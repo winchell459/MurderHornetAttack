@@ -88,6 +88,10 @@ public class Map : MonoBehaviour
     {
         voids.Add(newVoid);
     }
+    public void AddVoid(List<MapVoid> newVoids)
+    {
+        foreach (MapVoid v in newVoids) AddVoid(v);
+    }
 
     public static GameObject GetHoneycomb()
     {

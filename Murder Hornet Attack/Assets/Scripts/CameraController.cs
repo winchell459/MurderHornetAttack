@@ -6,15 +6,25 @@ public class CameraController : MonoBehaviour
 {
     public Transform Target;
     private Vector2 offset;
+    public float TrackingSpeed = 1;
+    public Camera cam;
     // Start is called before the first frame update
     void Start()
     {
-        offset = transform.position - Target.position;
+        offset = Target.position - cam.transform.position;
+        Debug.Log(offset);
+        transform.position = new Vector3(Target.position.x, Target.position.y, transform.position.z);
+        cam.transform.localPosition = -offset;
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if(Target)transform.position = new Vector3(transform.position.x, Target.position.y + offset.y, transform.position.z);
+        //if(Target)transform.position = new Vector3(transform.position.x, Target.position.y + offset.y, transform.position.z);
+        if (Target)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(Target.position.x, Target.position.y, transform.position.z), TrackingSpeed*Time.deltaTime);
+            transform.up = Target.up;
+        }
     }
 }

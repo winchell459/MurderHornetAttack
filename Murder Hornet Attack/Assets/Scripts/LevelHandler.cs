@@ -10,7 +10,8 @@ public class LevelHandler : MonoBehaviour
     void Start()
     {
         MurderPanel.SetActive(false);
-        createVoids();
+        //createVoids();
+        createRandomMap(7);
 
         Map.StaticMap.DisplayChunks();
     }
@@ -18,7 +19,7 @@ public class LevelHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        infiniteLevel();
     }
 
     private void infiniteLevel()
@@ -43,12 +44,62 @@ public class LevelHandler : MonoBehaviour
 
     private void createVoids()
     {
-        
-        MapPath newPath = MapPath.CreateJoggingPath(Player.position, new Vector2(40, -5f), -5, 5, 1, 3, 2, 4);
+        //Debug.Log("magnitude of zero vector: " + Vector2.zero.normalized);
+        MapPath newPath = MapPath.CreateJoggingPath(Player.position, new Vector2(35, 3f), -5, 5, 1, 3, 2, 4);
         Map.StaticMap.AddVoid(newPath);
+
+        newPath = MapPath.CreateJoggingPath(Player.position, new Vector2(-10, -10f), -5, 5, 1, 3, 2, 4);
+        Map.StaticMap.AddVoid(newPath);
+
         MapChamber newChamber = new MapChamber();
-        newChamber.AddChamber(new Vector2(40, 5), 10);
+        newChamber.AddChamber(new Vector2(35, 5), 10);
         newChamber.AddChamber(new Vector2(30, 3), 6);
         Map.StaticMap.AddVoid(newChamber);
+
+        
+        Map.StaticMap.AddVoid(MapChamber.RandomChamber(new Vector2(-20, 20), 10));
+    }
+
+    private void createRandomMap(float voidCount)
+    {
+        List<MapVoid> newVoids = new List<MapVoid>();
+        List<bool> connected = new List<bool>();
+
+        List<Vector2> locations = new List<Vector2>();
+        locations.Add(Player.position);
+        newVoids.Add(MapChamber.RandomChamber(Player.position, 3));
+        connected.Add(false);
+
+        Map map = Map.StaticMap;
+        Vector2 origin = new Vector2(map.MapOrigin.x * map.HorizontalSpacing, map.MapOrigin.y * map.VerticalSpacing);
+        Vector2 mapMin = origin + new Vector2(15, 15);
+        Vector2 mapMax = origin + new Vector2(map.MapWidth, map.MapHeight) - new Vector2(15, 15);
+
+        
+        for(int i = 0; i < voidCount; i += 1)
+        {
+            float xLoc = Random.Range(mapMin.x, mapMax.x);
+            float yLoc = Random.Range(mapMin.y, mapMax.y);
+            float radius = Random.Range(5, 15);
+            newVoids.Add(MapChamber.RandomChamber(new Vector2(xLoc, yLoc), radius));
+            connected.Add(false);
+
+            locations.Add(new Vector2(xLoc, yLoc));
+        }
+
+        for(int i = 0; i < voidCount; i += 1)
+        {
+            while (!connected[i])
+            {
+                int connecting = (int)Random.Range(0, voidCount - 1); 
+                if(connecting != i)
+                {
+                    newVoids.Add(MapPath.CreateJoggingPath(((MapChamber)newVoids[i]).ClosestEntrancePoint(locations[connecting]), locations[connecting], -2, 2, 2, 6, 2, 2));
+                    connected[i] = true;
+                }
+            }
+        }
+
+        map.AddVoid(newVoids);
     }
 }

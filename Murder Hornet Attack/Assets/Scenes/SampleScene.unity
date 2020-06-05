@@ -410,6 +410,53 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &516643013
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 516643015}
+  - component: {fileID: 516643014}
+  m_Layer: 0
+  m_Name: CameraRig
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &516643014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 516643013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed50a402dda02cd4f866e06918a26a21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 2123076730}
+  TrackingSpeed: 3
+  cam: {fileID: 963194227}
+--- !u!4 &516643015
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 516643013}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 963194228}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &649099332
 GameObject:
   m_ObjectHideFlags: 0
@@ -661,12 +708,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 118249912}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 516643015}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &963194229
@@ -676,12 +723,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ed50a402dda02cd4f866e06918a26a21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Target: {fileID: 2123076730}
+  TrackingSpeed: 1
+  cam: {fileID: 0}
 --- !u!82 &963194230
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1468,9 +1517,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HoneycombPrefab: {fileID: 1839788399973784453, guid: 2af0dbb945ca07a4f9ed32917bbb2a9a,
     type: 3}
-  MapWidth: 50
-  MapHeight: 20
-  MapOrigin: {x: -13, y: -36}
+  MapWidth: 100
+  MapHeight: 80
+  MapOrigin: {x: -70, y: -130}
   VerticalSpacing: 0.27
   HorizontalSpacing: 0.45
   HoneycombPool: []
@@ -1594,16 +1643,17 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2123076726}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 612ef6dd6593fe945a2a5e984c408a82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ForwardSpeed: 3
+  ForwardSpeed: 2
   SideSpeed: 1
   HornetSprite: {fileID: 218847607}
   HornetPlasmPrefab: {fileID: 2269173016302982693, guid: 0e2180129fdfb6d499cd9a31c12cf81b,
     type: 3}
+  Controls: 1
 --- !u!50 &2123076728
 Rigidbody2D:
   serializedVersion: 4
@@ -1649,7 +1699,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2123076726}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.07, y: -7.34, z: 0}
+  m_LocalPosition: {x: 0.07, y: -2.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 218847607}
