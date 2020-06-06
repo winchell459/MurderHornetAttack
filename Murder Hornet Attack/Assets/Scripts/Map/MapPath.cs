@@ -35,7 +35,7 @@ public class MapPath : MapVoid
         return Points[pathIndex + 1];
     }
 
-    public override bool Check(Honeycomb honeycomb)
+    public override bool Check(MapHoneycomb honeycomb)
     {
         for (int i = 0; i < Count; i++)
         {

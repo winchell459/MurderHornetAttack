@@ -7,7 +7,7 @@ public class MapChamber : MapVoid
     private List<Vector2> locations = new List<Vector2>();
     private List<float> widths = new List<float>();
 
-    public override bool Check(Honeycomb honeycomb)
+    public override bool Check(MapHoneycomb honeycomb)
     {
         //bool display = true;
         for(int i = 0; i < locations.Count; i++)

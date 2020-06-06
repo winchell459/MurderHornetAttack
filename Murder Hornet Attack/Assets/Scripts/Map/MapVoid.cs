@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class MapVoid 
 {
-    public abstract bool Check(Honeycomb honeycomb);
+    public abstract bool Check(MapHoneycomb honeycomb);
 }

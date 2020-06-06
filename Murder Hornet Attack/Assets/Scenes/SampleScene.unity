@@ -1101,7 +1101,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1840310405}
+      - m_Target: {fileID: 1047031841}
         m_MethodName: RestartLevel
         m_Mode: 1
         m_Arguments:
@@ -1526,6 +1526,8 @@ MonoBehaviour:
   HoneycombLayer_1: {fileID: 372231492}
   ChunkHeight: 40
   ChunkWidth: 14
+  cam: {fileID: 963194227}
+  Display: 0
 --- !u!4 &1840310406
 Transform:
   m_ObjectHideFlags: 0

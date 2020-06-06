@@ -8,7 +8,8 @@ public class HornetPlasm : MonoBehaviour
     {
         if (collision.CompareTag("Honeycomb"))
         {
-            Destroy(collision.gameObject);
+            //Destroy(collision.gameObject);
+            collision.GetComponent<Honeycomb>().DestroyHoneycomb();
             Destroy(gameObject);
         }
     }

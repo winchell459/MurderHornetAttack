@@ -14,12 +14,18 @@ public class LevelHandler : MonoBehaviour
         createRandomMap(7);
 
         Map.StaticMap.DisplayChunks();
+        Map.StaticMap.Display = true;
     }
 
     // Update is called once per frame
     void Update()
     {
         infiniteLevel();
+    }
+
+    public void RestartLevel()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 
     private void infiniteLevel()
