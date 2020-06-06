@@ -48,6 +48,16 @@ public class MapPath : MapVoid
                 {
                     honeycomb.display = false;
                 }
+                else
+                {
+                    CheckDepth(distance - widths[i] / 2, honeycomb);
+                //if(distance < widths[i] / 2 + Map.StaticMap.HorizontalSpacing*2)
+                //{
+                //    honeycomb.SetCapped(false);
+                //}
+                }
+
+
             }
 
         }

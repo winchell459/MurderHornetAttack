@@ -6,6 +6,7 @@ public class Map : MonoBehaviour
 {
     
     public GameObject HoneycombPrefab;
+    public GameObject HoneycombCappedPrefab;
     public static Map StaticMap;
     public float MapWidth = 10;
     public float MapHeight = 10;
@@ -166,7 +167,11 @@ public class Map : MonoBehaviour
         }
         else
         {
-            honeycomb = Instantiate(StaticMap.HoneycombPrefab, StaticMap.transform.position, Quaternion.identity);
+            int rand = Random.Range(0, 2);
+            GameObject prefab = StaticMap.HoneycombCappedPrefab;
+            //if (rand == 0) prefab = StaticMap.HoneycombCappedPrefab;
+            //else prefab = StaticMap.HoneycombPrefab;
+            honeycomb = Instantiate(prefab, StaticMap.transform.position, Quaternion.identity);
             honeycomb.transform.parent = StaticMap.HoneycombLayer_1;
         }
         return honeycomb;
@@ -275,11 +280,30 @@ public class MapHoneycomb
     public bool display;
     public Vector2 position;
     private GameObject honeycomb;
+    private bool capped = true;
+    private int depth = int.MaxValue; //roughly the number of honeycombs away from a void
+
+
+    public MapHoneycomb(bool display, Vector2 position, bool capped)
+    {
+        this.display = display;
+        this.position = position;
+        this.capped = capped;
+    }
     public MapHoneycomb(bool display, Vector2 position)
     {
         this.display = display;
         this.position = position;
+        
     }
+
+    public void SetCapped(bool capped) { this.capped = capped; }
+
+    public void SetDepth(int depth)
+    {
+        this.depth = depth;
+    }
+    public int GetDepth() { return depth; }
 
     public void DisplayHoneycomb()
     {
@@ -289,6 +313,8 @@ public class MapHoneycomb
             honeycomb.transform.position = position;
             honeycomb.GetComponent<Honeycomb>().honeyGrid = this;
             honeycomb.SetActive(true);
+            if (depth <= 2) capped = false;
+            honeycomb.GetComponent<Honeycomb>().SetCapped(capped);
         }
     }
 

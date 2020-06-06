@@ -13,6 +13,15 @@ public class MapChamber : MapVoid
         for(int i = 0; i < locations.Count; i++)
         {
             if (Vector2.Distance(honeycomb.position, locations[i]) <= widths[i]/2) honeycomb.display = false;
+            else
+            {
+                CheckDepth(Vector2.Distance(honeycomb.position, locations[i]) - widths[i] / 2, honeycomb);
+                //if (Vector2.Distance(honeycomb.position, locations[i]) < widths[i] / 2 + Map.StaticMap.HorizontalSpacing * 2)
+                //{
+                //    honeycomb.SetCapped(false);
+                //}
+            }
+           
         }
         return honeycomb.display;
     }
@@ -52,6 +61,8 @@ public class MapChamber : MapVoid
             float r = radius - Vector2.Distance(location, loc);
             newChamber.AddChamber(loc, r * 2);
             Debug.Log("new chamber section: loc " + loc + " radius: " + r);
+
+           
         }
         return newChamber;
     }
