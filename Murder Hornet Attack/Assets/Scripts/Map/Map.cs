@@ -104,6 +104,13 @@ public class Map : MonoBehaviour
     {
         return new Vector2(honeyPos.x * HorizontalSpacing, honeyPos.y * VerticalSpacing);
     }
+
+    public Vector2 WorldToHoneycomb(Vector2 worldPos)
+    {
+        float x = worldPos.x / HorizontalSpacing - MapOrigin.x;
+        float y = worldPos.y / VerticalSpacing - MapOrigin.y;
+        return new Vector2(x, y);
+    }
     
     private void createChunks()
     {
@@ -121,7 +128,7 @@ public class Map : MonoBehaviour
                 int height = (int)Mathf.Ceil((MapHeight - ChunkHeight * j*VerticalSpacing) / VerticalSpacing);
                 if (width > ChunkWidth) width = ChunkWidth;
                 if (height > ChunkHeight) height = ChunkHeight;
-                Debug.Log(width + " " + height);
+                //Debug.Log(width + " " + height);
                 createChunk(origin, width, height);
                 //honeycombChunks[honeycombChunks.Count - 1].DisplayChunk();
             }
@@ -228,7 +235,7 @@ public class MapChunk
        
         foreach (MapHoneycomb honeycomb in honeycombs)
         {
-            space.Check(honeycomb);
+            honeycomb.display = space.Check(honeycomb);
         }
         
         

@@ -37,16 +37,17 @@ public class MapPath : MapVoid
 
     public override bool Check(MapHoneycomb honeycomb)
     {
+        bool display = honeycomb.display;
         for (int i = 0; i < Count; i++)
         {
-            if (honeycomb.display)
+            if (display)
             {
                 Vector2 start = Start(i);
                 Vector2 end = End(i);
                 float distance = Utility.PointDistanceToPath(honeycomb.position, start, end);
                 if (distance < widths[i] / 2 || distance < 0.45f)
                 {
-                    honeycomb.display = false;
+                    display = false;
                 }
                 else
                 {
@@ -61,7 +62,7 @@ public class MapPath : MapVoid
             }
 
         }
-        return honeycomb.display;
+        return display;
     }
 
     public static MapPath CreateJoggingPath(Vector2 start, Vector2 end, float jogWidthMin, float jogWidthMax, float pathLengthMin, float pathLengthMax, float pathWidthMin, float pathWidthMax)
