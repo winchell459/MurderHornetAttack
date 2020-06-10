@@ -19,6 +19,9 @@ public class Map : MonoBehaviour
     private List<bool> displayChunks = new List<bool>();
     public Transform HoneycombLayer_1;
 
+    public Transform[] HoneycombLayers;
+    public List<float> LayerScales = new List<float>();
+
     private int honeycombHeight = -20;
     public int ChunkHeight = 40;
     public int ChunkWidth = 14;
@@ -36,6 +39,10 @@ public class Map : MonoBehaviour
         
         createChunks();
         
+        for(int i = 0; i < HoneycombLayers.Length; i += 1)
+        {
+            LayerScales.Add(HoneycombLayers[i].localScale.x);
+        }
     }
 
     private void Update()
@@ -329,6 +336,7 @@ public class MapHoneycomb
     {
         if (display && honeycomb)
         {
+            honeycomb.GetComponent<Honeycomb>().HideHoneycomb();
             honeycomb.SetActive(false);
             Map.ReturnHoneycomb(honeycomb);
 
