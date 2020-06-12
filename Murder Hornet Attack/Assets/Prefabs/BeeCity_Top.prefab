@@ -98,6 +98,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c83ce5b567d748c48b6cbf63f285bd70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TowerLayers:
+  - {fileID: 6656535895378994360}
+  - {fileID: 6656535895554712912}
+  - {fileID: 6656535896039245472}
+  - {fileID: 6656535897237007532}
 --- !u!1 &6656535895554712913
 GameObject:
   m_ObjectHideFlags: 0
