@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1451932472498554747}
   - component: {fileID: 1451932472498554746}
-  - component: {fileID: -617314314283797326}
+  - component: {fileID: 6070582712346403841}
   - component: {fileID: -8172852924203697138}
   m_Layer: 0
   m_Name: HoneycombCapped
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: e7cddffee5d78b44c80d75fbeaa50bbf, type: 3}
   m_Color: {r: 0.990566, g: 0.85612994, b: 0.39716092, a: 1}
   m_FlipX: 0
@@ -84,7 +84,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-617314314283797326
+--- !u!114 &6070582712346403841
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -93,7 +93,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1451932472498554745}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8fd8b8fe7adf48479a167ebb992e265, type: 3}
+  m_Script: {fileID: 11500000, guid: 846874c3a751b1a4e8d00ffa565c1daa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Cap: {fileID: 5122200917245367694}

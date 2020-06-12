@@ -7,6 +7,8 @@ public class Map : MonoBehaviour
     
     public GameObject HoneycombPrefab;
     public GameObject HoneycombCappedPrefab;
+    public GameObject HoneycombLargePrefab;
+    public GameObject BeeCityPrefab;
     public static Map StaticMap;
     public float MapWidth = 10;
     public float MapHeight = 10;
@@ -15,8 +17,10 @@ public class Map : MonoBehaviour
     public float VerticalSpacing = 0.27f;
     public float HorizontalSpacing = 0.45f;
     public List<GameObject> HoneycombPool = new List<GameObject>();
+    public List<GameObject> HoneycombLargePool = new List<GameObject>();
     private List<MapChunk> honeycombChunks = new List<MapChunk>();
     private List<bool> displayChunks = new List<bool>();
+    private List<GameObject> beeCityPool = new List<GameObject>();
     public Transform HoneycombLayer_1;
 
     public Transform[] HoneycombLayers;
@@ -195,6 +199,51 @@ public class Map : MonoBehaviour
     {
         StaticMap.HoneycombPool.Add(honeycomb);
     }
+
+    public static GameObject GetHoneycombLarge()
+    {
+        GameObject honeycomb;
+        if (StaticMap.HoneycombLargePool.Count > 0)
+        {
+            honeycomb = StaticMap.HoneycombLargePool[0];
+            StaticMap.HoneycombLargePool.RemoveAt(0);
+        }
+        else
+        {
+            int rand = Random.Range(0, 2);
+            GameObject prefab = StaticMap.HoneycombLargePrefab;
+            
+            honeycomb = Instantiate(prefab, StaticMap.transform.position, Quaternion.identity);
+            honeycomb.transform.parent = StaticMap.HoneycombLayer_1;
+        }
+        return honeycomb;
+    }
+
+    public static void ReturnHoneycombLarge(GameObject honeycomb)
+    {
+        StaticMap.HoneycombLargePool.Add(honeycomb);
+    }
+
+    public static GameObject GetBeeCity()
+    {
+        GameObject beeCity;
+        if(StaticMap.beeCityPool.Count > 0)
+        {
+            beeCity = StaticMap.beeCityPool[0];
+            StaticMap.beeCityPool.RemoveAt(0);
+        }
+        else
+        {
+            beeCity = Instantiate(StaticMap.BeeCityPrefab, StaticMap.transform.position, Quaternion.identity);
+
+        }
+        return beeCity;
+    }
+
+    public static void ReturnBeeCity(GameObject beeCity)
+    {
+        StaticMap.beeCityPool.Add(beeCity);
+    }
 }
 //-------------------------------------MapChunk------------------------------------------------------------------------
 public class MapChunk
@@ -230,8 +279,10 @@ public class MapChunk
             {
                 if (j % 2 != i % 2)
                 {
-                    
-                    honeycombs.Add(new MapHoneycomb(true, new Vector2((i + mapOffset.x ) * horizontalSpacing, (j + mapOffset.y) * verticalSpacing)));
+                    //if(i%6==0 && j%6==0 || i % 6 == 0 && j % 6 == 0)
+                    if(i%3==0 && j%3==0){ honeycombs.Add(new MapHoneycomb(true, new Vector2((i + mapOffset.x) * horizontalSpacing, (j + mapOffset.y) * verticalSpacing),true, true)); /*Debug.Log("isLarge");*/}
+                    else honeycombs.Add(new MapHoneycomb(true, new Vector2((i + mapOffset.x ) * horizontalSpacing, (j + mapOffset.y) * verticalSpacing)));
+
                 }
             }
         }
@@ -296,8 +347,17 @@ public class MapHoneycomb
     private GameObject honeycomb;
     private bool capped = true;
     private int depth = int.MaxValue; //roughly the number of honeycombs away from a void
+    private bool beeuilding;
+    public bool isLargeLoc = false;
+    private bool isLargeHoneycomb;
 
-
+    public MapHoneycomb(bool display, Vector2 position, bool capped, bool isLargeLoc)
+    {
+        this.display = display;
+        this.position = position;
+        this.capped = capped;
+        this.isLargeLoc = isLargeLoc;
+    }
     public MapHoneycomb(bool display, Vector2 position, bool capped)
     {
         this.display = display;
@@ -321,14 +381,31 @@ public class MapHoneycomb
 
     public void DisplayHoneycomb()
     {
-        if (display)
+        if (display && !beeuilding)
         {
-            honeycomb = Map.GetHoneycomb();
-            honeycomb.transform.position = position;
-            honeycomb.GetComponent<Honeycomb>().honeyGrid = this;
-            honeycomb.SetActive(true);
-            if (depth <= 2) capped = false;
-            honeycomb.GetComponent<Honeycomb>().SetCapped(capped);
+            if (depth < 5 || depth < 7 && !isLargeLoc)
+            {
+                honeycomb = Map.GetHoneycomb();
+                isLargeHoneycomb = false;
+            }
+            else if (isLargeLoc)
+            {
+                honeycomb = Map.GetHoneycombLarge();
+                isLargeHoneycomb = true;
+            }
+
+            if (honeycomb)
+            {
+                honeycomb.transform.position = position;
+                honeycomb.GetComponent<Honeycomb>().honeyGrid = this;
+                honeycomb.SetActive(true);
+                if (depth <= 2) capped = false;
+                honeycomb.GetComponent<HoneycombCell>().SetCapped(capped);
+            }
+            
+        }else if(display && beeuilding)
+        {
+            honeycomb = Map.GetBeeCity();
         }
     }
 
@@ -338,8 +415,9 @@ public class MapHoneycomb
         {
             honeycomb.GetComponent<Honeycomb>().HideHoneycomb();
             honeycomb.SetActive(false);
-            Map.ReturnHoneycomb(honeycomb);
-
+            if (!isLargeHoneycomb && honeycomb) Map.ReturnHoneycomb(honeycomb);
+            else if (honeycomb) Map.ReturnHoneycombLarge(honeycomb);
+            honeycomb = null;
         }
     }
 
