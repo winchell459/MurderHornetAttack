@@ -2584,7 +2584,7 @@ MonoBehaviour:
   ChunkWidth: 6
   cam: {fileID: 963194227}
   Display: 0
-  chunkRadius: 5
+  chunkRadius: 9
 --- !u!4 &1840310406
 Transform:
   m_ObjectHideFlags: 0
