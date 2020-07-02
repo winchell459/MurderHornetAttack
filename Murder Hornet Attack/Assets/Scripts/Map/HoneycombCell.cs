@@ -6,6 +6,7 @@ public class HoneycombCell : Honeycomb
 {
     public GameObject Cap;
     public GameObject CapRing;
+    public Collider2D EnemyTrigger;
     //public GameObject EnemyPrefab;
     private bool capped = true;
     //private Transform Layer2;
@@ -40,12 +41,12 @@ public class HoneycombCell : Honeycomb
         Cap.transform.localPosition = Vector3.zero;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            Instantiate(honeyGrid.GetEnemyPrefab(), transform.position, Quaternion.identity);
-            honeyGrid.DestroyHoneycomb();
-        }
-    }
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (collision.CompareTag("Player"))
+    //    {
+    //        Instantiate(honeyGrid.GetEnemyPrefab(), transform.position, Quaternion.identity);
+    //        honeyGrid.DestroyHoneycomb();
+    //    }
+    //}
 }

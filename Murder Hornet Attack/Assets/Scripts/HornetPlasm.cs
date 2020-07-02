@@ -20,6 +20,8 @@ public class HornetPlasm : MonoBehaviour
 
             
             collider.Collision(Damage);
+            FindObjectOfType<LevelHandler>().UpdatePlayerStats(1, 0);
+            Destroy(gameObject);
         }
     }
 }

@@ -85,7 +85,7 @@ public class HornetController : Insect
         if (collision.transform.CompareTag("Honeycomb"))
         {
             Destroy(collision.gameObject);
-            Destroy(gameObject);
+            hornetMurdered();
         }
         
     }
@@ -107,7 +107,13 @@ public class HornetController : Insect
         Health -= Damage;
         if (Health <= 0)
         {
-            Destroy(gameObject);
+            hornetMurdered();
         }
+    }
+
+    private void hornetMurdered()
+    {
+        FindObjectOfType<LevelHandler>().UpdatePlayerStats(0, 1);
+        Destroy(gameObject);
     }
 }

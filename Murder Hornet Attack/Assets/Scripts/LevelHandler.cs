@@ -15,6 +15,7 @@ public class LevelHandler : MonoBehaviour
     private Portal Exit;
 
     public Text PlayerLoc, SpawnLoc, EndLoc;
+    public Text BeesMurderedText, HornetMurderedText;
 
     public CameraController Cam;
 
@@ -27,6 +28,9 @@ public class LevelHandler : MonoBehaviour
     {
         MurderPanel.SetActive(false);
         ExitPanel.SetActive(false);
+        UpdatePlayerStats();
+
+
         //createVoids();
         createRandomMap(7);
 
@@ -83,6 +87,7 @@ public class LevelHandler : MonoBehaviour
     {
         MurderPanel.SetActive(false);
         spawnPlayer(PlayerSpawn);
+        
     }
 
     private void ReloadLevel()
@@ -108,6 +113,20 @@ public class LevelHandler : MonoBehaviour
         {
             MurderPanel.SetActive(true);
         }
+    }
+
+    public void UpdatePlayerStats()
+    {
+        PlayerHandler ph = FindObjectOfType<PlayerHandler>();
+        BeesMurderedText.text = PlayerHandler.BeesMurderedCount.ToString();
+        HornetMurderedText.text = PlayerHandler.HornetMurderedCount.ToString();
+    }
+
+    public void UpdatePlayerStats(int BeesDied, int HornetDied)
+    {
+        PlayerHandler.BeesMurderedCount += BeesDied;
+        PlayerHandler.HornetMurderedCount += HornetDied;
+        UpdatePlayerStats();
     }
 
     private void createVoids()

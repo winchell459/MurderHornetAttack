@@ -9,6 +9,7 @@ public class MapHoneycomb
     public Vector2 position;
     private GameObject honeycomb;
     private GameObject EnemyPrefab;
+
     //private List<Transform> honeycombChildren = new List<Transform>();
     private bool capped = true;
     private int depth = int.MaxValue; //roughly the number of honeycombs away from a void
@@ -24,13 +25,7 @@ public class MapHoneycomb
     }
     public LocationTypes LocationType;
 
-    //public MapHoneycomb(bool display, Vector2 position, bool capped, GameObject EnemyPrefab)
-    //{
-    //    this.display = display;
-    //    this.position = position;
-    //    this.capped = capped;
-    //    this.EnemyPrefab = EnemyPrefab;
-    //}
+    
     public MapHoneycomb(bool display, Vector2 position, bool capped, bool isLargeLoc)
     {
         this.display = display;
@@ -70,7 +65,7 @@ public class MapHoneycomb
                 honeycomb = Map.GetHoneycomb();
                 isLargeHoneycomb = false;
                 beeuilding = false;
-                if(EnemyPrefab) honeycomb.GetComponent<CircleCollider2D>().enabled = true;
+                if(EnemyPrefab) setupEnemyTrigger(true);
             }
             else if (beeuilding)
             {
@@ -102,7 +97,8 @@ public class MapHoneycomb
     {
         if (display && honeycomb)
         {
-            if(EnemyPrefab) honeycomb.GetComponent<CircleCollider2D>().enabled = false;
+            if (EnemyPrefab) setupEnemyTrigger(false);
+
             honeycomb.GetComponent<Honeycomb>().HideHoneycomb();
             honeycomb.SetActive(false);
             if (!isLargeHoneycomb && honeycomb && !beeuilding) Map.ReturnHoneycomb(honeycomb);
@@ -131,5 +127,10 @@ public class MapHoneycomb
     {
         return EnemyPrefab;
     }
-    
+
+    private void setupEnemyTrigger(bool active)
+    {
+        //honeycomb.GetComponent<CircleCollider2D>().enabled = active;
+        honeycomb.GetComponent<HoneycombCell>().EnemyTrigger.enabled = active;
+    }
 }
