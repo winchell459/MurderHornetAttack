@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1451932472498554746}
   - component: {fileID: 6070582712346403841}
   - component: {fileID: -8172852924203697138}
+  - component: {fileID: 1305768637630022537}
   m_Layer: 0
   m_Name: HoneycombCapped
   m_TagString: Honeycomb
@@ -96,6 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 846874c3a751b1a4e8d00ffa565c1daa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LocationType: 0
   Cap: {fileID: 5122200917245367694}
   CapRing: {fileID: 6941247006321709390}
 --- !u!61 &-8172852924203697138
@@ -124,6 +126,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.35777724, y: 0.56}
   m_EdgeRadius: 0
+--- !u!58 &1305768637630022537
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451932472498554745}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 4
 --- !u!1 &5122200917245367694
 GameObject:
   m_ObjectHideFlags: 0
@@ -222,7 +240,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2971967687003532859
 Transform:
   m_ObjectHideFlags: 0

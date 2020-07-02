@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HornetController : MonoBehaviour
+public class HornetController : Insect
 {
     public float ForwardSpeed = 3;
     public float SideSpeed = 1f;
@@ -85,6 +85,28 @@ public class HornetController : MonoBehaviour
         if (collision.transform.CompareTag("Honeycomb"))
         {
             Destroy(collision.gameObject);
+            Destroy(gameObject);
+        }
+        
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        //Debug.Log(collision.transform.name);
+        if (collision.transform.CompareTag("Enemy") && collision.transform.GetComponent<Insect>())
+        {
+            Insect collider = collision.transform.GetComponent<Insect>();
+            
+            Collision(collider.CollisionDamage);
+            collider.Collision(GetComponent<Insect>().CollisionDamage);
+        }
+    }
+
+    public override void Collision(float Damage)
+    {
+        Health -= Damage;
+        if (Health <= 0)
+        {
             Destroy(gameObject);
         }
     }

@@ -18,7 +18,7 @@ public class EnemyPhysicsBoundry : MonoBehaviour
     {
         if (collision.CompareTag("Enemy"))
         {
-            Debug.Log("Bee's near by!");
+            //Debug.Log("Bee's near by!");
             Vector3 otherPosition = collision.transform.position;
 
             // This gives you the vector away from the other

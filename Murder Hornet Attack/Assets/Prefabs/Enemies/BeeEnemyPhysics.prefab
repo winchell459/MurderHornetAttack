@@ -134,6 +134,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32ecc837267814513b9ba499cfd19267, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CollisionDamage: 1
+  Health: 1
   speed: 1
   attackSpeed: 1
   attackRadius: 2
@@ -143,6 +145,7 @@ MonoBehaviour:
   playerLocation: {x: 0, y: 0, z: 0}
   playerDistance: 0
   dieOnCollision: 0
+  rb: {fileID: 1301808763863226253}
 --- !u!1 &8623933768484551021
 GameObject:
   m_ObjectHideFlags: 0

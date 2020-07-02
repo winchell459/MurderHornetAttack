@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyPhysics : MonoBehaviour
+public class EnemyPhysics : Insect
 {
     public float speed = 1f;
     public float attackSpeed = 1.0f;
@@ -20,7 +20,7 @@ public class EnemyPhysics : MonoBehaviour
 
     public bool dieOnCollision = false;
 
-    private Rigidbody2D rb;
+    public Rigidbody2D rb;
 
 
     private bool _enterAttackRadius = false;
@@ -37,13 +37,13 @@ public class EnemyPhysics : MonoBehaviour
                 if (value)
                 {
                     // Entered the radius
-                    Debug.Log("Entered the radius");
+                    //Debug.Log("Entered the radius");
                     rb.velocity = Vector2.zero;
                 }
                 else
                 {
                     // Exit the radius
-                    Debug.Log("Exited the radius");
+                    //Debug.Log("Exited the radius");
 
                 }
             }
@@ -64,12 +64,12 @@ public class EnemyPhysics : MonoBehaviour
                 if (value)
                 {
                     // Entered the radius
-                    Debug.Log("Entered the reset radius");
+                    //Debug.Log("Entered the reset radius");
                 }
                 else
                 {
                     // Exit the radius
-                    Debug.Log("Exited the reset radius");
+                    //Debug.Log("Exited the reset radius");
                     rb.velocity = Vector2.zero;
                 }
             }
@@ -90,13 +90,13 @@ public class EnemyPhysics : MonoBehaviour
                 if (value)
                 {
                     // Entered the radius
-                    Debug.Log("Entered the Move radius");
+                   // Debug.Log("Entered the Move radius");
                     rb.velocity = Vector2.zero;
                 }
                 else
                 {
                     // Exit the radius
-                    Debug.Log("Exited the Move radius");
+                    //Debug.Log("Exited the Move radius");
                     rb.velocity = Vector2.zero;
                 }
             }
@@ -194,5 +194,14 @@ public class EnemyPhysics : MonoBehaviour
         Gizmos.color = Color.blue;
         Vector3 velocity = new Vector3(rb.velocity.x, rb.velocity.y);
         Gizmos.DrawLine(transform.position, transform.position + velocity);
+    }
+
+    public override void Collision(float Damage)
+    {
+        Health -= Damage;
+        if(Health <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 }

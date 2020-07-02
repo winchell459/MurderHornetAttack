@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2963273219893779831}
   m_Layer: 0
   m_Name: MurderHornet
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -83,6 +83,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 612ef6dd6593fe945a2a5e984c408a82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CollisionDamage: 1
+  Health: 50
   ForwardSpeed: 2
   SideSpeed: 1
   HornetSprite: {fileID: 2963273221294690423}

@@ -11,6 +11,7 @@ public class MapChamber : MapVoid
     public MapChamber(Vector2 Location)
     {
         this.Location = Location;
+        VoidType = MapHoneycomb.LocationTypes.Chamber;
     }
     public override bool Check(MapHoneycomb honeycomb)
     {
@@ -22,7 +23,7 @@ public class MapChamber : MapVoid
             if (Vector2.Distance(honeycomb.position, locations[i]) <= widths[i]/2) display = false;
             else
             {
-                CheckDepth(Vector2.Distance(honeycomb.position, locations[i]) - widths[i] / 2, honeycomb);
+                CheckDepth(Vector2.Distance(honeycomb.position, locations[i]) - widths[i] / 2, honeycomb, MapHoneycomb.LocationTypes.Chamber);
                 //if (Vector2.Distance(honeycomb.position, locations[i]) < widths[i] / 2 + Map.StaticMap.HorizontalSpacing * 2)
                 //{
                 //    honeycomb.SetCapped(false);

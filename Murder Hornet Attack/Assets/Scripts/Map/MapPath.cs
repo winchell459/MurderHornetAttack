@@ -15,10 +15,12 @@ public class MapPath : MapVoid
         Points.Add(end);
         widths.Add(width);
         Count += 1;
+        VoidType = MapHoneycomb.LocationTypes.Path;
     }
     private MapPath(Vector2 start)
     {
         Points.Add(start);
+        VoidType = MapHoneycomb.LocationTypes.Path;
     }
     public void Add(Vector2 point, float width)
     {
@@ -51,7 +53,7 @@ public class MapPath : MapVoid
                 }
                 else
                 {
-                    CheckDepth(distance - widths[i] / 2, honeycomb);
+                    CheckDepth(distance - widths[i] / 2, honeycomb, MapHoneycomb.LocationTypes.Path);
                 //if(distance < widths[i] / 2 + Map.StaticMap.HorizontalSpacing*2)
                 //{
                 //    honeycomb.SetCapped(false);

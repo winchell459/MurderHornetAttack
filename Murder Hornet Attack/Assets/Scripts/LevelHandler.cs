@@ -18,6 +18,10 @@ public class LevelHandler : MonoBehaviour
 
     public CameraController Cam;
 
+    public GameObject EnemyPrefabs;
+
+    private List<MapVoid> mapVoids = new List<MapVoid>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +31,10 @@ public class LevelHandler : MonoBehaviour
         createRandomMap(7);
 
         Map.StaticMap.DisplayChunks();
+
+        //setup enemies in Paths
+        addPathEnemies();
+
         Map.StaticMap.Display = true;
     }
 
@@ -178,6 +186,13 @@ public class LevelHandler : MonoBehaviour
         }
 
         map.AddVoid(newVoids);
+
+        mapVoids = newVoids;
+        Debug.Log("void wall count: " + newVoids[newVoids.Count - 1].GetVoidWalls().Count);
+
+        
+
+
     }
 
     private void addPortal(Portal portal, MapChamber chamber)
@@ -200,6 +215,26 @@ public class LevelHandler : MonoBehaviour
             circle.transform.localScale = new Vector2(chamber.widths[i], chamber.widths[i]);
             circle.GetComponent<SpriteRenderer>().color = Color.black;
             //Debug.Log(chamber.locations[i] + " " + chamber.widths[i]);
+        }
+    }
+
+    private void addPathEnemies()
+    {
+        foreach (MapVoid mv in mapVoids)
+        {
+            if (mv.VoidType == MapHoneycomb.LocationTypes.Path)
+            {
+                List<MapHoneycomb> walls = mv.GetVoidWalls();
+                Debug.Log(walls.Count);
+                foreach (MapHoneycomb mhc in walls)
+                {
+                    if (Random.Range(0, 10) < 1)
+                    {
+                        mhc.AddEnemy(EnemyPrefabs);
+                        //Debug.Log("Enemy Added");
+                    }
+                }
+            }
         }
     }
 }
