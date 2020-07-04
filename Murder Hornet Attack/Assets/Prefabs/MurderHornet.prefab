@@ -85,6 +85,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CollisionDamage: 1
   Health: 50
+  MaxHealth: 50
   ForwardSpeed: 2
   SideSpeed: 1
   HornetSprite: {fileID: 2963273221294690423}

@@ -16,12 +16,18 @@ public class LevelHandler : MonoBehaviour
 
     public Text PlayerLoc, SpawnLoc, EndLoc;
     public Text BeesMurderedText, HornetMurderedText;
+    public Text HealthMeterText;
+    public RawImage HealthMeterBar;
+
+    public Text PlasmaMeterText;
+    public RawImage PlasmaMeterBar;
 
     public CameraController Cam;
 
     public GameObject EnemyPrefabs;
 
     private List<MapVoid> mapVoids = new List<MapVoid>();
+    private PlayerHandler ph;
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +46,8 @@ public class LevelHandler : MonoBehaviour
         addPathEnemies();
 
         Map.StaticMap.Display = true;
+
+        ph = FindObjectOfType<PlayerHandler>();
     }
 
     // Update is called once per frame
@@ -81,6 +89,7 @@ public class LevelHandler : MonoBehaviour
     {
         Player = Instantiate(PlayerPrefab, PlayerSpawn.Chamber.locations[0], Quaternion.identity).transform;
         Cam.SetCameraTarget(Player);
+        UpdatePlayerStats();
     }
 
     public void RestartLevel()
@@ -120,6 +129,16 @@ public class LevelHandler : MonoBehaviour
         PlayerHandler ph = FindObjectOfType<PlayerHandler>();
         BeesMurderedText.text = PlayerHandler.BeesMurderedCount.ToString();
         HornetMurderedText.text = PlayerHandler.HornetMurderedCount.ToString();
+
+        HornetController hc = FindObjectOfType<HornetController>();
+
+        float barPercent = hc.Health / ph.MaxHealth;
+        HealthMeterBar.rectTransform.localScale = new Vector3(barPercent, 1, 1);
+        HealthMeterText.text = hc.Health.ToString();
+
+        float plasmaPercent = (float) hc.ShotCount / ph.MaxShot;
+        PlasmaMeterBar.rectTransform.localScale = new Vector3(plasmaPercent, plasmaPercent, 1);
+        PlasmaMeterText.text = hc.ShotCount.ToString();
     }
 
     public void UpdatePlayerStats(int BeesDied, int HornetDied)

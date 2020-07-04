@@ -9,6 +9,8 @@ public class HornetController : Insect
     public Transform HornetSprite;
     private Rigidbody2D rb;
     public GameObject HornetPlasmPrefab;
+
+    public int ShotCount;
     
     public enum ControlTypes
     {
@@ -69,10 +71,14 @@ public class HornetController : Insect
         }
         else if (Controls == ControlTypes.DirectKeyboard)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (ShotCount > 0 && Input.GetKeyDown(KeyCode.Space))
             {
                 GameObject plasm = Instantiate(HornetPlasmPrefab, transform.position, Quaternion.identity);
                 plasm.GetComponent<Rigidbody2D>().velocity = 10 * transform.up;
+                
+                ShotCount -= 1;
+
+                FindObjectOfType<LevelHandler>().UpdatePlayerStats();
             }
         }
         
@@ -85,7 +91,8 @@ public class HornetController : Insect
         if (collision.transform.CompareTag("Honeycomb"))
         {
             Destroy(collision.gameObject);
-            hornetMurdered();
+            //hornetMurdered();
+            Collision(Health);
         }
         
     }
@@ -105,6 +112,7 @@ public class HornetController : Insect
     public override void Collision(float Damage)
     {
         Health -= Damage;
+        FindObjectOfType<LevelHandler>().UpdatePlayerStats();
         if (Health <= 0)
         {
             hornetMurdered();
