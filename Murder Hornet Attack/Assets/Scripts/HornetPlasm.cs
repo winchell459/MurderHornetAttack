@@ -10,7 +10,7 @@ public class HornetPlasm : MonoBehaviour
         if (collision.CompareTag("Honeycomb"))
         {
             //Destroy(collision.gameObject);
-            collision.GetComponent<Honeycomb>().DestroyHoneycomb();
+            collision.GetComponent<Honeycomb>().DamageHoneycomb(Damage);
             Destroy(gameObject);
         }
 
@@ -19,7 +19,7 @@ public class HornetPlasm : MonoBehaviour
             Insect collider = collision.transform.GetComponent<Insect>();
 
             
-            collider.Collision(Damage);
+            collider.TakeDamage(Damage);
             FindObjectOfType<LevelHandler>().UpdatePlayerStats(1, 0);
             Destroy(gameObject);
         }

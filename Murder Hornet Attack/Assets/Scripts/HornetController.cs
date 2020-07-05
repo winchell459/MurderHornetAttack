@@ -92,7 +92,7 @@ public class HornetController : Insect
         {
             Destroy(collision.gameObject);
             //hornetMurdered();
-            Collision(Health);
+            TakeDamage(Health);
         }
         
     }
@@ -104,12 +104,12 @@ public class HornetController : Insect
         {
             Insect collider = collision.transform.GetComponent<Insect>();
             
-            Collision(collider.CollisionDamage);
-            collider.Collision(GetComponent<Insect>().CollisionDamage);
+            TakeDamage(collider.CollisionDamage);
+            collider.TakeDamage(GetComponent<Insect>().CollisionDamage);
         }
     }
 
-    public override void Collision(float Damage)
+    public override void TakeDamage(float Damage)
     {
         Health -= Damage;
         FindObjectOfType<LevelHandler>().UpdatePlayerStats();

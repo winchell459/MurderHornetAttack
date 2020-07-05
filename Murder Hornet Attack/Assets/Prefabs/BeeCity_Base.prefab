@@ -177,6 +177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c83ce5b567d748c48b6cbf63f285bd70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LocationType: 0
   TowerLayers:
   - {fileID: 2717590611057914024}
   - {fileID: 2717590611419230528}
@@ -193,6 +194,7 @@ GameObject:
   - component: {fileID: 2717590611419230528}
   - component: {fileID: 2717590611419230531}
   - component: {fileID: 1431635032215170423}
+  - component: {fileID: 1379858776272445030}
   m_Layer: 0
   m_Name: BeeCity_Base
   m_TagString: Untagged
@@ -280,11 +282,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c83ce5b567d748c48b6cbf63f285bd70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LocationType: 0
   TowerLayers:
   - {fileID: 2717590611419230528}
   - {fileID: 2717590610398073520}
   - {fileID: 2717590611892517052}
   - {fileID: 2717590611057914024}
+--- !u!58 &1379858776272445030
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2717590611419230529}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.6
 --- !u!1 &2717590611892517053
 GameObject:
   m_ObjectHideFlags: 0

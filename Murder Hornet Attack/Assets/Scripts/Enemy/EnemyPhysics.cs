@@ -196,7 +196,7 @@ public class EnemyPhysics : Insect
         Gizmos.DrawLine(transform.position, transform.position + velocity);
     }
 
-    public override void Collision(float Damage)
+    public override void TakeDamage(float Damage)
     {
         Health -= Damage;
         if(Health <= 0)

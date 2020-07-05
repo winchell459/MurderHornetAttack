@@ -6,6 +6,12 @@ public class HoneycombTower : Honeycomb
 {
     public Transform[] TowerLayers;
     private Transform[] layers;
+
+    public override void DamageHoneycomb(float damage)
+    {
+        throw new System.NotImplementedException();
+    }
+
     public override void DestroyHoneycomb()
     {
         throw new System.NotImplementedException();

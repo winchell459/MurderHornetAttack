@@ -9,5 +9,5 @@ public abstract class Insect : MonoBehaviour
     public float MaxHealth = 1f;
 
     //public abstract void Collision(Insect collider);
-    public abstract void Collision(float damage);
+    public abstract void TakeDamage(float damage);
 }
