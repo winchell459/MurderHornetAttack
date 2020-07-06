@@ -46,7 +46,7 @@ public class PlayerHandler : MonoBehaviour
         else
         {
             //if (FindObjectOfType<HornetController>())
-            Debug.Log("Looking for Player");
+            //Debug.Log("Looking for Player");
             player = FindObjectOfType<HornetController>();
         }
     }

@@ -48,6 +48,12 @@ public class LevelHandler : MonoBehaviour
         Map.StaticMap.Display = true;
 
         ph = FindObjectOfType<PlayerHandler>();
+
+        Debug.Log("honeycomb (0,0) " + Utility.HoneycombGridToWorldPostion(new Vector2(0, 0)));
+        Debug.Log("honeycomb (0,6) " + Utility.HoneycombGridToWorldPostion(new Vector2(0, 6)));
+        Debug.Log("honeycomb (3,0) " + Utility.HoneycombGridToWorldPostion(new Vector2(3, 0)));
+        Debug.Log("honeycomb (3,6) " + Utility.HoneycombGridToWorldPostion(new Vector2(3, 6)));
+        Debug.Log("honeycomb (6,6) " + Utility.HoneycombGridToWorldPostion(new Vector2(6, 6)));
     }
 
     // Update is called once per frame
@@ -63,14 +69,14 @@ public class LevelHandler : MonoBehaviour
             ExitPanel.SetActive(false);
         }
 
-        if(Player) displayLocation(Map.StaticMap.WorldToHoneycomb(Player.position), PlayerLoc);
+        if(Player) displayLocation(Utility.WorldToHoneycomb(Player.position), PlayerLoc);
         else
         {
             // spawnPlayer(PlayerSpawn);
             MurderPanel.SetActive(true);
         }
-        displayLocation(Map.StaticMap.WorldToHoneycomb(Exit.transform.position), EndLoc);
-        displayLocation(Map.StaticMap.WorldToHoneycomb(PlayerSpawn.transform.position), SpawnLoc);
+        displayLocation(Utility.WorldToHoneycomb(Exit.transform.position), EndLoc);
+        displayLocation(Utility.WorldToHoneycomb(PlayerSpawn.transform.position), SpawnLoc);
     }
 
     private void displayLocation(Vector2 loc, Text text)
@@ -226,7 +232,7 @@ public class LevelHandler : MonoBehaviour
         map.AddVoid(newVoids);
 
         mapVoids = newVoids;
-        Debug.Log("void wall count: " + newVoids[newVoids.Count - 1].GetVoidWalls().Count);
+        //Debug.Log("void wall count: " + newVoids[newVoids.Count - 1].GetVoidWalls().Count);
 
         
 
@@ -263,7 +269,7 @@ public class LevelHandler : MonoBehaviour
             if (mv.VoidType == MapHoneycomb.LocationTypes.Path)
             {
                 List<MapHoneycomb> walls = mv.GetVoidWalls();
-                Debug.Log(walls.Count);
+                //Debug.Log(walls.Count);
                 foreach (MapHoneycomb mhc in walls)
                 {
                     if (Random.Range(0, 10) < 1)

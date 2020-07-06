@@ -78,4 +78,34 @@ public static class Utility
         }
         return linePoint;
     }
+
+    public static Vector2 WorldPointToHoneycombGrid(Vector2 point)
+    {
+        Map map = Map.StaticMap;
+        Vector2 gridPoint = point - map.MapOrigin;
+        //gridPoint = new Vector2((int)gridPoint.x / map.HorizontalSpacing, (int)gridPoint.y / map.VerticalSpacing);
+        float a = map.HorizontalSpacing / 3;//map.VerticalSpacing / Mathf.Sqrt(3);
+        float xGrid = gridPoint.x + 2 * a;
+        
+
+        return gridPoint;
+    }
+
+    public static Vector2 HoneycombGridToWorldPostion(Vector2 honeyPos)
+    {
+        Map map = Map.StaticMap;
+        float xPos = honeyPos.x * map.HorizontalSpacing;
+        float yPos = yPos = honeyPos.y * map.VerticalSpacing * 2;
+        if (honeyPos.x % 2 == 0) yPos +=  map.VerticalSpacing;
+        
+        return new Vector2(xPos, yPos) + new Vector2(map.MapOrigin.x * map.HorizontalSpacing, map.MapOrigin.y * map.VerticalSpacing);
+    }
+
+    public static Vector2 WorldToHoneycomb(Vector2 worldPos)
+    {
+        Map map = Map.StaticMap;
+        float x = worldPos.x / map.HorizontalSpacing - map.MapOrigin.x;
+        float y = worldPos.y / (2*map.VerticalSpacing) - map.MapOrigin.y/2;
+        return new Vector2(x, y);
+    }
 }

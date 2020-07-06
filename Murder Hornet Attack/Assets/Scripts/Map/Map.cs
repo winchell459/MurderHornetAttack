@@ -111,17 +111,7 @@ public class Map : MonoBehaviour
         return honeycombChunks[row * chunkCols + col];
     }
 
-    private Vector2 honeycombToWorldPostion(Vector2 honeyPos)
-    {
-        return new Vector2(honeyPos.x * HorizontalSpacing, honeyPos.y * VerticalSpacing);
-    }
-
-    public Vector2 WorldToHoneycomb(Vector2 worldPos)
-    {
-        float x = worldPos.x / HorizontalSpacing - MapOrigin.x;
-        float y = worldPos.y / VerticalSpacing - MapOrigin.y;
-        return new Vector2(x, y);
-    }
+    
     
     private void createChunks()
     {
