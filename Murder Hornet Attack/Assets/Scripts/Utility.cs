@@ -104,8 +104,10 @@ public static class Utility
     public static Vector2 WorldToHoneycomb(Vector2 worldPos)
     {
         Map map = Map.StaticMap;
-        float x = worldPos.x / map.HorizontalSpacing - map.MapOrigin.x;
-        float y = worldPos.y / (2*map.VerticalSpacing) - map.MapOrigin.y/2;
+        int x = (int)((worldPos.x + map.HorizontalSpacing / 3) / map.HorizontalSpacing - map.MapOrigin.x );
+        int y = (int)((worldPos.y + map.VerticalSpacing) / (2*map.VerticalSpacing) - map.MapOrigin.y/2 );
+        
+        
         return new Vector2(x, y);
     }
 }
