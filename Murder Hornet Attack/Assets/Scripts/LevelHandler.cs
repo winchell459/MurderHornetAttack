@@ -54,6 +54,9 @@ public class LevelHandler : MonoBehaviour
         //Debug.Log("honeycomb (3,0) " + Utility.HoneycombGridToWorldPostion(new Vector2(3, 0)));
         //Debug.Log("honeycomb (3,6) " + Utility.HoneycombGridToWorldPostion(new Vector2(3, 6)));
         //Debug.Log("honeycomb (6,6) " + Utility.HoneycombGridToWorldPostion(new Vector2(6, 6)));
+
+        displayLocation(Utility.WorldToHoneycomb(Exit.transform.position), EndLoc);
+        displayLocation(Utility.WorldToHoneycomb(PlayerSpawn.transform.position), SpawnLoc);
     }
 
     // Update is called once per frame
@@ -75,8 +78,8 @@ public class LevelHandler : MonoBehaviour
             // spawnPlayer(PlayerSpawn);
             MurderPanel.SetActive(true);
         }
-        displayLocation(Utility.WorldToHoneycomb(Exit.transform.position), EndLoc);
-        displayLocation(Utility.WorldToHoneycomb(PlayerSpawn.transform.position), SpawnLoc);
+
+        if(Player)Debug.Log("Player Chunk: " + Utility.GetMapChunk(Player.transform.position).mapOffset);
     }
 
     private void displayLocation(Vector2 loc, Text text)

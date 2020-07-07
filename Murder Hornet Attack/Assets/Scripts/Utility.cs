@@ -106,8 +106,45 @@ public static class Utility
         Map map = Map.StaticMap;
         int x = (int)((worldPos.x + map.HorizontalSpacing / 3) / map.HorizontalSpacing - map.MapOrigin.x );
         int y = (int)((worldPos.y + map.VerticalSpacing) / (2*map.VerticalSpacing) - map.MapOrigin.y/2 );
-        
-        
+
+        List<Vector2> honeyCandidates = new List<Vector2>();
+        int xMin = x;
+        int xMax = x + 1;
+        int yMin = y;
+        int yMax = y + 1;
+        //honeyCandidates.Add(HoneycombGridToWorldPostion(new Vector2(x, y)));
+        if (x > 0) xMin -= 1;
+        //if(x< map.Width) xMax += 1;
+        if (y > 0) yMin -= 1;
+
+        float distance = Mathf.Infinity;
+        //string debugStr = "Checking Honeycomb:";
+        for(int i = xMin; i <= xMax; i+=1)
+        {
+            for(int j = yMin; j <= yMax; j += 1)
+            {
+                //debugStr += " (" + i + ", " + j + ")";
+                float check = Vector2.Distance(worldPos, HoneycombGridToWorldPostion(new Vector2(i, j)));
+                if (check < distance)
+                {
+                    distance = check;
+                    x = i;
+                    y = j;
+                }
+            }
+        }
+        //debugStr += " Closest: ("  + x + ", " + y + ")";
+        //Debug.Log(debugStr);
         return new Vector2(x, y);
+    }
+
+    public static MapChunk GetMapChunk(Vector2 worldPos)
+    {
+        Vector2 honeyIndex = WorldToHoneycomb(worldPos);
+        Map map = Map.StaticMap;
+        int xChunk = (int)honeyIndex.x / map.ChunkWidth;
+        int yChunk = (int)honeyIndex.y / map.ChunkHeight;
+        //int chunkIndex = xChunk * yChunk + xChunk;
+        return map.GetChunk(xChunk, yChunk);
     }
 }

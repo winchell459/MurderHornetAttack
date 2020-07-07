@@ -10,4 +10,6 @@ public abstract class Insect : MonoBehaviour
 
     //public abstract void Collision(Insect collider);
     public abstract void TakeDamage(float damage);
+
+    public GameObject InsectPrefab;
 }

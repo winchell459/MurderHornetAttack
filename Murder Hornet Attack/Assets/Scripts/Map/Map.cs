@@ -105,7 +105,7 @@ public class Map : MonoBehaviour
         
     }
 
-    private MapChunk GetChunk(int col, int row)
+    public MapChunk GetChunk(int col, int row)
     {
         int chunkCols = (int)Mathf.Ceil((MapWidth / HorizontalSpacing) / (ChunkWidth));
         return honeycombChunks[row * chunkCols + col];

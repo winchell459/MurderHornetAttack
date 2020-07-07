@@ -5,7 +5,7 @@ using UnityEngine;
 //-------------------------------------MapChunk------------------------------------------------------------------------
 public class MapChunk
 {
-    private Vector2 mapOffset;
+    public Vector2 mapOffset;
     private float width;
     private float height;
     private float verticalSpacing;
@@ -13,6 +13,8 @@ public class MapChunk
     private List<MapHoneycomb> honeycombs = new List<MapHoneycomb>();
     private bool display = false;
     //private List<GameObject> displayhoneycombs;
+
+    private List<Insect> enemiesInChunk = new List<Insect>();
 
     public MapChunk(Vector2 mapOffset, float width, float height, float verticalSpacing, float horizontalSpacing)
     {
@@ -72,6 +74,11 @@ public class MapChunk
             {
                 honeycomb.DisplayHoneycomb();
             }
+
+            foreach(Insect insect in enemiesInChunk)
+            {
+                if(insect)insect.gameObject.SetActive(true);
+            }
         }
 
     }
@@ -83,6 +90,25 @@ public class MapChunk
             foreach (MapHoneycomb honeycomb in honeycombs)
             {
                 honeycomb.HideHoneycomb();
+            }
+
+            for(int i = enemiesInChunk.Count - 1; i >= 0; i -= 1)
+            {
+                if (enemiesInChunk[i])
+                {
+                    MapChunk chunk = Utility.GetMapChunk(enemiesInChunk[i].transform.position);
+                    if (chunk == this)
+                    {
+                        enemiesInChunk[i].gameObject.SetActive(false);
+                    }
+                    else
+                    {
+
+                        chunk.AddEnemyToChunk(enemiesInChunk[i]);
+                        enemiesInChunk.RemoveAt(i);
+                    }
+                }
+                
             }
         }
         display = false;
@@ -99,6 +125,11 @@ public class MapChunk
         return (point.x >= xMin && point.x <= xMax && point.y >= yMin && point.y <= yMax);
     }
 
+    public void AddEnemyToChunk(Insect insect)
+    {
+        if (!enemiesInChunk.Contains(insect)) enemiesInChunk.Add(insect);
+        if (!display) insect.gameObject.SetActive(false);
+    }
 }
 
 
