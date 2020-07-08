@@ -79,7 +79,7 @@ public class LevelHandler : MonoBehaviour
             MurderPanel.SetActive(true);
         }
 
-        if(Player)Debug.Log("Player Chunk: " + Utility.GetMapChunk(Player.transform.position).mapOffset);
+        //if(Player)Debug.Log("Player Chunk: " + Utility.GetMapChunk(Player.transform.position).mapOffset);
     }
 
     private void displayLocation(Vector2 loc, Text text)
@@ -184,7 +184,7 @@ public class LevelHandler : MonoBehaviour
 
         //Added player spawn point
         locations.Add(Player.position);
-        MapChamber spawnChamber = MapChamber.RandomChamber(Player.position, 3);
+        MapChamber spawnChamber = MapChamber.RandomChamber(Player.position, 20);
         PlayerSpawn = Instantiate(PortalPrefab, spawnChamber.Location, Quaternion.identity).GetComponent<Portal>();
         Player.position = spawnChamber.locations[0];
         addPortal(PlayerSpawn, spawnChamber);
