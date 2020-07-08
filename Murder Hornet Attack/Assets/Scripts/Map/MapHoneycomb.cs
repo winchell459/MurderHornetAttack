@@ -56,7 +56,7 @@ public class MapHoneycomb
     }
     public int GetDepth() { return depth; }
 
-    bool ignoreLarge = false;
+    bool ignoreLarge = true;
     public void DisplayHoneycomb()
     {
         if (display)

@@ -6,6 +6,7 @@ public class SnakeController : MonoBehaviour
 {
     public SnakeController Head, Tail;
     public Vector2 Target;
+    public List<Vector2> Path = new List<Vector2>();
     public float TargetThreshold = 0.01f;
     public float Velocity = 5;
     public Vector2 Direction = new Vector2(-1,1);
@@ -15,6 +16,7 @@ public class SnakeController : MonoBehaviour
     void Start()
     {
         Target = Utility.HoneycombGridToWorldPostion((Utility.WorldToHoneycomb(transform.position)));
+        Path.Add(Target);
         Debug.Log(Target);
     }
 
@@ -33,6 +35,11 @@ public class SnakeController : MonoBehaviour
             transform.right = -(Target - (Vector2)transform.position);
             
         }
+
+        for(int i = 1; i < Path.Count; i++)
+        {
+            Debug.DrawLine(Path[i-1], Path[i],Color.red);
+        }
         
     }
 
@@ -40,9 +47,13 @@ public class SnakeController : MonoBehaviour
     {
         int randDist = Random.Range(3, 10);
         int ranDir = Random.Range(0, 2);
+        
         if (ranDir == 0) Direction = GetNewDirection(Direction, 1);
         else Direction = GetNewDirection(Direction, -1);
-        Target = Utility.HoneycombGridToWorldPostion( GetHoneycombDirection(Utility.WorldToHoneycomb(transform.position), Direction, randDist));
+        Debug.Log("HoneyDir: " + Direction + " WorldDir: " + -transform.right + " HoneyPos: " + Utility.WorldToHoneycomb(Target));
+        
+        Target = Utility.HoneycombGridToWorldPostion( GetHoneycombDirection(Utility.WorldToHoneycomb(Target), Direction, randDist));
+        Path.Add(Target);
     }
 
     private Vector2 GetNewDirection(Vector2 current, int turns) //turns + for counter clockwise
@@ -77,11 +88,11 @@ public class SnakeController : MonoBehaviour
         if (dir.x == 0) end.y += dir.y * honeyDistance;
         else if(start.x % 2 == 0 && dir.y > 0 || start.x % 2 != 0 && dir.y < 0)
         {
-            end.y += Mathf.Ceil(honeyDistance / 2);
+            end.y += Mathf.Sign(dir.y) * Mathf.Ceil(honeyDistance / 2);
         }
         else
         {
-            end.y += Mathf.Ceil((honeyDistance - 1) / 2);
+            end.y += Mathf.Sign(dir.y) * Mathf.Ceil((honeyDistance - 1) / 2);
         }
 
         return end;
