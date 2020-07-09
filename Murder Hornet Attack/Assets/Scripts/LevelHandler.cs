@@ -38,7 +38,7 @@ public class LevelHandler : MonoBehaviour
 
 
         //createVoids();
-        createRandomMap(0);
+        createRandomMap(7);
 
         Map.StaticMap.DisplayChunks();
 

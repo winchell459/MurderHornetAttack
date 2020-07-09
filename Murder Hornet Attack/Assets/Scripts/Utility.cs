@@ -148,5 +148,22 @@ public static class Utility
         return map.GetChunk(xChunk, yChunk);
     }
 
+    public static Vector2 GetHoneycombDirection(Vector2 start, Vector2 dir, int honeyDistance)
+    {
+        //start = Utility.WorldPointToHoneycombGrid(start);
+        Vector2 end = start;
+        end.x += dir.x * honeyDistance;
+        if (dir.x == 0) end.y += dir.y * honeyDistance;
+        else if (start.x % 2 == 0 && dir.y > 0 || start.x % 2 != 0 && dir.y < 0)
+        {
+            end.y += Mathf.Sign(dir.y) * Mathf.Ceil((float)honeyDistance / 2);
+        }
+        else
+        {
+            end.y += Mathf.Sign(dir.y) * Mathf.Ceil(((float)honeyDistance - 1) / 2);
+        }
+
+        return end;
+    }
 
 }

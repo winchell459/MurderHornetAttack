@@ -12,6 +12,13 @@ public class SnakeController : MonoBehaviour
     public Vector2 Direction = new Vector2(-1,1);
     private Vector2[] Directions = { new Vector2(-1, -1), new Vector2(0, -1), new Vector2(1, 1), new Vector2(1,-1), new Vector2(0,1), new Vector2(-1,1)};
 
+    public int headIndex = 0;
+    public GameObject SnakeLinkPrefab;
+
+    public int SpawnRate = 3;
+    private int lastSpawn = 0;
+
+    public float SnakeSpacing = 1f;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,36 +31,102 @@ public class SnakeController : MonoBehaviour
     void Update()
     {
 
-        if (Vector2.Distance(transform.position, Target) > Velocity * Time.deltaTime)
+        if (!Head)
         {
-            transform.position = Vector2.MoveTowards(transform.position, Target, Velocity * Time.deltaTime);
-        }
-        else
-        {
-            transform.position = Target;
-            getRandomLoc();
-            transform.right = -(Target - (Vector2)transform.position);
-            
+            if (Vector2.Distance(transform.position, Target) > Velocity * Time.deltaTime)
+            {
+                transform.position = Vector2.MoveTowards(transform.position, Target, Velocity * Time.deltaTime);
+            }
+            else
+            {
+                float secondDistance = Velocity * Time.deltaTime - Vector2.Distance(transform.position, Target);
+
+                Vector2 newTarget = getNewTarget();
+                Path.Add(newTarget);
+                transform.position = secondDistance * (newTarget - Target).normalized + Target;
+
+                Target = newTarget;
+                transform.right = -(Target - (Vector2)transform.position);
+                lastSpawn++;
+                if (!Head && lastSpawn >= SpawnRate)
+                {
+                    lastSpawn = 0;
+                    spawnTail();
+                }
+            }
+
+            for (int i = 1; i < Path.Count; i++)
+            {
+                Debug.DrawLine(Path[i - 1], Path[i], Color.red);
+            }
+
+            SetTailPosition();
         }
 
-        for(int i = 1; i < Path.Count; i++)
-        {
-            Debug.DrawLine(Path[i-1], Path[i],Color.red);
-        }
+        
         
     }
-
-    private void getRandomLoc()
+    private void spawnTail()
     {
-        int randDist = Random.Range(3, 10);
+        if (Tail) Tail.spawnTail();
+        else
+        {
+            SnakeController tail = Instantiate(SnakeLinkPrefab, transform.position - (-transform.right.normalized)*Time.deltaTime, Quaternion.identity).GetComponent<SnakeController>();
+            Tail = tail;
+            tail.Head = this;
+            //tail.SnakeLinkPrefab = SnakeLinkPrefab;
+            //tail.headIndex = headIndex;
+            SetTailPosition();
+        }
+    }
+    public void SetTailPosition()
+    {
+        if(Tail)
+        {
+            if(Vector2.Distance(transform.position, GetNextHeadTarget(headIndex - 1)) > SnakeSpacing)
+            {
+                Vector2 dir = (GetNextHeadTarget(headIndex) - GetNextHeadTarget(headIndex - 1)).normalized;
+                Tail.transform.position = -dir * SnakeSpacing + (Vector2)transform.position;
+                Tail.transform.right = -dir;
+                Tail.headIndex = headIndex;
+            }
+            else
+            {
+                Vector2 dir = (GetNextHeadTarget(headIndex-1) - GetNextHeadTarget(headIndex - 2)).normalized;
+                Tail.transform.position = -dir * (SnakeSpacing - Vector2.Distance(transform.position, GetNextHeadTarget(headIndex - 1))) + GetNextHeadTarget(headIndex - 1);
+                Tail.transform.right = -dir;
+                Tail.headIndex = headIndex - 1;
+            }
+            Tail.SetTailPosition();
+        }
+    }
+    public Vector2 GetNextHeadTarget(int headIndex)
+    {
+        if (!Head) return Path[headIndex];
+        else return Head.GetNextHeadTarget(headIndex);
+    }
+    private Vector2 getNewTarget()
+    {
+        headIndex += 1;
+        if (!Head) return getRandomLoc();
+        else
+        {
+            // headIndex += 1;
+            return Head.GetNextHeadTarget(headIndex);
+        }
+    }
+
+    private Vector2 getRandomLoc()
+    {
+        int randDist = Random.Range(1, 4) * 3;
         int ranDir = Random.Range(0, 2);
         
         if (ranDir == 0) Direction = GetNewDirection(Direction, 1);
         else Direction = GetNewDirection(Direction, -1);
-        Debug.Log("HoneyDir: " + Direction + " WorldDir: " + -transform.right + " HoneyPos: " + Utility.WorldToHoneycomb(Target));
+        //Debug.Log("HoneyDir: " + Direction + " HoneyDist: " + randDist + " HoneyPos: " + Utility.WorldToHoneycomb(Target));
         
-        Target = Utility.HoneycombGridToWorldPostion( GetHoneycombDirection(Utility.WorldToHoneycomb(Target), Direction, randDist));
-        Path.Add(Target);
+        return Utility.HoneycombGridToWorldPostion( Utility.GetHoneycombDirection(Utility.WorldToHoneycomb(Target), Direction, randDist));
+        
     }
 
     private Vector2 GetNewDirection(Vector2 current, int turns) //turns + for counter clockwise
@@ -80,21 +153,5 @@ public class SnakeController : MonoBehaviour
         else return newDir;
     }
 
-    public Vector2 GetHoneycombDirection(Vector2 start, Vector2 dir, int honeyDistance)
-    {
-        //start = Utility.WorldPointToHoneycombGrid(start);
-        Vector2 end = start;
-        end.x += dir.x * honeyDistance;
-        if (dir.x == 0) end.y += dir.y * honeyDistance;
-        else if(start.x % 2 == 0 && dir.y > 0 || start.x % 2 != 0 && dir.y < 0)
-        {
-            end.y += Mathf.Sign(dir.y) * Mathf.Ceil(honeyDistance / 2);
-        }
-        else
-        {
-            end.y += Mathf.Sign(dir.y) * Mathf.Ceil((honeyDistance - 1) / 2);
-        }
-
-        return end;
-    }
+    
 }
