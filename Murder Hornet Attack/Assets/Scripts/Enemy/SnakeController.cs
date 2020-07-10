@@ -100,6 +100,19 @@ public class SnakeController : MonoBehaviour
             Tail.SetTailPosition();
         }
     }
+    public List<Vector2> GetPath(int startIndex)
+    {
+        if (!Head)
+        {
+            List<Vector2> path = new List<Vector2>();
+            for(int i = 0; i <= startIndex; i+= 1)
+            {
+                path.Add(Path[i]);
+            }
+            return path;
+        }
+        else return Head.GetPath(startIndex);
+    }
     public Vector2 GetNextHeadTarget(int headIndex)
     {
         if (!Head) return Path[headIndex];
@@ -153,5 +166,17 @@ public class SnakeController : MonoBehaviour
         else return newDir;
     }
 
-    
+    public void DestroyLink()
+    {
+        if (Tail)
+        {
+            Tail.Path = GetPath(Tail.headIndex);
+            Tail.Head = null;
+            Tail.Target = Tail.Path[Tail.headIndex];
+        }
+
+        Destroy(gameObject);
+    }
+
+
 }

@@ -23,5 +23,11 @@ public class HornetPlasm : MonoBehaviour
             FindObjectOfType<LevelHandler>().UpdatePlayerStats(1, 0);
             Destroy(gameObject);
         }
+
+        if (collision.GetComponent<SnakeController>())
+        {
+            collision.GetComponent<SnakeController>().DestroyLink();
+            Destroy(gameObject);
+        }
     }
 }
