@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SnakeController : MonoBehaviour
+public class SnakeController : Insect
 {
     public SnakeController Head, Tail;
     public Vector2 Target;
@@ -71,7 +71,7 @@ public class SnakeController : MonoBehaviour
         if (Tail) Tail.spawnTail();
         else
         {
-            SnakeController tail = Instantiate(SnakeLinkPrefab, transform.position - (-transform.right.normalized)*Time.deltaTime, Quaternion.identity).GetComponent<SnakeController>();
+            SnakeController tail = Instantiate(FindObjectOfType<LevelHandler>().SnakePrefab, transform.position - (-transform.right.normalized)*Time.deltaTime, Quaternion.identity).GetComponent<SnakeController>();
             Tail = tail;
             tail.Head = this;
             //tail.SnakeLinkPrefab = SnakeLinkPrefab;
@@ -178,5 +178,46 @@ public class SnakeController : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public void DestroySnake()
+    {
+        //if (Tail) Tail.DestroySnake();
+        //if (Head) Head.DestroySnake();
+        while (Tail)
+        {
+            SnakeController tail = Tail.Tail;
+            Destroy(Tail.gameObject);
+            Tail = tail;
+        }
+        while (Head)
+        {
+            SnakeController head = Head.Head;
+            Destroy(Head.gameObject);
+            Head = head;
+        }
+        Destroy(gameObject);
+    }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.GetComponent<SnakeController>())
+        {
+            DestroySnake();
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.GetComponent<SnakeController>())
+        {
+            SnakeController link = collision.GetComponent<SnakeController>();
+            if(link != Head && link != Tail)
+                DestroySnake();
+        }
+    }
+
+    public override void TakeDamage(float damage)
+    {
+        Health -= damage;
+        if (Health <= 0) DestroyLink();
+    }
 }

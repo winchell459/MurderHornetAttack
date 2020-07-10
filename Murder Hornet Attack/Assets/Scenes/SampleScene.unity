@@ -2452,6 +2452,8 @@ MonoBehaviour:
   Cam: {fileID: 516643014}
   EnemyPrefabs: {fileID: 1301808763863226240, guid: a84a7fa051b764d6f9e5e2e8748f3f76,
     type: 3}
+  SnakePrefab: {fileID: 2010293437201622713, guid: 0b283abda00c04e44b2914c947b99923,
+    type: 3}
 --- !u!4 &1047031842
 Transform:
   m_ObjectHideFlags: 0

@@ -25,6 +25,7 @@ public class LevelHandler : MonoBehaviour
     public CameraController Cam;
 
     public GameObject EnemyPrefabs;
+    public GameObject SnakePrefab;
 
     private List<MapVoid> mapVoids = new List<MapVoid>();
     private PlayerHandler ph;
@@ -38,7 +39,7 @@ public class LevelHandler : MonoBehaviour
 
 
         //createVoids();
-        createRandomMap(7);
+        createRandomMap(10);
 
         Map.StaticMap.DisplayChunks();
 
@@ -184,7 +185,7 @@ public class LevelHandler : MonoBehaviour
 
         //Added player spawn point
         locations.Add(Player.position);
-        MapChamber spawnChamber = MapChamber.RandomChamber(Player.position, 20);
+        MapChamber spawnChamber = MapChamber.RandomChamber(Player.position, 3);
         PlayerSpawn = Instantiate(PortalPrefab, spawnChamber.Location, Quaternion.identity).GetComponent<Portal>();
         Player.position = spawnChamber.locations[0];
         addPortal(PlayerSpawn, spawnChamber);

@@ -24,10 +24,10 @@ public class HornetPlasm : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if (collision.GetComponent<SnakeController>())
-        {
-            collision.GetComponent<SnakeController>().DestroyLink();
-            Destroy(gameObject);
-        }
+        //if (collision.GetComponent<SnakeController>())
+        //{
+        //    collision.GetComponent<SnakeController>().TakeDamage();
+        //    Destroy(gameObject);
+        //}
     }
 }
