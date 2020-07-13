@@ -6,6 +6,7 @@ using UnityEngine;
 public class MapChunk
 {
     public Vector2 mapOffset;
+    public Vector2 ChunkIndex;
     private float width;
     private float height;
     private float verticalSpacing;

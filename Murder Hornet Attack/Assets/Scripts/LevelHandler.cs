@@ -73,7 +73,12 @@ public class LevelHandler : MonoBehaviour
             ExitPanel.SetActive(false);
         }
 
-        if(Player) displayLocation(Utility.WorldToHoneycomb(Player.position), PlayerLoc);
+        if (Player)
+        {
+            displayLocation(Utility.WorldToHoneycomb(Player.position), PlayerLoc);
+            displayLocation(Map.StaticMap.GetChunkIndex( Utility.GetMapChunk(Player.position)), SpawnLoc);
+            Debug.Log(Utility.GetMapChunk(Player.position).ChunkIndex + " chunkOffset: " + Utility.GetMapChunk(Player.position).mapOffset);
+        }
         else
         {
             // spawnPlayer(PlayerSpawn);

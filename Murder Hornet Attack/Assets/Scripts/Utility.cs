@@ -143,7 +143,7 @@ public static class Utility
         Vector2 honeyIndex = WorldToHoneycomb(worldPos);
         Map map = Map.StaticMap;
         int xChunk = (int)honeyIndex.x / map.ChunkWidth;
-        int yChunk = (int)honeyIndex.y / map.ChunkHeight;
+        int yChunk = (int)honeyIndex.y / (map.ChunkHeight/2);
         //int chunkIndex = xChunk * yChunk + xChunk;
         return map.GetChunk(xChunk, yChunk);
     }
@@ -164,6 +164,11 @@ public static class Utility
         }
 
         return end;
+    }
+
+    public static Vector2 WorldDirToHoneycombDir(Vector2 worldDir)
+    {
+        return worldDir;
     }
 
 }

@@ -110,7 +110,15 @@ public class Map : MonoBehaviour
         int chunkCols = (int)Mathf.Ceil((MapWidth / HorizontalSpacing) / (ChunkWidth));
         return honeycombChunks[row * chunkCols + col];
     }
-
+    public Vector2 GetChunkIndex(MapChunk chunk)
+    {
+        int chunkCols = (int)Mathf.Ceil((MapWidth / HorizontalSpacing) / (ChunkWidth));
+        int chunkRows = (int)Mathf.Ceil((MapHeight / VerticalSpacing) / ChunkHeight);
+        int index = honeycombChunks.IndexOf(chunk);
+        float x = index % (chunkCols);
+        float y = index / (chunkCols);
+        return new Vector2(x, y);
+    }
     
     
     private void createChunks()
@@ -130,15 +138,16 @@ public class Map : MonoBehaviour
                 if (width > ChunkWidth) width = ChunkWidth;
                 if (height > ChunkHeight) height = ChunkHeight;
                 //Debug.Log(width + " " + height);
-                createChunk(origin, width, height);
+                createChunk(origin, width, height, i, j);
                 //honeycombChunks[honeycombChunks.Count - 1].DisplayChunk();
             }
         }
     }
 
-    private void createChunk(Vector2 start, float width, float height)
+    private void createChunk(Vector2 start, float width, float height, int x, int y)
     {
         MapChunk chunk = new MapChunk(start, width, height, VerticalSpacing, HorizontalSpacing);
+        chunk.ChunkIndex = new Vector2(x, y);
         honeycombChunks.Add(chunk);
         displayChunks.Add(false);
         

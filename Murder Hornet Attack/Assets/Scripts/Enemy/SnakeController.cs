@@ -173,6 +173,7 @@ public class SnakeController : Insect
             Tail.Path = GetPath(Tail.headIndex);
             Tail.Head = null;
             Tail.Target = Tail.Path[Tail.headIndex];
+            Tail.Direction = (Tail.Path[Tail.headIndex] - Tail.Path[Tail.headIndex - 1]).normalized;
         }
 
         Destroy(gameObject);
@@ -197,13 +198,15 @@ public class SnakeController : Insect
         Destroy(gameObject);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.transform.GetComponent<SnakeController>())
-        {
-            DestroySnake();
-        }
-    }
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if (collision.transform.GetComponent<SnakeController>())
+    //    {
+    //        SnakeController link = collision.transform.GetComponent<SnakeController>();
+    //        if (!link.Head) link.DestroySnake();
+    //        else DestroyLink();
+    //    }
+    //}
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -211,13 +214,25 @@ public class SnakeController : Insect
         {
             SnakeController link = collision.GetComponent<SnakeController>();
             if(link != Head && link != Tail)
-                DestroySnake();
+            {
+                if (!link.Head) link.DestroySnake();
+                else DestroyLink();
+            }
+                //DestroySnake();
         }
     }
 
     public override void TakeDamage(float damage)
     {
         Health -= damage;
+        takeDamageAnimation();
         if (Health <= 0) DestroyLink();
+    }
+
+    private void takeDamageAnimation()
+    {
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        float colorPercent =  Health / MaxHealth;
+        sprite.color = new Color(1, colorPercent, colorPercent);
     }
 }
