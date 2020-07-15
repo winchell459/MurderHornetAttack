@@ -24,7 +24,7 @@ public class SnakeController : Insect
     {
         Target = Utility.HoneycombGridToWorldPostion((Utility.WorldToHoneycomb(transform.position)));
         Path.Add(Target);
-        Debug.Log(Target);
+        //Debug.Log(Target);
     }
 
     // Update is called once per frame
@@ -74,8 +74,7 @@ public class SnakeController : Insect
             SnakeController tail = Instantiate(FindObjectOfType<LevelHandler>().SnakePrefab, transform.position - (-transform.right.normalized)*Time.deltaTime, Quaternion.identity).GetComponent<SnakeController>();
             Tail = tail;
             tail.Head = this;
-            //tail.SnakeLinkPrefab = SnakeLinkPrefab;
-            //tail.headIndex = headIndex;
+           
             SetTailPosition();
         }
     }
@@ -137,7 +136,12 @@ public class SnakeController : Insect
         if (ranDir == 0) Direction = GetNewDirection(Direction, 1);
         else Direction = GetNewDirection(Direction, -1);
         //Debug.Log("HoneyDir: " + Direction + " HoneyDist: " + randDist + " HoneyPos: " + Utility.WorldToHoneycomb(Target));
-        
+        List<MapHoneycomb> path = Utility.GetHoneycombPath(Utility.WorldToHoneycomb(Target), Direction, randDist);
+        Debug.Log("--------------------------- new Path ----------------------------");
+        foreach (MapHoneycomb honeycomb in path)
+        {
+            Debug.Log(honeycomb.position);
+        }
         return Utility.HoneycombGridToWorldPostion( Utility.GetHoneycombDirection(Utility.WorldToHoneycomb(Target), Direction, randDist));
         
     }
@@ -173,7 +177,7 @@ public class SnakeController : Insect
             Tail.Path = GetPath(Tail.headIndex);
             Tail.Head = null;
             Tail.Target = Tail.Path[Tail.headIndex];
-            Tail.Direction = (Tail.Path[Tail.headIndex] - Tail.Path[Tail.headIndex - 1]).normalized;
+            Tail.Direction = Utility.WorldDirToHoneycombDir((Tail.Path[Tail.headIndex] - (Vector2)Tail.transform.position).normalized); // Tail.Path[Tail.headIndex - 1]).normalized;
         }
 
         Destroy(gameObject);

@@ -1644,7 +1644,7 @@ GameObject:
   - component: {fileID: 680366106}
   - component: {fileID: 680366105}
   m_Layer: 5
-  m_Name: SpawnPanel
+  m_Name: ChunkPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2067,7 +2067,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Spawn:'
+  m_Text: 'Chunk:'
 --- !u!222 &894895164
 CanvasRenderer:
   m_ObjectHideFlags: 0

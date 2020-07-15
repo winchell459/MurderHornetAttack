@@ -77,7 +77,7 @@ public class LevelHandler : MonoBehaviour
         {
             displayLocation(Utility.WorldToHoneycomb(Player.position), PlayerLoc);
             displayLocation(Map.StaticMap.GetChunkIndex( Utility.GetMapChunk(Player.position)), SpawnLoc);
-            Debug.Log(Utility.GetMapChunk(Player.position).ChunkIndex + " chunkOffset: " + Utility.GetMapChunk(Player.position).mapOffset);
+            //Debug.Log(Utility.GetMapChunk(Player.position).ChunkIndex + " chunkOffset: " + Utility.GetMapChunk(Player.position).mapOffset);
         }
         else
         {

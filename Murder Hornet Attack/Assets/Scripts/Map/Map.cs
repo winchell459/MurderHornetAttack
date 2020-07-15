@@ -119,6 +119,19 @@ public class Map : MonoBehaviour
         float y = index / (chunkCols);
         return new Vector2(x, y);
     }
+    public MapHoneycomb GetHoneycomb(int col, int row)
+    {
+        
+        int xChunk = col / ChunkWidth;
+        int yChunk = row / (ChunkHeight / 2);
+
+        //Debug.Log("xChunk: " + xChunk + " yChunk: " + yChunk);
+        MapChunk chunk = GetChunk(xChunk, yChunk);
+        col = col % ChunkWidth;
+        row = row % (ChunkHeight /2);
+        Debug.Log("col: " + col + " row: " + row);
+        return chunk.GetMapHoneycomb(col, row);
+    }
     
     
     private void createChunks()
@@ -144,7 +157,7 @@ public class Map : MonoBehaviour
         }
     }
 
-    private void createChunk(Vector2 start, float width, float height, int x, int y)
+    private void createChunk(Vector2 start, int width, int height, int x, int y)
     {
         MapChunk chunk = new MapChunk(start, width, height, VerticalSpacing, HorizontalSpacing);
         chunk.ChunkIndex = new Vector2(x, y);

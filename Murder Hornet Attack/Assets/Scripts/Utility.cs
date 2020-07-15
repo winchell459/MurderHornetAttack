@@ -138,6 +138,7 @@ public static class Utility
         return new Vector2(x, y);
     }
 
+
     public static MapChunk GetMapChunk(Vector2 worldPos)
     {
         Vector2 honeyIndex = WorldToHoneycomb(worldPos);
@@ -147,7 +148,26 @@ public static class Utility
         //int chunkIndex = xChunk * yChunk + xChunk;
         return map.GetChunk(xChunk, yChunk);
     }
-
+    public static List<MapHoneycomb> GetHoneycombPath(Vector2 start, Vector2 dir, int honeyDistance)
+    {
+        List<MapHoneycomb> path = new List<MapHoneycomb>();
+        //start = WorldToHoneycomb(start);
+        for(int i = 1; i <= honeyDistance; i += 1)
+        {
+            Vector2 honeyCell = GetHoneycombDirection(start, dir, i);
+            Debug.Log(honeyCell);
+            path.Add(Map.StaticMap.GetHoneycomb((int)honeyCell.x, (int)honeyCell.y));
+        }
+        return path;
+    }
+    
+    /// <summary>
+    /// Returns the coordinates of a target honeycomb starting from the coordinates of a honeycomb in a honeycomb vector (honeycomb direction and distance)
+    /// </summary>
+    /// <param name="start"></param>
+    /// <param name="dir"></param>
+    /// <param name="honeyDistance"></param>
+    /// <returns></returns>
     public static Vector2 GetHoneycombDirection(Vector2 start, Vector2 dir, int honeyDistance)
     {
         //start = Utility.WorldPointToHoneycombGrid(start);
@@ -168,6 +188,10 @@ public static class Utility
 
     public static Vector2 WorldDirToHoneycombDir(Vector2 worldDir)
     {
+        if (worldDir.x > 0) worldDir.x = 1;
+        else if (worldDir.x < 0) worldDir.x = 1;
+        if (worldDir.y > 0) worldDir.y = 1;
+        else if (worldDir.y < 0) worldDir.y = -1;
         return worldDir;
     }
 
