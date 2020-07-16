@@ -127,9 +127,13 @@ public class Map : MonoBehaviour
 
         //Debug.Log("xChunk: " + xChunk + " yChunk: " + yChunk);
         MapChunk chunk = GetChunk(xChunk, yChunk);
+        //foreach(MapHoneycomb hc in chunk.GetAllMapHoneycombs())
+        //{
+        //    Debug.Log("List<honeycomb> " + hc.position);
+        //}
         col = col % ChunkWidth;
         row = row % (ChunkHeight /2);
-        Debug.Log("col: " + col + " row: " + row);
+        //Debug.Log("col: " + col + " row: " + row);
         return chunk.GetMapHoneycomb(col, row);
     }
     

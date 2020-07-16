@@ -151,10 +151,12 @@ public class MapChunk
 
     public MapHoneycomb GetMapHoneycomb(int col, int row)
     {
-        if (col % 2 == 0) col = col / 2 + width / 2;
-        else col = 1 + col / 2;
+        if (col % 2 == 0) col = (int)(col / 2) + width / 2;
+        else col = (int)(col / 2);
         return honeycombs[col + row * width];
     }
+
+    public List<MapHoneycomb> GetAllMapHoneycombs() { return honeycombs; }
 }
 
 

@@ -19,8 +19,12 @@ public class MapChamber : MapVoid
         
         for(int i = 0; i < locations.Count; i++)
         {
-            if (!display) break;
-            if (Vector2.Distance(honeycomb.position, locations[i]) <= widths[i]/2) display = false;
+            //if (!display) break;
+            if (Vector2.Distance(honeycomb.position, locations[i]) <= widths[i] / 2)
+            {
+                SetLocationType(honeycomb, MapHoneycomb.LocationTypes.Chamber);
+                display = false;
+            }
             else
             {
                 CheckDepth(Vector2.Distance(honeycomb.position, locations[i]) - widths[i] / 2, honeycomb, MapHoneycomb.LocationTypes.Chamber);

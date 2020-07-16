@@ -19,11 +19,32 @@ public class SnakeController : Insect
     private int lastSpawn = 0;
 
     public float SnakeSpacing = 1f;
+    
+
+    public enum PathTypes
+    {
+        Random,
+        Pattern
+    }
+    public PathTypes PathType;
+
+    public List<HoneycompVectors> MyPath;
     // Start is called before the first frame update
     void Start()
     {
-        Target = Utility.HoneycombGridToWorldPostion((Utility.WorldToHoneycomb(transform.position)));
-        Path.Add(Target);
+        
+        if (PathType == PathTypes.Random)
+        {
+            Target = Utility.HoneycombGridToWorldPostion((Utility.WorldToHoneycomb(transform.position)));
+            Path.Add(Target);
+        }
+        else
+        {
+            setPath(MyPath);
+        }
+        
+
+
         //Debug.Log(Target);
     }
 
@@ -41,18 +62,29 @@ public class SnakeController : Insect
             {
                 float secondDistance = Velocity * Time.deltaTime - Vector2.Distance(transform.position, Target);
 
-                Vector2 newTarget = getNewTarget();
-                Path.Add(newTarget);
-                transform.position = secondDistance * (newTarget - Target).normalized + Target;
-
-                Target = newTarget;
-                transform.right = -(Target - (Vector2)transform.position);
-                lastSpawn++;
-                if (!Head && lastSpawn >= SpawnRate)
+                Vector2 newTarget;
+                if (PathType == PathTypes.Random)
                 {
-                    lastSpawn = 0;
-                    spawnTail();
+                    newTarget = getNewTarget();
+                    Path.Add(newTarget);
                 }
+                else
+                {
+                    headIndex = (headIndex + 1) % Path.Count;
+                    newTarget = Path[headIndex];
+                }
+                    
+                
+
+                transform.position = secondDistance * (newTarget - Target).normalized + Target;
+                Target = newTarget;
+
+                pointSnake();
+                
+
+                //Testing Spawn Tail
+                testingSpawnTail();
+
             }
 
             for (int i = 1; i < Path.Count; i++)
@@ -66,6 +98,19 @@ public class SnakeController : Insect
         
         
     }
+    private void pointSnake()
+    {
+        transform.right = -(Target - (Vector2)transform.position);
+    }
+    private void testingSpawnTail()
+    {
+        lastSpawn++;
+        if (!Head && lastSpawn >= SpawnRate)
+        {
+            lastSpawn = 0;
+            spawnTail();
+        }
+    }
     private void spawnTail()
     {
         if (Tail) Tail.spawnTail();
@@ -78,26 +123,43 @@ public class SnakeController : Insect
             SetTailPosition();
         }
     }
+    private int decrementHeadIndex(int index, int decrent)
+    {
+        index -= decrent;
+        while (index < 0) index += Path.Count;
+        return index;
+    }
     public void SetTailPosition()
     {
         if(Tail)
         {
-            if(Vector2.Distance(transform.position, GetNextHeadTarget(headIndex - 1)) > SnakeSpacing)
+            if(Vector2.Distance(transform.position, GetNextHeadTarget(decrementHeadIndex(headIndex, 1))) > SnakeSpacing)
             {
-                Vector2 dir = (GetNextHeadTarget(headIndex) - GetNextHeadTarget(headIndex - 1)).normalized;
+                Vector2 dir = (GetNextHeadTarget(headIndex) - GetNextHeadTarget(decrementHeadIndex(headIndex, 1))).normalized;
                 Tail.transform.position = -dir * SnakeSpacing + (Vector2)transform.position;
                 Tail.transform.right = -dir;
                 Tail.headIndex = headIndex;
             }
             else
             {
-                Vector2 dir = (GetNextHeadTarget(headIndex-1) - GetNextHeadTarget(headIndex - 2)).normalized;
-                Tail.transform.position = -dir * (SnakeSpacing - Vector2.Distance(transform.position, GetNextHeadTarget(headIndex - 1))) + GetNextHeadTarget(headIndex - 1);
+                Vector2 dir = (GetNextHeadTarget(decrementHeadIndex(headIndex, 1)) - GetNextHeadTarget(decrementHeadIndex(headIndex , 2))).normalized;
+                Tail.transform.position = -dir * (SnakeSpacing - Vector2.Distance(transform.position, GetNextHeadTarget(decrementHeadIndex(headIndex , 1)))) + GetNextHeadTarget(decrementHeadIndex(headIndex , 1));
                 Tail.transform.right = -dir;
-                Tail.headIndex = headIndex - 1;
+                Tail.headIndex = decrementHeadIndex(headIndex, 1);
             }
             Tail.SetTailPosition();
         }
+    }
+    private void setPath(List<HoneycompVectors> path)
+    {
+        Path.Clear();
+        Target = Utility.HoneycombGridToWorldPostion(Utility.GetHoneycombDirection(Utility.WorldToHoneycomb(transform.position), path[0].Direction, path[0].Distance));
+        Path.Add(Target);
+        for(int i = 1; i < path.Count; i += 1)
+        {
+            Path.Add(Utility.HoneycombGridToWorldPostion(Utility.GetHoneycombDirection(Utility.WorldToHoneycomb(Path[i-1]), path[i].Direction, path[i].Distance)));
+        }
+        pointSnake();
     }
     public List<Vector2> GetPath(int startIndex)
     {
@@ -128,6 +190,7 @@ public class SnakeController : Insect
         }
     }
 
+    int pathAttempts = 0;
     private Vector2 getRandomLoc()
     {
         int randDist = Random.Range(1, 4) * 3;
@@ -136,13 +199,34 @@ public class SnakeController : Insect
         if (ranDir == 0) Direction = GetNewDirection(Direction, 1);
         else Direction = GetNewDirection(Direction, -1);
         //Debug.Log("HoneyDir: " + Direction + " HoneyDist: " + randDist + " HoneyPos: " + Utility.WorldToHoneycomb(Target));
+        Debug.Log("--------------------------- new Path Start----------------------------");
         List<MapHoneycomb> path = Utility.GetHoneycombPath(Utility.WorldToHoneycomb(Target), Direction, randDist);
-        Debug.Log("--------------------------- new Path ----------------------------");
+        //Debug.Log("--------------------------- new Path Honeycombs----------------------------");
+        MapHoneycomb newTarget = null;
         foreach (MapHoneycomb honeycomb in path)
         {
-            Debug.Log(honeycomb.position);
+            //Debug.Log(honeycomb.position);
+            if (!honeycomb.display && honeycomb.LocationType == MapHoneycomb.LocationTypes.Chamber)
+            {
+                newTarget = honeycomb;
+                pathAttempts = 0;
+            }
+            else
+            {
+                Debug.Log(honeycomb.LocationType);
+                break;
+            }
         }
-        return Utility.HoneycombGridToWorldPostion( Utility.GetHoneycombDirection(Utility.WorldToHoneycomb(Target), Direction, randDist));
+
+        Debug.Log("--------------------------- new Path End----------------------------");
+        //return Utility.HoneycombGridToWorldPostion( Utility.GetHoneycombDirection(Utility.WorldToHoneycomb(Target), Direction, randDist));
+        if (newTarget != null) return newTarget.position;
+        else
+        {
+            pathAttempts += 1;
+            if (pathAttempts > 3) return Vector2.zero;
+            return getRandomLoc();
+        }
         
     }
 
@@ -199,6 +283,7 @@ public class SnakeController : Insect
             Destroy(Head.gameObject);
             Head = head;
         }
+        Debug.Log("Destroy Snake");
         Destroy(gameObject);
     }
 
@@ -239,4 +324,10 @@ public class SnakeController : Insect
         float colorPercent =  Health / MaxHealth;
         sprite.color = new Color(1, colorPercent, colorPercent);
     }
+}
+[System.Serializable]
+public class HoneycompVectors
+{
+    public Vector2 Direction;
+    public int Distance;
 }

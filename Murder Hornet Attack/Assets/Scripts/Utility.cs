@@ -155,7 +155,7 @@ public static class Utility
         for(int i = 1; i <= honeyDistance; i += 1)
         {
             Vector2 honeyCell = GetHoneycombDirection(start, dir, i);
-            Debug.Log(honeyCell);
+            //Debug.Log(honeyCell);
             path.Add(Map.StaticMap.GetHoneycomb((int)honeyCell.x, (int)honeyCell.y));
         }
         return path;

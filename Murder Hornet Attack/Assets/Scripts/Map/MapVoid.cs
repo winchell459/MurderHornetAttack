@@ -17,15 +17,20 @@ public abstract class MapVoid
 
         if(depth <= locationDepthThreshold)
         {
-
-            if (locationType > honeycomb.LocationType)
-            {
-                honeycomb.LocationType = locationType;
-                voidWalls.Add(honeycomb);
-                //Debug.Log(voidWalls.Count);
-            }
+            SetLocationType(honeycomb, locationType);
+            
         }
         
+    }
+
+    protected void SetLocationType(MapHoneycomb honeycomb, MapHoneycomb.LocationTypes locationType)
+    {
+        if (locationType > honeycomb.LocationType)
+        {
+            honeycomb.LocationType = locationType;
+            voidWalls.Add(honeycomb);
+            //Debug.Log(voidWalls.Count);
+        }
     }
 
     public List<MapHoneycomb> GetVoidWalls()
