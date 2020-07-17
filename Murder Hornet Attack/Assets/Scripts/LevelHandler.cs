@@ -194,7 +194,8 @@ public class LevelHandler : MonoBehaviour
         MapChamber spawnChamber = MapChamber.RandomChamber(Player.position, 3);
         PlayerSpawn = Instantiate(PortalPrefab, spawnChamber.Location, Quaternion.identity).GetComponent<Portal>();
         Player.position = spawnChamber.locations[0];
-        addChamberTrigger(PlayerSpawn, spawnChamber);
+        //addChamberTrigger(PlayerSpawn, spawnChamber);
+        PlayerSpawn = (Portal)ChamberTrigger.SetupChamberTrigger(PortalPrefab, spawnChamber);
         newVoids.Add(spawnChamber);
         connected.Add(false);
 
@@ -206,8 +207,9 @@ public class LevelHandler : MonoBehaviour
         //create snake Chamber
         Vector2 snakeChamberLoc = Utility.HoneycombGridToWorldPostion(new Vector2(40, 40));
         MapChamber snakeChamber = MapChamber.RandomChamber(snakeChamberLoc, 20);
-        ChamberTrigger snakeChamberTrigger = Instantiate(ChamberTriggerPrefab, snakeChamberLoc, Quaternion.identity).GetComponent<ChamberTrigger>();
-        addChamberTrigger(snakeChamberTrigger, snakeChamber);
+        //ChamberTrigger snakeChamberTrigger = Instantiate(ChamberTriggerPrefab, snakeChamberLoc, Quaternion.identity).GetComponent<ChamberTrigger>();
+        //addChamberTrigger(snakeChamberTrigger, snakeChamber);
+        ChamberTrigger.SetupChamberTrigger(ChamberTriggerPrefab, snakeChamber);
         newVoids.Add(snakeChamber);
 
         //create random chambers
@@ -231,8 +233,9 @@ public class LevelHandler : MonoBehaviour
         }
 
         //setup Exit tunnel
-        Exit = Instantiate(PortalPrefab, endChamber.Location, Quaternion.identity).GetComponent<Portal>();
-        addChamberTrigger(Exit, endChamber);
+        //Exit = Instantiate(PortalPrefab, endChamber.Location, Quaternion.identity).GetComponent<Portal>();
+        //addChamberTrigger(Exit, endChamber);
+        Exit = (Portal)ChamberTrigger.SetupChamberTrigger(PortalPrefab, endChamber);
 
         //connect chambers
         for(int i = 0; i < voidCount; i += 1)
@@ -258,28 +261,28 @@ public class LevelHandler : MonoBehaviour
 
     }
 
-    private void addChamberTrigger(ChamberTrigger trigger, MapChamber chamber)
-    {
-        trigger.Chamber = chamber;
-        foreach(Vector2 loc in chamber.locations)
-        {
-            trigger.gameObject.AddComponent<CircleCollider2D>();
-            
-        }
-        CircleCollider2D[] colliders = trigger.gameObject.GetComponents<CircleCollider2D>();
-        for (int i = 0; i < colliders.Length; i+=1)
-        {
-            CircleCollider2D collider = colliders[i];
-            collider.isTrigger = true;
-            collider.radius = chamber.widths[i] / 2;
-            collider.offset = chamber.locations[i] - (Vector2)trigger.transform.position;
+    //private void addChamberTrigger(ChamberTrigger trigger, MapChamber chamber)
+    //{
+    //    trigger.Chamber = chamber;
+    //    foreach (Vector2 loc in chamber.locations)
+    //    {
+    //        trigger.gameObject.AddComponent<CircleCollider2D>();
 
-            GameObject circle = Instantiate(trigger.CirclePrefab, chamber.locations[i], Quaternion.identity);
-            circle.transform.localScale = new Vector2(chamber.widths[i], chamber.widths[i]);
-            circle.GetComponent<SpriteRenderer>().color = Color.black;
-            //Debug.Log(chamber.locations[i] + " " + chamber.widths[i]);
-        }
-    }
+    //    }
+    //    CircleCollider2D[] colliders = trigger.gameObject.GetComponents<CircleCollider2D>();
+    //    for (int i = 0; i < colliders.Length; i += 1)
+    //    {
+    //        CircleCollider2D collider = colliders[i];
+    //        collider.isTrigger = true;
+    //        collider.radius = chamber.widths[i] / 2;
+    //        collider.offset = chamber.locations[i] - (Vector2)trigger.transform.position;
+
+    //        GameObject circle = Instantiate(trigger.CirclePrefab, chamber.locations[i], Quaternion.identity);
+    //        circle.transform.localScale = new Vector2(chamber.widths[i], chamber.widths[i]);
+    //        circle.GetComponent<SpriteRenderer>().color = Color.black;
+    //        //Debug.Log(chamber.locations[i] + " " + chamber.widths[i]);
+    //    }
+    //}
 
     private void addPathEnemies()
     {

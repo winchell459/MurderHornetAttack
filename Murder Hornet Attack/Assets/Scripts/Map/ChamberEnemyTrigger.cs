@@ -20,4 +20,11 @@ public class ChamberEnemyTrigger : ChamberTrigger
         }
     }
 
+    //private void Update()
+    //{
+    //    foreach(Collider2D cc in GetComponents<Collider2D>())
+    //    {
+    //        Debug.Log(cc.c)
+    //    }
+    //}
 }
