@@ -126,7 +126,7 @@ public class SnakeController : Insect
     private int decrementHeadIndex(int index, int decrent)
     {
         index -= decrent;
-        while (index < 0) index += Path.Count;
+        while (index < 0) index += GetPathCount();
         return index;
     }
     public void SetTailPosition()
@@ -153,6 +153,7 @@ public class SnakeController : Insect
     private void setPath(List<HoneycompVectors> path)
     {
         Path.Clear();
+        //Path.Add(Utility.HoneycombGridToWorldPostion((Utility.WorldToHoneycomb(transform.position))));
         Target = Utility.HoneycombGridToWorldPostion(Utility.GetHoneycombDirection(Utility.WorldToHoneycomb(transform.position), path[0].Direction, path[0].Distance));
         Path.Add(Target);
         for(int i = 1; i < path.Count; i += 1)
@@ -160,6 +161,11 @@ public class SnakeController : Insect
             Path.Add(Utility.HoneycombGridToWorldPostion(Utility.GetHoneycombDirection(Utility.WorldToHoneycomb(Path[i-1]), path[i].Direction, path[i].Distance)));
         }
         pointSnake();
+    }
+    public int GetPathCount()
+    {
+        if (!Head) return Path.Count;
+        else return Head.GetPathCount();
     }
     public List<Vector2> GetPath(int startIndex)
     {
@@ -199,7 +205,7 @@ public class SnakeController : Insect
         if (ranDir == 0) Direction = GetNewDirection(Direction, 1);
         else Direction = GetNewDirection(Direction, -1);
         //Debug.Log("HoneyDir: " + Direction + " HoneyDist: " + randDist + " HoneyPos: " + Utility.WorldToHoneycomb(Target));
-        Debug.Log("--------------------------- new Path Start----------------------------");
+        //Debug.Log("--------------------------- new Path Start----------------------------");
         List<MapHoneycomb> path = Utility.GetHoneycombPath(Utility.WorldToHoneycomb(Target), Direction, randDist);
         //Debug.Log("--------------------------- new Path Honeycombs----------------------------");
         MapHoneycomb newTarget = null;
@@ -213,12 +219,12 @@ public class SnakeController : Insect
             }
             else
             {
-                Debug.Log(honeycomb.LocationType);
+                //Debug.Log(honeycomb.LocationType);
                 break;
             }
         }
 
-        Debug.Log("--------------------------- new Path End----------------------------");
+        //Debug.Log("--------------------------- new Path End----------------------------");
         //return Utility.HoneycombGridToWorldPostion( Utility.GetHoneycombDirection(Utility.WorldToHoneycomb(Target), Direction, randDist));
         if (newTarget != null) return newTarget.position;
         else

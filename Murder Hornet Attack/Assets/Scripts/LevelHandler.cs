@@ -221,6 +221,8 @@ public class LevelHandler : MonoBehaviour
                 endChamber = (MapChamber)newVoids[i];
             }
         }
+
+        //setup Exit tunnel
         Exit = Instantiate(PortalPrefab, endChamber.Location, Quaternion.identity).GetComponent<Portal>();
         addPortal(Exit, endChamber);
 

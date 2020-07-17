@@ -26,7 +26,7 @@ public class Map : MonoBehaviour
     public Transform[] HoneycombLayers;
     public List<float> LayerScales = new List<float>();
 
-    private int honeycombHeight = -20;
+    //private int honeycombHeight = -20;
     public int ChunkHeight = 40;
     public int ChunkWidth = 14;
     
