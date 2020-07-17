@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2010293437201622713}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.8856914, y: -0.9211633, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -149,3 +149,17 @@ MonoBehaviour:
   SnakeLinkPrefab: {fileID: 2010293437201622713}
   SpawnRate: 3
   SnakeSpacing: 1
+  PathType: 0
+  MyPath:
+  - Direction: {x: 1, y: 1}
+    Distance: 9
+  - Direction: {x: 0, y: 1}
+    Distance: 9
+  - Direction: {x: -1, y: 1}
+    Distance: 9
+  - Direction: {x: -1, y: -1}
+    Distance: 9
+  - Direction: {x: 0, y: -1}
+    Distance: 9
+  - Direction: {x: 1, y: -1}
+    Distance: 9

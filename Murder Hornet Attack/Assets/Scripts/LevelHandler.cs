@@ -10,6 +10,7 @@ public class LevelHandler : MonoBehaviour
     public Transform Player;
     public GameObject PlayerPrefab;
     public GameObject PortalPrefab;
+    public GameObject ChamberTriggerPrefab;
 
     private Portal PlayerSpawn;
     private Portal Exit;
@@ -57,14 +58,14 @@ public class LevelHandler : MonoBehaviour
         //Debug.Log("honeycomb (6,6) " + Utility.HoneycombGridToWorldPostion(new Vector2(6, 6)));
 
         displayLocation(Utility.WorldToHoneycomb(Exit.transform.position), EndLoc);
-        displayLocation(Utility.WorldToHoneycomb(PlayerSpawn.transform.position), SpawnLoc);
+        //displayLocation(Utility.WorldToHoneycomb(PlayerSpawn.transform.position), SpawnLoc);
     }
 
     // Update is called once per frame
     void Update()
     {
         //infiniteLevel();
-        if (Exit && Exit.inPortal) {
+        if (Exit && Exit.inChamber) {
             ExitPanel.SetActive(true);
             if( Input.GetKeyDown(KeyCode.E)) ReloadLevel();
         }
@@ -193,7 +194,7 @@ public class LevelHandler : MonoBehaviour
         MapChamber spawnChamber = MapChamber.RandomChamber(Player.position, 3);
         PlayerSpawn = Instantiate(PortalPrefab, spawnChamber.Location, Quaternion.identity).GetComponent<Portal>();
         Player.position = spawnChamber.locations[0];
-        addPortal(PlayerSpawn, spawnChamber);
+        addChamberTrigger(PlayerSpawn, spawnChamber);
         newVoids.Add(spawnChamber);
         connected.Add(false);
 
@@ -201,6 +202,13 @@ public class LevelHandler : MonoBehaviour
         Vector2 origin = new Vector2(map.MapOrigin.x * map.HorizontalSpacing, map.MapOrigin.y * map.VerticalSpacing);
         Vector2 mapMin = origin + new Vector2(15, 15);
         Vector2 mapMax = origin + new Vector2(map.MapWidth, map.MapHeight) - new Vector2(15, 15);
+
+        //create snake Chamber
+        Vector2 snakeChamberLoc = Utility.HoneycombGridToWorldPostion(new Vector2(40, 40));
+        MapChamber snakeChamber = MapChamber.RandomChamber(snakeChamberLoc, 20);
+        ChamberTrigger snakeChamberTrigger = Instantiate(ChamberTriggerPrefab, snakeChamberLoc, Quaternion.identity).GetComponent<ChamberTrigger>();
+        addChamberTrigger(snakeChamberTrigger, snakeChamber);
+        newVoids.Add(snakeChamber);
 
         //create random chambers
         for(int i = 0; i < voidCount; i += 1)
@@ -224,7 +232,7 @@ public class LevelHandler : MonoBehaviour
 
         //setup Exit tunnel
         Exit = Instantiate(PortalPrefab, endChamber.Location, Quaternion.identity).GetComponent<Portal>();
-        addPortal(Exit, endChamber);
+        addChamberTrigger(Exit, endChamber);
 
         //connect chambers
         for(int i = 0; i < voidCount; i += 1)
@@ -250,23 +258,23 @@ public class LevelHandler : MonoBehaviour
 
     }
 
-    private void addPortal(Portal portal, MapChamber chamber)
+    private void addChamberTrigger(ChamberTrigger trigger, MapChamber chamber)
     {
-        portal.Chamber = chamber;
+        trigger.Chamber = chamber;
         foreach(Vector2 loc in chamber.locations)
         {
-            portal.gameObject.AddComponent<CircleCollider2D>();
+            trigger.gameObject.AddComponent<CircleCollider2D>();
             
         }
-        CircleCollider2D[] colliders = portal.gameObject.GetComponents<CircleCollider2D>();
+        CircleCollider2D[] colliders = trigger.gameObject.GetComponents<CircleCollider2D>();
         for (int i = 0; i < colliders.Length; i+=1)
         {
             CircleCollider2D collider = colliders[i];
             collider.isTrigger = true;
             collider.radius = chamber.widths[i] / 2;
-            collider.offset = chamber.locations[i] - (Vector2)portal.transform.position;
+            collider.offset = chamber.locations[i] - (Vector2)trigger.transform.position;
 
-            GameObject circle = Instantiate(portal.CirclePrefab, chamber.locations[i], Quaternion.identity);
+            GameObject circle = Instantiate(trigger.CirclePrefab, chamber.locations[i], Quaternion.identity);
             circle.transform.localScale = new Vector2(chamber.widths[i], chamber.widths[i]);
             circle.GetComponent<SpriteRenderer>().color = Color.black;
             //Debug.Log(chamber.locations[i] + " " + chamber.widths[i]);
