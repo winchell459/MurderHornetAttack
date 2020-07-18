@@ -18,6 +18,8 @@ public class HornetController : Insect
         DirectKeyboard
     }
     public ControlTypes Controls;
+
+    private PlayerHandler ph;
     
     // Start is called before the first frame update
     void Start()
@@ -73,8 +75,10 @@ public class HornetController : Insect
         {
             if (ShotCount > 0 && Input.GetKeyDown(KeyCode.Space))
             {
-                GameObject plasm = Instantiate(HornetPlasmPrefab, transform.position, Quaternion.identity);
-                plasm.GetComponent<Rigidbody2D>().velocity = 10 * transform.up;
+                //GameObject plasm = Instantiate(HornetPlasmPrefab, transform.position, Quaternion.identity);
+                //plasm.GetComponent<Rigidbody2D>().velocity = 10 * transform.up;
+                if (!ph) ph = FindObjectOfType<PlayerHandler>();
+                HornetPlasm.FirePlasma(HornetPlasmPrefab, transform.position, 10 * transform.up, ph.GetPlasmaPower());
                 
                 ShotCount -= 1;
 
@@ -117,6 +121,13 @@ public class HornetController : Insect
         {
             hornetMurdered();
         }
+    }
+
+    public void AddedHealth(float Healing)
+    {
+        if (!ph) ph = FindObjectOfType<PlayerHandler>();
+        Health = Mathf.Clamp(Health + Healing, 0, ph.GetMaxHealth());
+        FindObjectOfType<LevelHandler>().UpdatePlayerStats();
     }
 
     private void hornetMurdered()

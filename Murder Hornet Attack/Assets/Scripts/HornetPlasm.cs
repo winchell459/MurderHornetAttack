@@ -5,13 +5,24 @@ using UnityEngine;
 public class HornetPlasm : MonoBehaviour
 {
     public float Damage = 1;
+    private bool honeycombBounce;
+    private int bounceCount = 3;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Honeycomb"))
         {
             //Destroy(collision.gameObject);
-            collision.GetComponent<Honeycomb>().DamageHoneycomb(Damage);
-            Destroy(gameObject);
+            if (honeycombBounce)
+            {
+                Vector2 velocity = GetComponent<Rigidbody2D>().velocity;
+                Vector2 normal = collision.transform.position - transform.position;
+            }
+            else
+            {
+                collision.GetComponent<Honeycomb>().DamageHoneycomb(Damage);
+                Destroy(gameObject);
+            }
+           
         }
 
         if (collision.transform.CompareTag("Enemy") && collision.transform.GetComponent<Insect>())
@@ -24,10 +35,15 @@ public class HornetPlasm : MonoBehaviour
             Destroy(gameObject);
         }
 
-        //if (collision.GetComponent<SnakeController>())
-        //{
-        //    collision.GetComponent<SnakeController>().TakeDamage();
-        //    Destroy(gameObject);
-        //}
+       
     }
+
+    public static void FirePlasma(GameObject HornetPlasmPrefab, Vector2 location, Vector2 velocity, float power)
+    {
+        GameObject plasm = Instantiate(HornetPlasmPrefab, location, Quaternion.identity);
+        plasm.GetComponent<Rigidbody2D>().velocity = velocity;
+        plasm.GetComponent<HornetPlasm>().Damage = power;
+    }
+
+
 }

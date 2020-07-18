@@ -23,10 +23,14 @@ public class LevelHandler : MonoBehaviour
     public Text PlasmaMeterText;
     public RawImage PlasmaMeterBar;
 
+    public Text PlasmaPowerText, PlasmaChargeRateText, PlasmaChargeCapacityText;
+
     public CameraController Cam;
 
     public GameObject EnemyPrefabs;
     public GameObject SnakePrefab;
+
+    public GameObject EnemyDropPrefab;
 
     private List<MapVoid> mapVoids = new List<MapVoid>();
     private PlayerHandler ph;
@@ -85,7 +89,7 @@ public class LevelHandler : MonoBehaviour
             // spawnPlayer(PlayerSpawn);
             MurderPanel.SetActive(true);
         }
-
+        UpdatePlayerStats();
         //if(Player)Debug.Log("Player Chunk: " + Utility.GetMapChunk(Player.transform.position).mapOffset);
     }
 
@@ -106,6 +110,40 @@ public class LevelHandler : MonoBehaviour
         Player = Instantiate(PlayerPrefab, PlayerSpawn.Chamber.locations[0], Quaternion.identity).transform;
         Cam.SetCameraTarget(Player);
         UpdatePlayerStats();
+    }
+
+    public void EnemyDeath(GameObject enemy)
+    {
+        int dropCheck = 8;
+        if (enemy.GetComponent<SnakeController>()) dropCheck = 2;
+        if(Random.Range(0,10) > dropCheck)
+        {
+            int dropItem = Random.Range(0, 10); //0-2 Health 3 Power 4-6 Storage 7-9 Rapid
+            float power;
+            float duration = Random.Range(1 , 7) * 5;
+            if(dropItem < 7)
+            {
+                power = Random.Range(10, 30);
+            }
+            else
+            {
+                power = Random.Range(0.05f, 0.45f) * 2;
+            }
+
+            ItemPickup drop = Instantiate(EnemyDropPrefab, enemy.transform.position, Quaternion.identity).GetComponent<ItemPickup>();
+
+            if (dropItem < 3)
+            {
+                drop.PickupType = ItemPickup.PickupTypes.Health;
+                
+            }
+            else if (dropItem < 4) drop.PickupType = ItemPickup.PickupTypes.Power;
+            else if (dropItem < 7) drop.PickupType = ItemPickup.PickupTypes.Storage;
+            else if (dropItem < 10) drop.PickupType = ItemPickup.PickupTypes.Rapid;
+            drop.Power = power;
+            drop.Duration = duration;
+            drop.SetupLetters();
+        }
     }
 
     public void RestartLevel()
@@ -148,13 +186,17 @@ public class LevelHandler : MonoBehaviour
 
         HornetController hc = FindObjectOfType<HornetController>();
 
-        float barPercent = hc.Health / ph.MaxHealth;
+        float barPercent = hc.Health / ph.GetMaxHealth();
         HealthMeterBar.rectTransform.localScale = new Vector3(barPercent, 1, 1);
         HealthMeterText.text = hc.Health.ToString();
 
-        float plasmaPercent = (float) hc.ShotCount / ph.MaxShot;
+        float plasmaPercent = (float) hc.ShotCount / ph.GetMaxShot();
         PlasmaMeterBar.rectTransform.localScale = new Vector3(plasmaPercent, plasmaPercent, 1);
         PlasmaMeterText.text = hc.ShotCount.ToString();
+
+        PlasmaPowerText.text = (int) ph.GetPlasmaPower() + " " + (int) ph.GetPlasmaPowerBuffTime();
+        PlasmaChargeRateText.text = ph.GetPlasmaChargeRate() + " " + (int)ph.GetPlasmaChargeRateBuffTime();
+        PlasmaChargeCapacityText.text = ph.GetMaxShot() + " " + (int)ph.GetMaxShotBuffTime();
     }
 
     public void UpdatePlayerStats(int BeesDied, int HornetDied)
@@ -206,7 +248,7 @@ public class LevelHandler : MonoBehaviour
 
         //create snake Chamber
         Vector2 snakeChamberLoc = Utility.HoneycombGridToWorldPostion(new Vector2(40, 40));
-        MapChamber snakeChamber = MapChamber.RandomChamber(snakeChamberLoc, 20);
+        MapChamber snakeChamber = MapChamber.RandomChamber(snakeChamberLoc, 15);
         //ChamberTrigger snakeChamberTrigger = Instantiate(ChamberTriggerPrefab, snakeChamberLoc, Quaternion.identity).GetComponent<ChamberTrigger>();
         //addChamberTrigger(snakeChamberTrigger, snakeChamber);
         ChamberTrigger.SetupChamberTrigger(ChamberTriggerPrefab, snakeChamber);

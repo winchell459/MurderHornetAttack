@@ -321,7 +321,11 @@ public class SnakeController : Insect
     {
         Health -= damage;
         takeDamageAnimation();
-        if (Health <= 0) DestroyLink();
+        if (Health <= 0)
+        {
+            FindObjectOfType<LevelHandler>().EnemyDeath(gameObject);
+            DestroyLink();
+        }
     }
 
     private void takeDamageAnimation()
