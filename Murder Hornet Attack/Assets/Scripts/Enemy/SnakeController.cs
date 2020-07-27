@@ -19,7 +19,8 @@ public class SnakeController : Insect
     private int lastSpawn = 0;
 
     public float SnakeSpacing = 1f;
-    
+
+    public float AttackRadius = 5f;
 
     public enum PathTypes
     {
@@ -35,7 +36,7 @@ public class SnakeController : Insect
         
         if (PathType == PathTypes.Random)
         {
-            Target = Utility.HoneycombGridToWorldPostion((Utility.WorldToHoneycomb(transform.position)));
+            Target = Utility.HoneycombGridToWorldPostion((Utility.WorldPointToHoneycombGrid(transform.position)));
             Path.Add(Target);
         }
         else
@@ -154,11 +155,11 @@ public class SnakeController : Insect
     {
         Path.Clear();
         //Path.Add(Utility.HoneycombGridToWorldPostion((Utility.WorldToHoneycomb(transform.position))));
-        Target = Utility.HoneycombGridToWorldPostion(Utility.GetHoneycombDirection(Utility.WorldToHoneycomb(transform.position), path[0].Direction, path[0].Distance));
+        Target = Utility.HoneycombGridToWorldPostion(Utility.GetHoneycombDirection(Utility.WorldPointToHoneycombGrid(transform.position), path[0].Direction, path[0].Distance));
         Path.Add(Target);
         for(int i = 1; i < path.Count; i += 1)
         {
-            Path.Add(Utility.HoneycombGridToWorldPostion(Utility.GetHoneycombDirection(Utility.WorldToHoneycomb(Path[i-1]), path[i].Direction, path[i].Distance)));
+            Path.Add(Utility.HoneycombGridToWorldPostion(Utility.GetHoneycombDirection(Utility.WorldPointToHoneycombGrid(Path[i-1]), path[i].Direction, path[i].Distance)));
         }
         pointSnake();
     }
@@ -188,7 +189,17 @@ public class SnakeController : Insect
     private Vector2 getNewTarget()
     {
         headIndex += 1;
-        if (!Head) return getRandomLoc();
+        if (!Head)
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player && Vector2.Distance(player.transform.position, transform.position) < AttackRadius)
+            {
+                Vector2 playerGridPos = Utility.WorldPointToHoneycombPos(player.transform.position);
+
+                return playerGridPos ;
+            }
+            else return getRandomLoc();
+        }
         else
         {
             // headIndex += 1;
@@ -206,7 +217,7 @@ public class SnakeController : Insect
         else Direction = GetNewDirection(Direction, -1);
         //Debug.Log("HoneyDir: " + Direction + " HoneyDist: " + randDist + " HoneyPos: " + Utility.WorldToHoneycomb(Target));
         //Debug.Log("--------------------------- new Path Start----------------------------");
-        List<MapHoneycomb> path = Utility.GetHoneycombPath(Utility.WorldToHoneycomb(Target), Direction, randDist);
+        List<MapHoneycomb> path = Utility.GetHoneycombPath(Utility.WorldPointToHoneycombGrid(Target), Direction, randDist);
         //Debug.Log("--------------------------- new Path Honeycombs----------------------------");
         MapHoneycomb newTarget = null;
         foreach (MapHoneycomb honeycomb in path)

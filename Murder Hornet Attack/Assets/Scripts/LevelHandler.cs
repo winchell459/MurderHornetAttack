@@ -61,7 +61,7 @@ public class LevelHandler : MonoBehaviour
         //Debug.Log("honeycomb (3,6) " + Utility.HoneycombGridToWorldPostion(new Vector2(3, 6)));
         //Debug.Log("honeycomb (6,6) " + Utility.HoneycombGridToWorldPostion(new Vector2(6, 6)));
 
-        displayLocation(Utility.WorldToHoneycomb(Exit.transform.position), EndLoc);
+        displayLocation(Utility.WorldPointToHoneycombGrid(Exit.transform.position), EndLoc);
         //displayLocation(Utility.WorldToHoneycomb(PlayerSpawn.transform.position), SpawnLoc);
     }
 
@@ -80,7 +80,7 @@ public class LevelHandler : MonoBehaviour
 
         if (Player)
         {
-            displayLocation(Utility.WorldToHoneycomb(Player.position), PlayerLoc);
+            displayLocation(Utility.WorldPointToHoneycombGrid(Player.position), PlayerLoc);
             displayLocation(Map.StaticMap.GetChunkIndex( Utility.GetMapChunk(Player.position)), SpawnLoc);
             //Debug.Log(Utility.GetMapChunk(Player.position).ChunkIndex + " chunkOffset: " + Utility.GetMapChunk(Player.position).mapOffset);
         }

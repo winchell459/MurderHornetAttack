@@ -79,16 +79,10 @@ public static class Utility
         return linePoint;
     }
 
-    public static Vector2 WorldPointToHoneycombGrid(Vector2 point)
+    public static Vector2 WorldPointToHoneycombPos(Vector2 point)
     {
-        Map map = Map.StaticMap;
-        Vector2 gridPoint = point - map.MapOrigin;
-        //gridPoint = new Vector2((int)gridPoint.x / map.HorizontalSpacing, (int)gridPoint.y / map.VerticalSpacing);
-        float a = map.HorizontalSpacing / 3;//map.VerticalSpacing / Mathf.Sqrt(3);
-        float xGrid = gridPoint.x + 2 * a;
-        
-
-        return gridPoint;
+       
+        return HoneycombGridToWorldPostion(WorldPointToHoneycombGrid(point));
     }
 
     public static Vector2 HoneycombGridToWorldPostion(Vector2 honeyPos)
@@ -101,7 +95,7 @@ public static class Utility
         return new Vector2(xPos, yPos) + new Vector2(map.MapOrigin.x * map.HorizontalSpacing, map.MapOrigin.y * map.VerticalSpacing);
     }
 
-    public static Vector2 WorldToHoneycomb(Vector2 worldPos)
+    public static Vector2 WorldPointToHoneycombGrid(Vector2 worldPos)
     {
         Map map = Map.StaticMap;
         int x = (int)((worldPos.x + map.HorizontalSpacing / 3) / map.HorizontalSpacing - map.MapOrigin.x );
@@ -141,7 +135,7 @@ public static class Utility
 
     public static MapChunk GetMapChunk(Vector2 worldPos)
     {
-        Vector2 honeyIndex = WorldToHoneycomb(worldPos);
+        Vector2 honeyIndex = WorldPointToHoneycombGrid(worldPos);
         Map map = Map.StaticMap;
         int xChunk = (int)honeyIndex.x / map.ChunkWidth;
         int yChunk = (int)honeyIndex.y / (map.ChunkHeight/2);
