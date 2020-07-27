@@ -78,4 +78,121 @@ public static class Utility
         }
         return linePoint;
     }
+
+    public static Vector2 WorldPointToHoneycombGrid(Vector2 point)
+    {
+        Map map = Map.StaticMap;
+        Vector2 gridPoint = point - map.MapOrigin;
+        //gridPoint = new Vector2((int)gridPoint.x / map.HorizontalSpacing, (int)gridPoint.y / map.VerticalSpacing);
+        float a = map.HorizontalSpacing / 3;//map.VerticalSpacing / Mathf.Sqrt(3);
+        float xGrid = gridPoint.x + 2 * a;
+        
+
+        return gridPoint;
+    }
+
+    public static Vector2 HoneycombGridToWorldPostion(Vector2 honeyPos)
+    {
+        Map map = Map.StaticMap;
+        float xPos = honeyPos.x * map.HorizontalSpacing;
+        float yPos = yPos = honeyPos.y * map.VerticalSpacing * 2;
+        if (honeyPos.x % 2 == 0) yPos +=  map.VerticalSpacing;
+        
+        return new Vector2(xPos, yPos) + new Vector2(map.MapOrigin.x * map.HorizontalSpacing, map.MapOrigin.y * map.VerticalSpacing);
+    }
+
+    public static Vector2 WorldToHoneycomb(Vector2 worldPos)
+    {
+        Map map = Map.StaticMap;
+        int x = (int)((worldPos.x + map.HorizontalSpacing / 3) / map.HorizontalSpacing - map.MapOrigin.x );
+        int y = (int)((worldPos.y + map.VerticalSpacing) / (2*map.VerticalSpacing) - map.MapOrigin.y/2 );
+
+        List<Vector2> honeyCandidates = new List<Vector2>();
+        int xMin = x;
+        int xMax = x + 1;
+        int yMin = y;
+        int yMax = y + 1;
+        //honeyCandidates.Add(HoneycombGridToWorldPostion(new Vector2(x, y)));
+        if (x > 0) xMin -= 1;
+        //if(x< map.Width) xMax += 1;
+        if (y > 0) yMin -= 1;
+
+        float distance = Mathf.Infinity;
+        //string debugStr = "Checking Honeycomb:";
+        for(int i = xMin; i <= xMax; i+=1)
+        {
+            for(int j = yMin; j <= yMax; j += 1)
+            {
+                //debugStr += " (" + i + ", " + j + ")";
+                float check = Vector2.Distance(worldPos, HoneycombGridToWorldPostion(new Vector2(i, j)));
+                if (check < distance)
+                {
+                    distance = check;
+                    x = i;
+                    y = j;
+                }
+            }
+        }
+        //debugStr += " Closest: ("  + x + ", " + y + ")";
+        //Debug.Log(debugStr);
+        return new Vector2(x, y);
+    }
+
+
+    public static MapChunk GetMapChunk(Vector2 worldPos)
+    {
+        Vector2 honeyIndex = WorldToHoneycomb(worldPos);
+        Map map = Map.StaticMap;
+        int xChunk = (int)honeyIndex.x / map.ChunkWidth;
+        int yChunk = (int)honeyIndex.y / (map.ChunkHeight/2);
+        //int chunkIndex = xChunk * yChunk + xChunk;
+        return map.GetChunk(xChunk, yChunk);
+    }
+    public static List<MapHoneycomb> GetHoneycombPath(Vector2 start, Vector2 dir, int honeyDistance)
+    {
+        List<MapHoneycomb> path = new List<MapHoneycomb>();
+        //start = WorldToHoneycomb(start);
+        for(int i = 1; i <= honeyDistance; i += 1)
+        {
+            Vector2 honeyCell = GetHoneycombDirection(start, dir, i);
+            //Debug.Log(honeyCell);
+            path.Add(Map.StaticMap.GetHoneycomb((int)honeyCell.x, (int)honeyCell.y));
+        }
+        return path;
+    }
+    
+    /// <summary>
+    /// Returns the coordinates of a target honeycomb starting from the coordinates of a honeycomb in a honeycomb vector (honeycomb direction and distance)
+    /// </summary>
+    /// <param name="start"></param>
+    /// <param name="dir"></param>
+    /// <param name="honeyDistance"></param>
+    /// <returns></returns>
+    public static Vector2 GetHoneycombDirection(Vector2 start, Vector2 dir, int honeyDistance)
+    {
+        //start = Utility.WorldPointToHoneycombGrid(start);
+        Vector2 end = start;
+        end.x += dir.x * honeyDistance;
+        if (dir.x == 0) end.y += dir.y * honeyDistance;
+        else if (start.x % 2 == 0 && dir.y > 0 || start.x % 2 != 0 && dir.y < 0)
+        {
+            end.y += Mathf.Sign(dir.y) * Mathf.Ceil((float)honeyDistance / 2);
+        }
+        else
+        {
+            end.y += Mathf.Sign(dir.y) * Mathf.Ceil(((float)honeyDistance - 1) / 2);
+        }
+
+        return end;
+    }
+
+    public static Vector2 WorldDirToHoneycombDir(Vector2 worldDir)
+    {
+        if (worldDir.x > 0) worldDir.x = 1;
+        else if (worldDir.x < 0) worldDir.x = 1;
+        if (worldDir.y > 0) worldDir.y = 1;
+        else if (worldDir.y < 0) worldDir.y = -1;
+        return worldDir;
+    }
+
 }

@@ -56,11 +56,12 @@ public class MapHoneycomb
     }
     public int GetDepth() { return depth; }
 
+    bool ignoreLarge = false;
     public void DisplayHoneycomb()
     {
         if (display)
         {
-            if (depth < 5 || depth < 7 && !isLargeLoc)
+            if ((depth < 5 || depth < 7 &&  !isLargeLoc ) || ignoreLarge && !beeuilding)
             {
                 honeycomb = Map.GetHoneycomb();
                 isLargeHoneycomb = false;

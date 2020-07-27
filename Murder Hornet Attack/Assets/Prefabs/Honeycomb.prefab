@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1871647381428021527}
   - component: {fileID: 6552890109865651326}
   - component: {fileID: 47145156934169903}
+  - component: {fileID: 8814395911513169082}
   m_Layer: 0
   m_Name: Honeycomb
   m_TagString: Honeycomb
@@ -89,7 +90,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1839788399973784453}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -108,3 +109,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.35777724, y: 0.56}
   m_EdgeRadius: 0
+--- !u!58 &8814395911513169082
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1839788399973784453}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.27

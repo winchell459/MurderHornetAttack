@@ -10,6 +10,7 @@ public class LevelHandler : MonoBehaviour
     public Transform Player;
     public GameObject PlayerPrefab;
     public GameObject PortalPrefab;
+    public GameObject ChamberTriggerPrefab;
 
     private Portal PlayerSpawn;
     private Portal Exit;
@@ -22,9 +23,14 @@ public class LevelHandler : MonoBehaviour
     public Text PlasmaMeterText;
     public RawImage PlasmaMeterBar;
 
+    public Text PlasmaPowerText, PlasmaChargeRateText, PlasmaChargeCapacityText;
+
     public CameraController Cam;
 
     public GameObject EnemyPrefabs;
+    public GameObject SnakePrefab;
+
+    public GameObject EnemyDropPrefab;
 
     private List<MapVoid> mapVoids = new List<MapVoid>();
     private PlayerHandler ph;
@@ -38,7 +44,7 @@ public class LevelHandler : MonoBehaviour
 
 
         //createVoids();
-        createRandomMap(7);
+        createRandomMap(10);
 
         Map.StaticMap.DisplayChunks();
 
@@ -48,13 +54,22 @@ public class LevelHandler : MonoBehaviour
         Map.StaticMap.Display = true;
 
         ph = FindObjectOfType<PlayerHandler>();
+
+        //Debug.Log("honeycomb (0,0) " + Utility.HoneycombGridToWorldPostion(new Vector2(0, 0)));
+        //Debug.Log("honeycomb (0,6) " + Utility.HoneycombGridToWorldPostion(new Vector2(0, 6)));
+        //Debug.Log("honeycomb (3,0) " + Utility.HoneycombGridToWorldPostion(new Vector2(3, 0)));
+        //Debug.Log("honeycomb (3,6) " + Utility.HoneycombGridToWorldPostion(new Vector2(3, 6)));
+        //Debug.Log("honeycomb (6,6) " + Utility.HoneycombGridToWorldPostion(new Vector2(6, 6)));
+
+        displayLocation(Utility.WorldToHoneycomb(Exit.transform.position), EndLoc);
+        //displayLocation(Utility.WorldToHoneycomb(PlayerSpawn.transform.position), SpawnLoc);
     }
 
     // Update is called once per frame
     void Update()
     {
         //infiniteLevel();
-        if (Exit && Exit.inPortal) {
+        if (Exit && Exit.inChamber) {
             ExitPanel.SetActive(true);
             if( Input.GetKeyDown(KeyCode.E)) ReloadLevel();
         }
@@ -63,14 +78,19 @@ public class LevelHandler : MonoBehaviour
             ExitPanel.SetActive(false);
         }
 
-        if(Player) displayLocation(Map.StaticMap.WorldToHoneycomb(Player.position), PlayerLoc);
+        if (Player)
+        {
+            displayLocation(Utility.WorldToHoneycomb(Player.position), PlayerLoc);
+            displayLocation(Map.StaticMap.GetChunkIndex( Utility.GetMapChunk(Player.position)), SpawnLoc);
+            //Debug.Log(Utility.GetMapChunk(Player.position).ChunkIndex + " chunkOffset: " + Utility.GetMapChunk(Player.position).mapOffset);
+        }
         else
         {
             // spawnPlayer(PlayerSpawn);
             MurderPanel.SetActive(true);
         }
-        displayLocation(Map.StaticMap.WorldToHoneycomb(Exit.transform.position), EndLoc);
-        displayLocation(Map.StaticMap.WorldToHoneycomb(PlayerSpawn.transform.position), SpawnLoc);
+        UpdatePlayerStats();
+        //if(Player)Debug.Log("Player Chunk: " + Utility.GetMapChunk(Player.transform.position).mapOffset);
     }
 
     private void displayLocation(Vector2 loc, Text text)
@@ -90,6 +110,40 @@ public class LevelHandler : MonoBehaviour
         Player = Instantiate(PlayerPrefab, PlayerSpawn.Chamber.locations[0], Quaternion.identity).transform;
         Cam.SetCameraTarget(Player);
         UpdatePlayerStats();
+    }
+
+    public void EnemyDeath(GameObject enemy)
+    {
+        int dropCheck = 8;
+        if (enemy.GetComponent<SnakeController>()) dropCheck = 2;
+        if(Random.Range(0,10) > dropCheck)
+        {
+            int dropItem = Random.Range(0, 10); //0-2 Health 3 Power 4-6 Storage 7-9 Rapid
+            float power;
+            float duration = Random.Range(1 , 7) * 5;
+            if(dropItem < 7)
+            {
+                power = Random.Range(10, 30);
+            }
+            else
+            {
+                power = Random.Range(0.05f, 0.45f) * 2;
+            }
+
+            ItemPickup drop = Instantiate(EnemyDropPrefab, enemy.transform.position, Quaternion.identity).GetComponent<ItemPickup>();
+
+            if (dropItem < 3)
+            {
+                drop.PickupType = ItemPickup.PickupTypes.Health;
+                
+            }
+            else if (dropItem < 4) drop.PickupType = ItemPickup.PickupTypes.Power;
+            else if (dropItem < 7) drop.PickupType = ItemPickup.PickupTypes.Storage;
+            else if (dropItem < 10) drop.PickupType = ItemPickup.PickupTypes.Rapid;
+            drop.Power = power;
+            drop.Duration = duration;
+            drop.SetupLetters();
+        }
     }
 
     public void RestartLevel()
@@ -132,13 +186,17 @@ public class LevelHandler : MonoBehaviour
 
         HornetController hc = FindObjectOfType<HornetController>();
 
-        float barPercent = hc.Health / ph.MaxHealth;
+        float barPercent = hc.Health / ph.GetMaxHealth();
         HealthMeterBar.rectTransform.localScale = new Vector3(barPercent, 1, 1);
         HealthMeterText.text = hc.Health.ToString();
 
-        float plasmaPercent = (float) hc.ShotCount / ph.MaxShot;
+        float plasmaPercent = (float) hc.ShotCount / ph.GetMaxShot();
         PlasmaMeterBar.rectTransform.localScale = new Vector3(plasmaPercent, plasmaPercent, 1);
         PlasmaMeterText.text = hc.ShotCount.ToString();
+
+        PlasmaPowerText.text = (int) ph.GetPlasmaPower() + " " + (int) ph.GetPlasmaPowerBuffTime();
+        PlasmaChargeRateText.text = ph.GetPlasmaChargeRate() + " " + (int)ph.GetPlasmaChargeRateBuffTime();
+        PlasmaChargeCapacityText.text = ph.GetMaxShot() + " " + (int)ph.GetMaxShotBuffTime();
     }
 
     public void UpdatePlayerStats(int BeesDied, int HornetDied)
@@ -178,7 +236,8 @@ public class LevelHandler : MonoBehaviour
         MapChamber spawnChamber = MapChamber.RandomChamber(Player.position, 3);
         PlayerSpawn = Instantiate(PortalPrefab, spawnChamber.Location, Quaternion.identity).GetComponent<Portal>();
         Player.position = spawnChamber.locations[0];
-        addPortal(PlayerSpawn, spawnChamber);
+        //addChamberTrigger(PlayerSpawn, spawnChamber);
+        PlayerSpawn = (Portal)ChamberTrigger.SetupChamberTrigger(PortalPrefab, spawnChamber);
         newVoids.Add(spawnChamber);
         connected.Add(false);
 
@@ -186,6 +245,14 @@ public class LevelHandler : MonoBehaviour
         Vector2 origin = new Vector2(map.MapOrigin.x * map.HorizontalSpacing, map.MapOrigin.y * map.VerticalSpacing);
         Vector2 mapMin = origin + new Vector2(15, 15);
         Vector2 mapMax = origin + new Vector2(map.MapWidth, map.MapHeight) - new Vector2(15, 15);
+
+        //create snake Chamber
+        Vector2 snakeChamberLoc = Utility.HoneycombGridToWorldPostion(new Vector2(40, 40));
+        MapChamber snakeChamber = MapChamber.RandomChamber(snakeChamberLoc, 15);
+        //ChamberTrigger snakeChamberTrigger = Instantiate(ChamberTriggerPrefab, snakeChamberLoc, Quaternion.identity).GetComponent<ChamberTrigger>();
+        //addChamberTrigger(snakeChamberTrigger, snakeChamber);
+        ChamberTrigger.SetupChamberTrigger(ChamberTriggerPrefab, snakeChamber);
+        newVoids.Add(snakeChamber);
 
         //create random chambers
         for(int i = 0; i < voidCount; i += 1)
@@ -206,8 +273,11 @@ public class LevelHandler : MonoBehaviour
                 endChamber = (MapChamber)newVoids[i];
             }
         }
-        Exit = Instantiate(PortalPrefab, endChamber.Location, Quaternion.identity).GetComponent<Portal>();
-        addPortal(Exit, endChamber);
+
+        //setup Exit tunnel
+        //Exit = Instantiate(PortalPrefab, endChamber.Location, Quaternion.identity).GetComponent<Portal>();
+        //addChamberTrigger(Exit, endChamber);
+        Exit = (Portal)ChamberTrigger.SetupChamberTrigger(PortalPrefab, endChamber);
 
         //connect chambers
         for(int i = 0; i < voidCount; i += 1)
@@ -226,35 +296,35 @@ public class LevelHandler : MonoBehaviour
         map.AddVoid(newVoids);
 
         mapVoids = newVoids;
-        Debug.Log("void wall count: " + newVoids[newVoids.Count - 1].GetVoidWalls().Count);
+        //Debug.Log("void wall count: " + newVoids[newVoids.Count - 1].GetVoidWalls().Count);
 
         
 
 
     }
 
-    private void addPortal(Portal portal, MapChamber chamber)
-    {
-        portal.Chamber = chamber;
-        foreach(Vector2 loc in chamber.locations)
-        {
-            portal.gameObject.AddComponent<CircleCollider2D>();
-            
-        }
-        CircleCollider2D[] colliders = portal.gameObject.GetComponents<CircleCollider2D>();
-        for (int i = 0; i < colliders.Length; i+=1)
-        {
-            CircleCollider2D collider = colliders[i];
-            collider.isTrigger = true;
-            collider.radius = chamber.widths[i] / 2;
-            collider.offset = chamber.locations[i] - (Vector2)portal.transform.position;
+    //private void addChamberTrigger(ChamberTrigger trigger, MapChamber chamber)
+    //{
+    //    trigger.Chamber = chamber;
+    //    foreach (Vector2 loc in chamber.locations)
+    //    {
+    //        trigger.gameObject.AddComponent<CircleCollider2D>();
 
-            GameObject circle = Instantiate(portal.CirclePrefab, chamber.locations[i], Quaternion.identity);
-            circle.transform.localScale = new Vector2(chamber.widths[i], chamber.widths[i]);
-            circle.GetComponent<SpriteRenderer>().color = Color.black;
-            //Debug.Log(chamber.locations[i] + " " + chamber.widths[i]);
-        }
-    }
+    //    }
+    //    CircleCollider2D[] colliders = trigger.gameObject.GetComponents<CircleCollider2D>();
+    //    for (int i = 0; i < colliders.Length; i += 1)
+    //    {
+    //        CircleCollider2D collider = colliders[i];
+    //        collider.isTrigger = true;
+    //        collider.radius = chamber.widths[i] / 2;
+    //        collider.offset = chamber.locations[i] - (Vector2)trigger.transform.position;
+
+    //        GameObject circle = Instantiate(trigger.CirclePrefab, chamber.locations[i], Quaternion.identity);
+    //        circle.transform.localScale = new Vector2(chamber.widths[i], chamber.widths[i]);
+    //        circle.GetComponent<SpriteRenderer>().color = Color.black;
+    //        //Debug.Log(chamber.locations[i] + " " + chamber.widths[i]);
+    //    }
+    //}
 
     private void addPathEnemies()
     {
@@ -263,7 +333,7 @@ public class LevelHandler : MonoBehaviour
             if (mv.VoidType == MapHoneycomb.LocationTypes.Path)
             {
                 List<MapHoneycomb> walls = mv.GetVoidWalls();
-                Debug.Log(walls.Count);
+                //Debug.Log(walls.Count);
                 foreach (MapHoneycomb mhc in walls)
                 {
                     if (Random.Range(0, 10) < 1)

@@ -23,6 +23,9 @@ public class EnemyPhysics : Insect
 
     private bool _enterAttackRadius = false;
 
+    private GameObject target;
+    private Vector2 spawnPoint;
+
     public bool EnterAttackRadius
     {
         get { return _enterAttackRadius; }
@@ -107,6 +110,7 @@ public class EnemyPhysics : Insect
     {
         rb = GetComponent<Rigidbody2D>();
         GetComponent<CircleCollider2D>().isTrigger = true;
+        spawnPoint = transform.position;
     }
 
     // Update is called once per frame
@@ -154,9 +158,14 @@ public class EnemyPhysics : Insect
 
     private void MoveToPlayer()
     {
-        playerLocation = GameObject.FindWithTag("Player").transform.position;
+        if (!target) target = GameObject.FindWithTag("Player");
+
+        if (target) playerLocation = target.transform.position;
+        else playerLocation = spawnPoint;
+
+
         playerDistance = Vector2.Distance(playerLocation, transform.position);
-        
+
 
         if (playerDistance <= int.MaxValue)
         {
@@ -178,6 +187,7 @@ public class EnemyPhysics : Insect
                 rb.velocity = Vector2.ClampMagnitude(rb.velocity, maxSpeed);
             }
         }
+
     }
 
 
@@ -199,6 +209,7 @@ public class EnemyPhysics : Insect
         Health -= Damage;
         if(Health <= 0)
         {
+            FindObjectOfType<LevelHandler>().EnemyDeath(gameObject);
             Destroy(gameObject);
         }
     }

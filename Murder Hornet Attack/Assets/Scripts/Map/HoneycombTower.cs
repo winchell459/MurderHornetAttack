@@ -29,7 +29,7 @@ public class HoneycombTower : Honeycomb
     public void SetupBeeTower()
     {
         if(layers == null) layers = Map.StaticMap.HoneycombLayers;
-        for(int i = 1; i < TowerLayers.Length; i+= 1)
+        for(int i = 0; i < TowerLayers.Length; i+= 1)
         {
             TowerLayers[i].parent = layers[i];
             TowerLayers[i].localPosition = TowerLayers[0].localPosition * layers[i].localScale.x;

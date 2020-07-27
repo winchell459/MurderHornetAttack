@@ -26,7 +26,7 @@ public class Map : MonoBehaviour
     public Transform[] HoneycombLayers;
     public List<float> LayerScales = new List<float>();
 
-    private int honeycombHeight = -20;
+    //private int honeycombHeight = -20;
     public int ChunkHeight = 40;
     public int ChunkWidth = 14;
     
@@ -105,23 +105,38 @@ public class Map : MonoBehaviour
         
     }
 
-    private MapChunk GetChunk(int col, int row)
+    public MapChunk GetChunk(int col, int row)
     {
         int chunkCols = (int)Mathf.Ceil((MapWidth / HorizontalSpacing) / (ChunkWidth));
         return honeycombChunks[row * chunkCols + col];
     }
-
-    private Vector2 honeycombToWorldPostion(Vector2 honeyPos)
+    public Vector2 GetChunkIndex(MapChunk chunk)
     {
-        return new Vector2(honeyPos.x * HorizontalSpacing, honeyPos.y * VerticalSpacing);
-    }
-
-    public Vector2 WorldToHoneycomb(Vector2 worldPos)
-    {
-        float x = worldPos.x / HorizontalSpacing - MapOrigin.x;
-        float y = worldPos.y / VerticalSpacing - MapOrigin.y;
+        int chunkCols = (int)Mathf.Ceil((MapWidth / HorizontalSpacing) / (ChunkWidth));
+        int chunkRows = (int)Mathf.Ceil((MapHeight / VerticalSpacing) / ChunkHeight);
+        int index = honeycombChunks.IndexOf(chunk);
+        float x = index % (chunkCols);
+        float y = index / (chunkCols);
         return new Vector2(x, y);
     }
+    public MapHoneycomb GetHoneycomb(int col, int row)
+    {
+        
+        int xChunk = col / ChunkWidth;
+        int yChunk = row / (ChunkHeight / 2);
+
+        //Debug.Log("xChunk: " + xChunk + " yChunk: " + yChunk);
+        MapChunk chunk = GetChunk(xChunk, yChunk);
+        //foreach(MapHoneycomb hc in chunk.GetAllMapHoneycombs())
+        //{
+        //    Debug.Log("List<honeycomb> " + hc.position);
+        //}
+        col = col % ChunkWidth;
+        row = row % (ChunkHeight /2);
+        //Debug.Log("col: " + col + " row: " + row);
+        return chunk.GetMapHoneycomb(col, row);
+    }
+    
     
     private void createChunks()
     {
@@ -140,15 +155,16 @@ public class Map : MonoBehaviour
                 if (width > ChunkWidth) width = ChunkWidth;
                 if (height > ChunkHeight) height = ChunkHeight;
                 //Debug.Log(width + " " + height);
-                createChunk(origin, width, height);
+                createChunk(origin, width, height, i, j);
                 //honeycombChunks[honeycombChunks.Count - 1].DisplayChunk();
             }
         }
     }
 
-    private void createChunk(Vector2 start, float width, float height)
+    private void createChunk(Vector2 start, int width, int height, int x, int y)
     {
         MapChunk chunk = new MapChunk(start, width, height, VerticalSpacing, HorizontalSpacing);
+        chunk.ChunkIndex = new Vector2(x, y);
         honeycombChunks.Add(chunk);
         displayChunks.Add(false);
         

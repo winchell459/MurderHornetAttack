@@ -42,7 +42,7 @@ public class MapPath : MapVoid
         bool display = honeycomb.display;
         for (int i = 0; i < Count; i++)
         {
-            if (display)
+            //if (display)
             {
                 Vector2 start = Start(i);
                 Vector2 end = End(i);
@@ -50,6 +50,7 @@ public class MapPath : MapVoid
                 if (distance < widths[i] / 2 || distance < 0.45f)
                 {
                     display = false;
+                    SetLocationType(honeycomb, MapHoneycomb.LocationTypes.Path);
                 }
                 else
                 {
