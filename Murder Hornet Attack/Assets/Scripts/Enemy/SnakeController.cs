@@ -192,10 +192,11 @@ public class SnakeController : Insect
         if (!Head)
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player && Vector2.Distance(player.transform.position, transform.position) < AttackRadius)
+            if (false && player && Vector2.Distance(player.transform.position, transform.position) < AttackRadius)
             {
-                Vector2 playerGridPos = Utility.WorldPointToHoneycombPos(player.transform.position);
-
+                Vector2 playerGridHex = Utility.WorldPointToHoneycombGrid(player.transform.position);
+                Vector2 startGridHex = Utility.WorldPointToHoneycombGrid(transform.position);
+                Vector2 playerGridPos = findPathToHoneycomb(startGridHex, playerGridHex);
                 return playerGridPos ;
             }
             else return getRandomLoc();
@@ -217,23 +218,25 @@ public class SnakeController : Insect
         else Direction = GetNewDirection(Direction, -1);
         //Debug.Log("HoneyDir: " + Direction + " HoneyDist: " + randDist + " HoneyPos: " + Utility.WorldToHoneycomb(Target));
         //Debug.Log("--------------------------- new Path Start----------------------------");
-        List<MapHoneycomb> path = Utility.GetHoneycombPath(Utility.WorldPointToHoneycombGrid(Target), Direction, randDist);
+        //List<MapHoneycomb> path = Utility.GetHoneycombPath(Utility.WorldPointToHoneycombGrid(Target), Direction, randDist);
+        //Debug.Log("path length: " + path.Count);
         //Debug.Log("--------------------------- new Path Honeycombs----------------------------");
-        MapHoneycomb newTarget = null;
-        foreach (MapHoneycomb honeycomb in path)
-        {
-            //Debug.Log(honeycomb.position);
-            if (!honeycomb.display && honeycomb.LocationType == MapHoneycomb.LocationTypes.Chamber)
-            {
-                newTarget = honeycomb;
-                pathAttempts = 0;
-            }
-            else
-            {
-                //Debug.Log(honeycomb.LocationType);
-                break;
-            }
-        }
+        MapHoneycomb newTarget = Utility.GetHoneycombFreePath(Utility.WorldPointToHoneycombGrid(Target), Direction, randDist);
+
+        //foreach (MapHoneycomb honeycomb in path)
+        //{
+        //    //Debug.Log(honeycomb.position);
+        //    if (!honeycomb.display && honeycomb.LocationType == MapHoneycomb.LocationTypes.Chamber)
+        //    {
+        //        newTarget = honeycomb;
+        //        pathAttempts = 0;
+        //    }
+        //    else
+        //    {
+        //        //Debug.Log(honeycomb.LocationType);
+        //        break;
+        //    }
+        //}
 
         //Debug.Log("--------------------------- new Path End----------------------------");
         //return Utility.HoneycombGridToWorldPostion( Utility.GetHoneycombDirection(Utility.WorldToHoneycomb(Target), Direction, randDist));
@@ -241,7 +244,7 @@ public class SnakeController : Insect
         else
         {
             pathAttempts += 1;
-            if (pathAttempts > 3) return Vector2.zero;
+            //if (pathAttempts > 3) return Vector2.zero;
             return getRandomLoc();
         }
         
@@ -269,6 +272,55 @@ public class SnakeController : Insect
         turns = turns - (int)Mathf.Sign(turns) *1;
         if (turns != 0) return GetNewDirection(newDir, turns);
         else return newDir;
+    }
+
+    private Vector2 findPathToHoneycomb(Vector2 startHoneycomb, Vector2 targetHoneycomb)
+    {
+
+        if(startHoneycomb.x < targetHoneycomb.x && startHoneycomb.y > targetHoneycomb.y)
+        {
+            //(1,-1) || (0,-1)
+        }else if(startHoneycomb.x < targetHoneycomb.x && startHoneycomb.y < targetHoneycomb.y)
+        {
+            //(1,1) || (0,1)
+        }
+        else if (startHoneycomb.x < targetHoneycomb.x && startHoneycomb.y == targetHoneycomb.y)
+        {
+            //(1,1) || (1,-1)
+        }
+        else if (startHoneycomb.x > targetHoneycomb.x && startHoneycomb.y > targetHoneycomb.y)
+        {
+            //(-1,-1) || (0,-1)
+        }
+        else if (startHoneycomb.x > targetHoneycomb.x && startHoneycomb.y < targetHoneycomb.y)
+        {
+            //(-1,1) || (0,1)
+        }
+        else if (startHoneycomb.x > targetHoneycomb.x && startHoneycomb.y == targetHoneycomb.y)
+        {
+            //(-1,1) || (-1,-1)
+        }
+        else if (startHoneycomb.x == targetHoneycomb.x && startHoneycomb.y < targetHoneycomb.y)
+        {
+            // (0,1)
+        }
+        else if (startHoneycomb.x == targetHoneycomb.x && startHoneycomb.y > targetHoneycomb.y)
+        {
+            // (0,-1)
+        }
+        else
+        {
+            //(0,0)
+        }
+        return targetHoneycomb;
+    }
+
+    private Vector2 FindShortestPath(Vector2 startHex, Vector2 hexDir, Vector2 targetHex)
+    {
+        int distance = 1;
+        Vector2 pathHex = startHex;
+
+        return targetHex;
     }
 
     public void DestroyLink()

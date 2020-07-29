@@ -180,23 +180,28 @@ public class LevelHandler : MonoBehaviour
 
     public void UpdatePlayerStats()
     {
-        PlayerHandler ph = FindObjectOfType<PlayerHandler>();
+        
         BeesMurderedText.text = PlayerHandler.BeesMurderedCount.ToString();
         HornetMurderedText.text = PlayerHandler.HornetMurderedCount.ToString();
 
+        PlayerHandler ph = FindObjectOfType<PlayerHandler>();
         HornetController hc = FindObjectOfType<HornetController>();
 
-        float barPercent = hc.Health / ph.GetMaxHealth();
-        HealthMeterBar.rectTransform.localScale = new Vector3(barPercent, 1, 1);
-        HealthMeterText.text = hc.Health.ToString();
+        if(ph && hc)
+        {
+            float barPercent = hc.Health / ph.GetMaxHealth();
+            HealthMeterBar.rectTransform.localScale = new Vector3(barPercent, 1, 1);
+            HealthMeterText.text = hc.Health.ToString();
 
-        float plasmaPercent = (float) hc.ShotCount / ph.GetMaxShot();
-        PlasmaMeterBar.rectTransform.localScale = new Vector3(plasmaPercent, plasmaPercent, 1);
-        PlasmaMeterText.text = hc.ShotCount.ToString();
+            float plasmaPercent = (float)hc.ShotCount / ph.GetMaxShot();
+            PlasmaMeterBar.rectTransform.localScale = new Vector3(plasmaPercent, plasmaPercent, 1);
+            PlasmaMeterText.text = hc.ShotCount.ToString();
 
-        PlasmaPowerText.text = (int) ph.GetPlasmaPower() + " " + (int) ph.GetPlasmaPowerBuffTime();
-        PlasmaChargeRateText.text = ph.GetPlasmaChargeRate() + " " + (int)ph.GetPlasmaChargeRateBuffTime();
-        PlasmaChargeCapacityText.text = ph.GetMaxShot() + " " + (int)ph.GetMaxShotBuffTime();
+            PlasmaPowerText.text = (int)ph.GetPlasmaPower() + " " + (int)ph.GetPlasmaPowerBuffTime();
+            PlasmaChargeRateText.text = ph.GetPlasmaChargeRate() + " " + (int)ph.GetPlasmaChargeRateBuffTime();
+            PlasmaChargeCapacityText.text = ph.GetMaxShot() + " " + (int)ph.GetMaxShotBuffTime();
+        }
+        
     }
 
     public void UpdatePlayerStats(int BeesDied, int HornetDied)

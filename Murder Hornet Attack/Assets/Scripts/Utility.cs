@@ -154,6 +154,27 @@ public static class Utility
         }
         return path;
     }
+
+    public static MapHoneycomb GetHoneycombFreePath(Vector2 startHex, Vector2 hexDir, int hexDistance)
+    {
+        List<MapHoneycomb> path = GetHoneycombPath(startHex, hexDir, hexDistance);
+        MapHoneycomb newTarget = null;
+        foreach (MapHoneycomb honeycomb in path)
+        {
+            //Debug.Log(honeycomb.position);
+            if (!honeycomb.display && honeycomb.LocationType == MapHoneycomb.LocationTypes.Chamber)
+            {
+                newTarget = honeycomb;
+                
+            }
+            else
+            {
+                //Debug.Log(honeycomb.LocationType);
+                break;
+            }
+        }
+        return newTarget;
+    }
     
     /// <summary>
     /// Returns the coordinates of a target honeycomb starting from the coordinates of a honeycomb in a honeycomb vector (honeycomb direction and distance)
