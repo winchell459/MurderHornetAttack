@@ -192,7 +192,7 @@ public class SnakeController : Insect
         if (!Head)
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (false && player && Vector2.Distance(player.transform.position, transform.position) < AttackRadius)
+            if (true && player && Vector2.Distance(player.transform.position, transform.position) < AttackRadius)
             {
                 Vector2 playerGridHex = Utility.WorldPointToHoneycombGrid(player.transform.position);
                 Vector2 startGridHex = Utility.WorldPointToHoneycombGrid(transform.position);
@@ -312,7 +312,7 @@ public class SnakeController : Insect
         {
             //(0,0)
         }
-        return targetHoneycomb;
+        return Utility.HoneycombGridToWorldPostion(targetHoneycomb);
     }
 
     private Vector2 FindShortestPath(Vector2 startHex, Vector2 hexDir, Vector2 targetHex)
