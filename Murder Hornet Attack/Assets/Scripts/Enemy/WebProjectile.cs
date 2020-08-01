@@ -12,6 +12,9 @@ public class WebProjectile : MonoBehaviour
     public float MoveTimer = 1f;
     public float SelfDesctuctTimer = 10f;
 
+    public float DamageDirect = 1f;
+    public float DamageIndirect = 1f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,9 +31,7 @@ public class WebProjectile : MonoBehaviour
         {
             float delta = (EndScale - StartScale) / ScaleSteps + transform.localScale.x;
             transform.localScale = Vector3.one * delta;
-            print("1");
         }
-        print("2");
     }
 
     IEnumerator SelfDestuct(float time)
@@ -44,4 +45,55 @@ public class WebProjectile : MonoBehaviour
         yield return new WaitForSecondsRealtime(time);
         rb.velocity = Vector2.zero;
     }
+
+    DamageDPS dps;
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Player"))
+        {
+            HornetController player = collision.GetComponent<HornetController>();
+            if (rb.velocity.magnitude > 0.1)
+            {
+                // Direct hit
+                print("Direct hit");
+                player.TakeDamage(DamageDirect);
+            }
+            else
+            {
+                print("Indirect hit");
+            }
+
+            // Slow debuff
+            SpeedBuff speedBuff = collision.gameObject.AddComponent<SpeedBuff>();
+            speedBuff.BuffName = "Spider Web";
+            speedBuff.Duration = 30f;
+            speedBuff.Unique = true;
+            speedBuff.SpeedMuliplier = 0.5f;
+            speedBuff.BeginBuff();
+
+            // Damage over time
+            if (dps == null)
+            {
+                dps = collision.gameObject.AddComponent<DamageDPS>();
+                dps.BuffName = "Spider Web";
+                dps.Damage = 1f;
+                dps.Delay = 0f;
+                dps.ApplyDamageNTimes = 30f;
+                dps.ApplyEveryNSeconds = .1f;
+                //dps.BeginDPS();
+            }
+        }
+    }
+
+
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.tag == "Player")
+        {
+            dps = null;
+        }
+    }
+
 }
