@@ -86,11 +86,15 @@ MonoBehaviour:
   CollisionDamage: 1
   Health: 50
   MaxHealth: 50
+  InsectPrefab: {fileID: 0}
+  ForwardSpeed_Defualt: 2
   ForwardSpeed: 2
   SideSpeed: 1
+  SideSpeed_Defualt: 1
   HornetSprite: {fileID: 2963273221294690423}
   HornetPlasmPrefab: {fileID: 2269173016302982693, guid: 0e2180129fdfb6d499cd9a31c12cf81b,
     type: 3}
+  ShotCount: 0
   Controls: 1
 --- !u!1 &2963273220353562594
 GameObject:

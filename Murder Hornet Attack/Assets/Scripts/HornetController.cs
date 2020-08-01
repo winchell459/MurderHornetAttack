@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class HornetController : Insect
 {
-    public float ForwardSpeed = 3;
+    public float ForwardSpeed_Defualt = 2;
+    public float ForwardSpeed = 2;
     public float SideSpeed = 1f;
+    public float SideSpeed_Defualt = 1f;
     public Transform HornetSprite;
     private Rigidbody2D rb;
     public GameObject HornetPlasmPrefab;
@@ -128,6 +130,12 @@ public class HornetController : Insect
         if (!ph) ph = FindObjectOfType<PlayerHandler>();
         Health = Mathf.Clamp(Health + Healing, 0, ph.GetMaxHealth());
         FindObjectOfType<LevelHandler>().UpdatePlayerStats();
+    }
+
+    public void ResetSpeed()
+    {
+        ForwardSpeed = ForwardSpeed_Defualt;
+        SideSpeed = SideSpeed_Defualt;
     }
 
     private void hornetMurdered()
