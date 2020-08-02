@@ -1,18 +1,40 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PitchTest : MonoBehaviour
 {
     private Rigidbody2D Player;
-    public float smoothing = 1;
+    public float smoothing = 0.01f;
+    public float Pitch = 1;
     public float MaxSpeed, MinSpeed;
     public float MaxPitch, MinPitch;
+    
     public AudioSource AS;
+    public enum TestingType
+    {
+        constant,
+        continuous,
+        dualstep,
+        slowcontinuous,
+        slowdualstep
+    }
+    public TestingType MyType;
+
+    public Dropdown TestingTypeDropdown;
+    public InputField inputMaxPitch, inputMinPitch, inputPitch, inputPitchRate;
+    public Text textPitch;
+    public Slider VolumeSlider;
+
+    private float currentPitch;
+
     // Start is called before the first frame update
     void Start()
     {
-        AS = GetComponent<AudioSource>(); 
+        AS = GetComponent<AudioSource>();
+        setTestPanelParameters();
+        currentPitch = Pitch;
     }
 
     // Update is called once per frame
@@ -23,11 +45,79 @@ public class PitchTest : MonoBehaviour
         else
         {
             Debug.Log(Player.velocity.magnitude);
-            float speed = Player.velocity.magnitude;
-            float percent = (speed - MinSpeed) / (MaxSpeed - MinSpeed);
-            float pitch = percent * (MaxPitch - MinPitch) + MinPitch;
-            pitch = pitch < MinPitch ? MinPitch : pitch;
+            float pitch = AS.pitch;
+            
+            if(MyType == TestingType.continuous)
+            {
+                
+                float percent = getSpeedPercent();
+                pitch = percent * (MaxPitch - MinPitch) + MinPitch;
+            }
+            else if(MyType == TestingType.dualstep)
+            {
+                pitch = Player.velocity.magnitude < ((MaxSpeed - MinSpeed) / 2 + MinSpeed) ? MinPitch : MaxPitch;
+            }
+            else if (MyType == TestingType.slowcontinuous)
+            {
+               
+                float pitchStep = (Player.velocity.magnitude < ((MaxSpeed - MinSpeed) / 2 + MinSpeed) ? -smoothing : smoothing)*Time.deltaTime;
+                pitch += pitchStep;
+            }
+            else if(MyType == TestingType.slowdualstep)
+            {
+                float pitchStep = (Player.velocity.magnitude < ((MaxSpeed - MinSpeed) / 2 + MinSpeed) ? -smoothing : smoothing) * Time.deltaTime;
+                currentPitch += pitchStep;
+                if (currentPitch >= MaxPitch) pitch = MaxPitch;
+                else if (currentPitch <= MinPitch) pitch = MinPitch;
+            }
+            else
+            {
+                pitch = Pitch;
+            }
+            
+
+            pitch = Mathf.Clamp(pitch, MinPitch, MaxPitch);
             AS.pitch = pitch;
+            textPitch.text = pitch.ToString();
         }
+    }
+    void setTestPanelParameters()
+    {
+        if(TestingTypeDropdown)TestingTypeDropdown.value = (int)MyType;
+        if(inputMaxPitch)inputMaxPitch.text = MaxPitch.ToString();
+        if(inputMinPitch)inputMinPitch.text = MinPitch.ToString();
+        if(inputPitch)inputPitch.text = Pitch.ToString();
+        if(inputPitchRate)inputPitchRate.text = smoothing.ToString();
+        if(VolumeSlider)VolumeSlider.value = 0.5f;
+    }
+
+    public void SetTestingType()
+    {
+        //MyType = type;
+        //Debug.Log(TestingTypeDropdown.value);
+        MyType = (TestingType)TestingTypeDropdown.value;
+    }
+
+    public void SetPitchParameters()
+    {
+        try
+        {
+            MaxPitch = float.Parse(inputMaxPitch.text);
+            MinPitch = float.Parse(inputMinPitch.text);
+            Pitch = float.Parse(inputPitch.text);
+            smoothing = float.Parse(inputPitchRate.text);
+            AS.volume = VolumeSlider.value;
+        }
+        catch
+        {
+            Debug.Log("Set Pitch Parameters Casting Error!");
+        }
+        
+    }
+
+    float getSpeedPercent()
+    {
+        float speed = Player.velocity.magnitude;
+        return (speed - MinSpeed) / (MaxSpeed - MinSpeed);
     }
 }

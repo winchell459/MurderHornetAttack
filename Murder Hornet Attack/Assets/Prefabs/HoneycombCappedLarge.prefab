@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 6
   m_Sprite: {fileID: 21300000, guid: e7cddffee5d78b44c80d75fbeaa50bbf, type: 3}
-  m_Color: {r: 0.990566, g: 0.85612994, b: 0.39716092, a: 1}
+  m_Color: {r: 1, g: 0.7058824, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -96,8 +96,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 846874c3a751b1a4e8d00ffa565c1daa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LocationType: 0
   Cap: {fileID: 5122200917245367694}
   CapRing: {fileID: 6941247006321709390}
+  EnemyTrigger: {fileID: 0}
 --- !u!61 &-8172852924203697138
 BoxCollider2D:
   m_ObjectHideFlags: 0

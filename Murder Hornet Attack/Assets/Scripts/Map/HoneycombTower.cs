@@ -44,7 +44,7 @@ public class HoneycombTower : Honeycomb
             for (int i = 0; i < TowerLayers.Length; i += 1)
             {
                 TowerLayers[i].parent = layers[i];
-                TowerLayers[i].localPosition = TowerLayers[i].localPosition * layers[i].localScale.x;
+                TowerLayers[i].localPosition = TowerLayers[0].localPosition * layers[i].localScale.x;
             }
         }
         
@@ -60,8 +60,8 @@ public class HoneycombTower : Honeycomb
         else
         {
             honeycombLayer.parent = layers[mapLayer];
-            honeycombLayer.localPosition = honeycombLayer.localPosition * layers[mapLayer].localScale.x;
-            for(int i = honeycombLayer.childCount - 1; i > -1 ; i -= 1)
+            honeycombLayer.localPosition = honeycombLayer.localPosition * layers[mapLayer].localScale.x; //(TowerLayers[0].position - honeycombLayer.position) * layers[mapLayer].localScale.x;
+            for (int i = honeycombLayer.childCount - 1; i > -1 ; i -= 1)
             {
                 placeHoneycombLayers(mapLayer + 1, honeycombLayer.GetChild(i));
             }
