@@ -18,7 +18,8 @@ public class PitchTest : MonoBehaviour
         continuous,
         dualstep,
         slowcontinuous,
-        slowdualstep
+        slowdualstep,
+        averagecontinuous
     }
     public TestingType MyType;
 
@@ -28,6 +29,7 @@ public class PitchTest : MonoBehaviour
     public Slider VolumeSlider;
 
     private float currentPitch;
+    private float averageVelocity;
 
     // Start is called before the first frame update
     void Start()
@@ -44,7 +46,7 @@ public class PitchTest : MonoBehaviour
         if (!Player) Player = FindObjectOfType<HornetController>().GetComponent<Rigidbody2D>();
         else
         {
-            Debug.Log(Player.velocity.magnitude);
+            //Debug.Log(Player.velocity.magnitude);
             float pitch = AS.pitch;
             
             if(MyType == TestingType.continuous)
@@ -65,13 +67,23 @@ public class PitchTest : MonoBehaviour
             }
             else if(MyType == TestingType.slowdualstep)
             {
-                float pitchStep = (Player.velocity.magnitude < ((MaxSpeed - MinSpeed) / 2 + MinSpeed) ? -smoothing : smoothing) * Time.deltaTime;
-                currentPitch += pitchStep;
+                float pitchStep = (Player.velocity.magnitude < ((MaxSpeed - MinSpeed) / 2 + MinSpeed) ? -smoothing : smoothing);//* Time.deltaTime;
+                //Debug.Log("pitchStep: " + pitchStep );
+                currentPitch += pitchStep * Time.deltaTime;
+                currentPitch = Mathf.Clamp(currentPitch, MinPitch, MaxPitch);
                 if (currentPitch >= MaxPitch) pitch = MaxPitch;
                 else if (currentPitch <= MinPitch) pitch = MinPitch;
             }
+            else if (MyType == TestingType.averagecontinuous)
+            {
+                float speed = Mathf.Clamp(Player.velocity.magnitude, MinSpeed, MaxSpeed);
+                averageVelocity = (speed * smoothing + (1 - smoothing) * averageVelocity);
+                float percent = getSpeedPercent(averageVelocity);
+                pitch = percent * (MaxPitch - MinPitch) + MinPitch;
+            }
             else
             {
+                if (MaxPitch < Pitch) MaxPitch = Pitch;
                 pitch = Pitch;
             }
             
@@ -118,6 +130,12 @@ public class PitchTest : MonoBehaviour
     float getSpeedPercent()
     {
         float speed = Player.velocity.magnitude;
+        return (speed - MinSpeed) / (MaxSpeed - MinSpeed);
+    }
+
+    float getSpeedPercent(float speed)
+    {
+        
         return (speed - MinSpeed) / (MaxSpeed - MinSpeed);
     }
 }

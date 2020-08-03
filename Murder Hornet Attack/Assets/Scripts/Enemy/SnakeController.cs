@@ -276,51 +276,101 @@ public class SnakeController : Insect
 
     private Vector2 findPathToHoneycomb(Vector2 startHoneycomb, Vector2 targetHoneycomb)
     {
+        //Vector2 targetPos = Utility.HoneycombGridToWorldPostion(targetHoneycomb);
+        //Vector2 startPos = Utility.HoneycombGridToWorldPostion(startHoneycomb);
+        Vector2 closestHex = startHoneycomb;
 
-        if(startHoneycomb.x < targetHoneycomb.x && startHoneycomb.y > targetHoneycomb.y)
+        if (startHoneycomb.x < targetHoneycomb.x && startHoneycomb.y > targetHoneycomb.y)
         {
             //(1,-1) || (0,-1)
-        }else if(startHoneycomb.x < targetHoneycomb.x && startHoneycomb.y < targetHoneycomb.y)
+            Vector2 dirOne = new Vector2(1, -1);
+            Vector2 dirTwo = new Vector2(0, -1);
+            closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb);
+        }
+        else if(startHoneycomb.x < targetHoneycomb.x && startHoneycomb.y < targetHoneycomb.y)
         {
             //(1,1) || (0,1)
+            Vector2 dirOne = new Vector2(1, 1);
+            Vector2 dirTwo = new Vector2(0, 1);
+            closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb);
+
         }
         else if (startHoneycomb.x < targetHoneycomb.x && startHoneycomb.y == targetHoneycomb.y)
         {
             //(1,1) || (1,-1)
+            Vector2 dirOne = new Vector2(1, 1);
+            Vector2 dirTwo = new Vector2(1, -1);
+            closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb);
         }
         else if (startHoneycomb.x > targetHoneycomb.x && startHoneycomb.y > targetHoneycomb.y)
         {
             //(-1,-1) || (0,-1)
+            Vector2 dirOne = new Vector2(-1, -1);
+            Vector2 dirTwo = new Vector2(0, -1);
+            closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb);
         }
         else if (startHoneycomb.x > targetHoneycomb.x && startHoneycomb.y < targetHoneycomb.y)
         {
             //(-1,1) || (0,1)
+            Vector2 dirOne = new Vector2(-1, 1);
+            Vector2 dirTwo = new Vector2(0, 1);
+            closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb);
         }
         else if (startHoneycomb.x > targetHoneycomb.x && startHoneycomb.y == targetHoneycomb.y)
         {
             //(-1,1) || (-1,-1)
+            Vector2 dirOne = new Vector2(-1, 1);
+            Vector2 dirTwo = new Vector2(-1, -1);
+            closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb);
         }
         else if (startHoneycomb.x == targetHoneycomb.x && startHoneycomb.y < targetHoneycomb.y)
         {
             // (0,1)
+            Vector2 hexOne = FindShortestPath(startHoneycomb, new Vector2(0,1), targetHoneycomb);
+            if (Utility.DistanceBetweenHoneycomb(closestHex, targetHoneycomb) > Utility.DistanceBetweenHoneycomb(hexOne, targetHoneycomb)) closestHex = hexOne;
         }
         else if (startHoneycomb.x == targetHoneycomb.x && startHoneycomb.y > targetHoneycomb.y)
         {
             // (0,-1)
+            Vector2 hexOne = FindShortestPath(startHoneycomb, new Vector2(0, -1), targetHoneycomb);
+            if (Utility.DistanceBetweenHoneycomb(closestHex, targetHoneycomb) > Utility.DistanceBetweenHoneycomb(hexOne, targetHoneycomb)) closestHex = hexOne;
         }
         else
         {
             //(0,0)
+            Debug.Log("Snake Follow Player Error");
         }
-        return Utility.HoneycombGridToWorldPostion(targetHoneycomb);
+        return Utility.HoneycombGridToWorldPostion( closestHex);
+    }
+
+    private Vector2 compareShortestPaths(Vector2 dirOne, Vector2 dirTwo, Vector2 startHoneycomb, Vector2 targetHoneycomb)
+    {
+        //Vector2 targetPos = Utility.HoneycombGridToWorldPostion(targetHoneycomb);
+        //Vector2 startPos = Utility.HoneycombGridToWorldPostion(startHoneycomb);
+        Vector2 closestHex = startHoneycomb;
+
+        Vector2 hexOne = FindShortestPath(startHoneycomb, dirOne, targetHoneycomb);
+        Vector2 hexTwo = FindShortestPath(startHoneycomb, dirTwo, targetHoneycomb);
+
+        if (Utility.DistanceBetweenHoneycomb(closestHex, targetHoneycomb) > Utility.DistanceBetweenHoneycomb(hexOne, targetHoneycomb)) closestHex = hexOne;
+        if (Utility.DistanceBetweenHoneycomb(closestHex, targetHoneycomb) > Utility.DistanceBetweenHoneycomb(hexTwo, targetHoneycomb)) closestHex = hexTwo;
+        return closestHex;
     }
 
     private Vector2 FindShortestPath(Vector2 startHex, Vector2 hexDir, Vector2 targetHex)
     {
         int distance = 1;
         Vector2 pathHex = startHex;
-
-        return targetHex;
+        MapHoneycomb newTarget = Utility.GetHoneycombFreePath(targetHex, hexDir, distance);
+        MapHoneycomb nextTarget = Utility.GetHoneycombFreePath(targetHex, hexDir, distance + 1);
+        while(Utility.DistanceBetweenHoneycomb(Utility.WorldPointToHoneycombGrid(newTarget.position), targetHex) > Utility.DistanceBetweenHoneycomb(Utility.WorldPointToHoneycombGrid(nextTarget.position), targetHex))
+        {
+            newTarget = nextTarget;
+            distance += 1;
+            nextTarget = Utility.GetHoneycombFreePath(targetHex, hexDir, distance + 1);
+        }
+        Debug.Log("Closets HexPos: " + Utility.WorldPointToHoneycombGrid(newTarget.position));
+        return Utility.WorldPointToHoneycombGrid(newTarget.position);
     }
 
     public void DestroyLink()

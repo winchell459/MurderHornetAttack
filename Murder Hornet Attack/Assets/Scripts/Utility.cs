@@ -210,4 +210,8 @@ public static class Utility
         return worldDir;
     }
 
+    public static float DistanceBetweenHoneycomb(Vector2 hexOne, Vector2 hexTwo)
+    {
+        return Vector2.Distance(HoneycombGridToWorldPostion( hexOne), HoneycombGridToWorldPostion( hexTwo));
+    }
 }
