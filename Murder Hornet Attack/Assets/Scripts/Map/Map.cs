@@ -9,6 +9,7 @@ public class Map : MonoBehaviour
     public GameObject HoneycombCappedPrefab;
     public GameObject HoneycombLargePrefab;
     public GameObject BeeCityPrefab;
+    public GameObject HoneycombChamberFloorPrefab;
     public static Map StaticMap;
     public float MapWidth = 10;
     public float MapHeight = 10;
@@ -21,7 +22,8 @@ public class Map : MonoBehaviour
     private List<MapChunk> honeycombChunks = new List<MapChunk>();
     private List<bool> displayChunks = new List<bool>();
     private List<GameObject> beeCityPool = new List<GameObject>();
-    public Transform HoneycombLayer_1;
+    private List<GameObject> HoneycombFloorPool = new List<GameObject>();
+    //public Transform HoneycombLayer_1;
 
     public Transform[] HoneycombLayers;
     public List<float> LayerScales = new List<float>();
@@ -201,12 +203,13 @@ public class Map : MonoBehaviour
         }
         else
         {
-            int rand = Random.Range(0, 2);
+            //int rand = Random.Range(0, 2);
             GameObject prefab = StaticMap.HoneycombCappedPrefab;
             //if (rand == 0) prefab = StaticMap.HoneycombCappedPrefab;
             //else prefab = StaticMap.HoneycombPrefab;
             honeycomb = Instantiate(prefab, StaticMap.transform.position, Quaternion.identity);
-            honeycomb.transform.parent = StaticMap.HoneycombLayer_1;
+            //honeycomb.transform.parent = StaticMap.HoneycombLayer_1;
+            honeycomb.transform.parent = StaticMap.HoneycombLayers[0];
         }
         return honeycomb;
     }
@@ -230,7 +233,8 @@ public class Map : MonoBehaviour
             GameObject prefab = StaticMap.HoneycombLargePrefab;
             
             honeycomb = Instantiate(prefab, StaticMap.transform.position, Quaternion.identity);
-            honeycomb.transform.parent = StaticMap.HoneycombLayer_1;
+            //honeycomb.transform.parent = StaticMap.HoneycombLayer_1;
+            honeycomb.transform.parent = StaticMap.HoneycombLayers[0];
         }
         return honeycomb;
     }
@@ -259,5 +263,24 @@ public class Map : MonoBehaviour
     public static void ReturnBeeCity(GameObject beeCity)
     {
         StaticMap.beeCityPool.Add(beeCity);
+    }
+
+    public static GameObject GetHoneycombChamberFloor()
+    {
+        GameObject honeycomb;
+        if(StaticMap.HoneycombFloorPool.Count > 0)
+        {
+            honeycomb = StaticMap.HoneycombFloorPool[0];
+            StaticMap.HoneycombFloorPool.RemoveAt(0);
+        }
+        else
+        {
+            honeycomb = Instantiate(StaticMap.HoneycombChamberFloorPrefab, StaticMap.transform.position, Quaternion.identity);
+        }
+        return honeycomb;
+    }
+    public static void ReturnHoneycombChamberFloor(GameObject honeycombFloor)
+    {
+        StaticMap.HoneycombFloorPool.Add(honeycombFloor);
     }
 }

@@ -16,6 +16,7 @@ public class MapHoneycomb
     private bool beeuilding;
     public bool isLargeLoc = false;
     private bool isLargeHoneycomb;
+    public bool isFloor;
 
     public enum LocationTypes
     {
@@ -56,12 +57,16 @@ public class MapHoneycomb
     }
     public int GetDepth() { return depth; }
 
-    bool ignoreLarge = false;
+    bool ignoreLarge = false; //---------------------------------------------------------------ignoreLarge---------------------------------------------------------------
     public void DisplayHoneycomb()
     {
         if (display)
         {
-            if ((depth < 5 || depth < 7 &&  !isLargeLoc ) || ignoreLarge && !beeuilding)
+            if (isFloor)
+            {
+                honeycomb = Map.GetHoneycombChamberFloor();
+            }
+            else if((depth < 5 || depth < 7 &&  !isLargeLoc ) || ignoreLarge && !beeuilding)
             {
                 honeycomb = Map.GetHoneycomb();
                 isLargeHoneycomb = false;
@@ -102,7 +107,10 @@ public class MapHoneycomb
 
             honeycomb.GetComponent<Honeycomb>().HideHoneycomb();
             honeycomb.SetActive(false);
-            if (!isLargeHoneycomb && honeycomb && !beeuilding) Map.ReturnHoneycomb(honeycomb);
+            if (isFloor) {
+                Map.ReturnHoneycombChamberFloor(honeycomb);
+            }
+            else if(!isLargeHoneycomb && honeycomb && !beeuilding) Map.ReturnHoneycomb(honeycomb);
             else if (honeycomb && !beeuilding) Map.ReturnHoneycombLarge(honeycomb);
             else if (honeycomb)
             {

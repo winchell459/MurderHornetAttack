@@ -192,10 +192,13 @@ public class SnakeController : Insect
         if (!Head)
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (true && player && Vector2.Distance(player.transform.position, transform.position) < AttackRadius)
+            Vector2 playerHex = Utility.WorldPointToHoneycombGrid(player.transform.position);
+            Vector2 snakeHex = Utility.WorldPointToHoneycombGrid(transform.position);
+
+            if (true && player && Utility.DistanceBetweenHoneycomb(playerHex,snakeHex) < AttackRadius && Map.StaticMap.GetHoneycomb((int)playerHex.x, (int) playerHex.y).LocationType == MapHoneycomb.LocationTypes.Chamber)
             {
-                Vector2 playerGridHex = Utility.WorldPointToHoneycombGrid(player.transform.position);
-                Vector2 startGridHex = Utility.WorldPointToHoneycombGrid(transform.position);
+                Vector2 playerGridHex = playerHex;// Utility.WorldPointToHoneycombGrid(player.transform.position);
+                Vector2 startGridHex = snakeHex; // Utility.WorldPointToHoneycombGrid(transform.position);
                 Vector2 playerGridPos = findPathToHoneycomb(startGridHex, playerGridHex);
                 return playerGridPos ;
             }
@@ -361,15 +364,15 @@ public class SnakeController : Insect
     {
         int distance = 1;
         Vector2 pathHex = startHex;
-        MapHoneycomb newTarget = Utility.GetHoneycombFreePath(targetHex, hexDir, distance);
-        MapHoneycomb nextTarget = Utility.GetHoneycombFreePath(targetHex, hexDir, distance + 1);
+        MapHoneycomb newTarget = Utility.GetHoneycombFreePath(startHex, hexDir, distance);
+        MapHoneycomb nextTarget = Utility.GetHoneycombFreePath(startHex, hexDir, distance + 1);
         while(Utility.DistanceBetweenHoneycomb(Utility.WorldPointToHoneycombGrid(newTarget.position), targetHex) > Utility.DistanceBetweenHoneycomb(Utility.WorldPointToHoneycombGrid(nextTarget.position), targetHex))
         {
             newTarget = nextTarget;
             distance += 1;
-            nextTarget = Utility.GetHoneycombFreePath(targetHex, hexDir, distance + 1);
+            nextTarget = Utility.GetHoneycombFreePath(startHex, hexDir, distance + 1);
         }
-        Debug.Log("Closets HexPos: " + Utility.WorldPointToHoneycombGrid(newTarget.position));
+        //Debug.Log("Closets HexPos: " + Utility.WorldPointToHoneycombGrid(newTarget.position));
         return Utility.WorldPointToHoneycombGrid(newTarget.position);
     }
 
@@ -388,8 +391,7 @@ public class SnakeController : Insect
 
     public void DestroySnake()
     {
-        //if (Tail) Tail.DestroySnake();
-        //if (Head) Head.DestroySnake();
+        
         while (Tail)
         {
             SnakeController tail = Tail.Tail;

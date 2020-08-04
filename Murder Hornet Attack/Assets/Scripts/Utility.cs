@@ -162,7 +162,7 @@ public static class Utility
         foreach (MapHoneycomb honeycomb in path)
         {
             //Debug.Log(honeycomb.position);
-            if (!honeycomb.display && honeycomb.LocationType == MapHoneycomb.LocationTypes.Chamber)
+            if ((!honeycomb.display || honeycomb.isFloor) && honeycomb.LocationType == MapHoneycomb.LocationTypes.Chamber)
             {
                 newTarget = honeycomb;
                 

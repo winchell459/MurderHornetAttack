@@ -23,7 +23,12 @@ public class MapChamber : MapVoid
             if (Vector2.Distance(honeycomb.position, locations[i]) <= widths[i] / 2)
             {
                 SetLocationType(honeycomb, MapHoneycomb.LocationTypes.Chamber);
-                display = false;
+                //display = false;
+                if (display)
+                {
+                    honeycomb.isFloor = true;
+                }
+                
             }
             else
             {

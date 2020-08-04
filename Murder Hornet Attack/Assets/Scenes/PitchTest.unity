@@ -8910,6 +8910,8 @@ MonoBehaviour:
     type: 3}
   BeeCityPrefab: {fileID: 2717590611419230529, guid: 54a87846bd3e249ce8644ec9597445c1,
     type: 3}
+  HoneycombChamberFloorPrefab: {fileID: 1451932472498554745, guid: ef5566033753aa14da70c0b7fa6079f6,
+    type: 3}
   MapWidth: 100
   MapHeight: 80
   MapOrigin: {x: -70, y: -130}
@@ -8917,7 +8919,6 @@ MonoBehaviour:
   HorizontalSpacing: 0.45
   HoneycombPool: []
   HoneycombLargePool: []
-  HoneycombLayer_1: {fileID: 372231492}
   HoneycombLayers:
   - {fileID: 372231492}
   - {fileID: 642884672}
