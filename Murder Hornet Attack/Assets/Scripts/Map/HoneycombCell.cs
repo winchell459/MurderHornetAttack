@@ -9,8 +9,8 @@ public class HoneycombCell : Honeycomb
     public Collider2D EnemyTrigger;
     
     private bool capped = true;
-    
 
+    public GameObject HoneycombBase;
 
     public override void DestroyHoneycomb()
     {

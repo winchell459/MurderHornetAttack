@@ -366,7 +366,7 @@ public class SnakeController : Insect
         Vector2 pathHex = startHex;
         MapHoneycomb newTarget = Utility.GetHoneycombFreePath(startHex, hexDir, distance);
         MapHoneycomb nextTarget = Utility.GetHoneycombFreePath(startHex, hexDir, distance + 1);
-        while(Utility.DistanceBetweenHoneycomb(Utility.WorldPointToHoneycombGrid(newTarget.position), targetHex) > Utility.DistanceBetweenHoneycomb(Utility.WorldPointToHoneycombGrid(nextTarget.position), targetHex))
+        while(newTarget != null && nextTarget != null && Utility.DistanceBetweenHoneycomb(Utility.WorldPointToHoneycombGrid(newTarget.position), targetHex) > Utility.DistanceBetweenHoneycomb(Utility.WorldPointToHoneycombGrid(nextTarget.position), targetHex))
         {
             newTarget = nextTarget;
             distance += 1;
