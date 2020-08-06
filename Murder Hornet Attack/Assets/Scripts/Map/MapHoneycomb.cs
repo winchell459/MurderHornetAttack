@@ -72,6 +72,7 @@ public class MapHoneycomb
                 isLargeHoneycomb = false;
                 beeuilding = false;
                 if(EnemyPrefab) setupEnemyTrigger(true);
+                
             }
             else if (beeuilding)
             {
@@ -89,11 +90,22 @@ public class MapHoneycomb
                 honeycomb.GetComponent<Honeycomb>().honeyGrid = this;
                 honeycomb.SetActive(true);
                 honeycomb.GetComponent<Honeycomb>().LocationType = LocationType;
-                if (depth <= 2) capped = false;
+                //if (depth <= 2) capped = false;
                 if (isFloor) capped = true;
 
                 if (beeuilding && !isLargeHoneycomb && !isFloor) honeycomb.GetComponent<HoneycombTower>().SetupBeeTower();
-                else honeycomb.GetComponent<HoneycombCell>().SetCapped(capped);
+                else 
+                {
+                    honeycomb.GetComponent<HoneycombCell>().SetCapped(capped);
+                    if (depth <= 3 && !isFloor)
+                    {
+                        honeycomb.GetComponent<HoneycombCell>().HoneycombBase.SetActive(true);
+                        honeycomb.GetComponent<HoneycombCell>().HoneycombBase.transform.parent = Map.StaticMap.HoneycombLayers[0];
+                        honeycomb.transform.parent = Map.StaticMap.HoneycombLayers[1];
+                        honeycomb.transform.localPosition = honeycomb.transform.localPosition * Map.StaticMap.HoneycombLayers[1].localScale.x;
+                    }
+                    
+                }
             }
 
         }
@@ -108,10 +120,20 @@ public class MapHoneycomb
 
             honeycomb.GetComponent<Honeycomb>().HideHoneycomb();
             honeycomb.SetActive(false);
-            if (isFloor) {
+            if (isFloor)
+            {
                 Map.ReturnHoneycombChamberFloor(honeycomb);
             }
-            else if(!isLargeHoneycomb && honeycomb && !beeuilding) Map.ReturnHoneycomb(honeycomb);
+            else if (!isLargeHoneycomb && honeycomb && !beeuilding)
+            {
+
+                GameObject honeycombBase = honeycomb.GetComponent<HoneycombCell>().HoneycombBase;
+                honeycombBase.SetActive(false);
+                honeycombBase.transform.parent = honeycomb.transform ;
+                honeycombBase.transform.localPosition = Vector2.zero;
+                Map.ReturnHoneycomb(honeycomb);
+                
+            }
             else if (honeycomb && !beeuilding) Map.ReturnHoneycombLarge(honeycomb);
             else if (honeycomb)
             {

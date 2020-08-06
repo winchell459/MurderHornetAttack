@@ -2751,7 +2751,6 @@ MonoBehaviour:
   Target: {fileID: 2123076730}
   TrackingSpeed: 3
   cam: {fileID: 963194227}
-  Layer2: {fileID: 642884672}
   Layers:
   - {fileID: 372231492}
   - {fileID: 642884672}
@@ -8931,9 +8930,9 @@ MonoBehaviour:
   LayerScales: []
   ChunkHeight: 12
   ChunkWidth: 6
+  ChunkRadius: 6
   cam: {fileID: 963194227}
   Display: 0
-  chunkRadius: 9
 --- !u!4 &1840310406
 Transform:
   m_ObjectHideFlags: 0

@@ -31,7 +31,8 @@ public class Map : MonoBehaviour
     //private int honeycombHeight = -20;
     public int ChunkHeight = 40;
     public int ChunkWidth = 14;
-    
+    public int ChunkRadius = 3; //number of chunks from the player to render
+
     private MapPath path;
     private List<MapVoid> voids = new List<MapVoid>();
 
@@ -50,13 +51,14 @@ public class Map : MonoBehaviour
             LayerScales.Add(HoneycombLayers[i].localScale.x);
         }
     }
-    public int chunkRadius = 3;
+    
     private void Update()
     {
         if (Display)
         {
-            
+            //Find which chunks the player camera is in
             List<int> chunkLoc = new List<int>();
+            int chunkCount = 0;
             for (int i = 0; i < honeycombChunks.Count; i+=1)
             {
                 MapChunk chunk = honeycombChunks[i];
@@ -64,10 +66,14 @@ public class Map : MonoBehaviour
                 {
                     displayChunks[i] = true;
                     chunkLoc.Add(i);
+                    chunkCount += 1;
                 }
                 else displayChunks[i] = false;
             }
 
+            //Debug.Log("Chunk Count: " + chunkCount);
+
+            //loop through chunks and set to display if chunk is with 
             int chunkRows = (int)Mathf.Ceil((MapHeight / VerticalSpacing) / (ChunkHeight));
             int chunkCols = (int)Mathf.Ceil((MapWidth / HorizontalSpacing) / (ChunkWidth));
             foreach(int index in chunkLoc)
@@ -75,9 +81,9 @@ public class Map : MonoBehaviour
                 int colCenter = index % chunkCols;
                 int rowCenter = index/ chunkCols;
                 //Debug.Log(col + " " + row);
-                for(int j = 0; j < chunkRadius; j += 1)
+                for(int j = 0; j < ChunkRadius; j += 1)
                 {
-                    for(int i = 0; i <= chunkRadius - j; i += 1)
+                    for(int i = 0; i <= ChunkRadius - j; i += 1)
                     {
                         int col = colCenter + i;
                         int row = rowCenter + j;
@@ -203,13 +209,12 @@ public class Map : MonoBehaviour
         }
         else
         {
-            //int rand = Random.Range(0, 2);
+            
             GameObject prefab = StaticMap.HoneycombCappedPrefab;
-            //if (rand == 0) prefab = StaticMap.HoneycombCappedPrefab;
-            //else prefab = StaticMap.HoneycombPrefab;
+            
             honeycomb = Instantiate(prefab, StaticMap.transform.position, Quaternion.identity);
-            //honeycomb.transform.parent = StaticMap.HoneycombLayer_1;
-            honeycomb.transform.parent = StaticMap.HoneycombLayers[0];
+            
+            //honeycomb.transform.parent = StaticMap.HoneycombLayers[0];
         }
         return honeycomb;
     }

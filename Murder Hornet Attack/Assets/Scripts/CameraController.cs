@@ -9,8 +9,8 @@ public class CameraController : MonoBehaviour
     public float TrackingSpeed = 1;
     public Camera cam;
 
-    public Transform Layer2;
-    private float layer2Scale;
+    //public Transform Layer2;
+    //private float layer2Scale;
     public Transform[] Layers;
     private List<float> scales = new List<float>();
     // Start is called before the first frame update
@@ -21,7 +21,7 @@ public class CameraController : MonoBehaviour
         transform.position = new Vector3(Target.position.x, Target.position.y, transform.position.z);
         cam.transform.localPosition = -offset;
         SetCameraTarget(Target);
-        layer2Scale = Layer2.localScale.x;
+        //layer2Scale = Layer2.localScale.x;
         foreach(Transform layer in Layers)
         {
             scales.Add(layer.localScale.x);

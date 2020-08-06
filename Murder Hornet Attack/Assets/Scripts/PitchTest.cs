@@ -43,8 +43,7 @@ public class PitchTest : MonoBehaviour
     void Update()
     {
         
-        if (!Player) Player = FindObjectOfType<HornetController>().GetComponent<Rigidbody2D>();
-        else
+        if (Player) 
         {
             //Debug.Log(Player.velocity.magnitude);
             float pitch = AS.pitch;
@@ -91,6 +90,14 @@ public class PitchTest : MonoBehaviour
             pitch = Mathf.Clamp(pitch, MinPitch, MaxPitch);
             AS.pitch = pitch;
             textPitch.text = pitch.ToString();
+        }
+        else
+        {
+            HornetController playerObj = FindObjectOfType<HornetController>();
+            if(playerObj)
+                Player = playerObj.GetComponent<Rigidbody2D>();
+            
+            
         }
     }
     void setTestPanelParameters()
