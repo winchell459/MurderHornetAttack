@@ -64,7 +64,7 @@ public class MapHoneycomb
         {
             if (isFloor)
             {
-                honeycomb = Map.GetHoneycombChamberFloor();
+                //honeycomb = Map.GetHoneycombChamberFloor();
             }
             else if((depth < 5 || depth < 7 &&  !isLargeLoc ) || ignoreLarge && !beeuilding)
             {
@@ -90,21 +90,22 @@ public class MapHoneycomb
                 honeycomb.GetComponent<Honeycomb>().honeyGrid = this;
                 honeycomb.SetActive(true);
                 honeycomb.GetComponent<Honeycomb>().LocationType = LocationType;
-                //if (depth <= 2) capped = false;
+                if (depth <= 2) capped = false;
                 if (isFloor) capped = true;
 
                 if (beeuilding && !isLargeHoneycomb && !isFloor) honeycomb.GetComponent<HoneycombTower>().SetupBeeTower();
                 else 
                 {
                     honeycomb.GetComponent<HoneycombCell>().SetCapped(capped);
-                    if (depth <= 3 && !isFloor)
-                    {
-                        honeycomb.GetComponent<HoneycombCell>().HoneycombBase.SetActive(true);
-                        honeycomb.GetComponent<HoneycombCell>().HoneycombBase.transform.parent = Map.StaticMap.HoneycombLayers[0];
-                        honeycomb.transform.parent = Map.StaticMap.HoneycombLayers[1];
-                        honeycomb.transform.localPosition = honeycomb.transform.localPosition * Map.StaticMap.HoneycombLayers[1].localScale.x;
-                    }
-                    
+                    //if (depth <= 3 && !isFloor)
+                    //{
+                    //    honeycomb.GetComponent<HoneycombCell>().HoneycombBase.SetActive(true);
+                    //    honeycomb.GetComponent<HoneycombCell>().HoneycombBase.transform.parent = Map.StaticMap.HoneycombLayers[0];
+                        
+                    //}
+                    //honeycomb.transform.parent = Map.StaticMap.HoneycombLayers[1];
+                    //honeycomb.transform.localPosition = honeycomb.transform.localPosition * Map.StaticMap.HoneycombLayers[1].localScale.x;
+
                 }
             }
 
@@ -122,7 +123,7 @@ public class MapHoneycomb
             honeycomb.SetActive(false);
             if (isFloor)
             {
-                Map.ReturnHoneycombChamberFloor(honeycomb);
+                //Map.ReturnHoneycombChamberFloor(honeycomb);
             }
             else if (!isLargeHoneycomb && honeycomb && !beeuilding)
             {

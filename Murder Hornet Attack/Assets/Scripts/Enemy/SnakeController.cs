@@ -192,17 +192,22 @@ public class SnakeController : Insect
         if (!Head)
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
-            Vector2 playerHex = Utility.WorldPointToHoneycombGrid(player.transform.position);
-            Vector2 snakeHex = Utility.WorldPointToHoneycombGrid(transform.position);
-
-            if (true && player && Utility.DistanceBetweenHoneycomb(playerHex,snakeHex) < AttackRadius && Map.StaticMap.GetHoneycomb((int)playerHex.x, (int) playerHex.y).LocationType == MapHoneycomb.LocationTypes.Chamber)
+            if (player)
             {
-                Vector2 playerGridHex = playerHex;// Utility.WorldPointToHoneycombGrid(player.transform.position);
-                Vector2 startGridHex = snakeHex; // Utility.WorldPointToHoneycombGrid(transform.position);
-                Vector2 playerGridPos = findPathToHoneycomb(startGridHex, playerGridHex);
-                return playerGridPos ;
+                Vector2 playerHex = Utility.WorldPointToHoneycombGrid(player.transform.position);
+                Vector2 snakeHex = Utility.WorldPointToHoneycombGrid(transform.position);
+
+                if (true && player && Utility.DistanceBetweenHoneycomb(playerHex, snakeHex) < AttackRadius && Map.StaticMap.GetHoneycomb((int)playerHex.x, (int)playerHex.y).LocationType == MapHoneycomb.LocationTypes.Chamber)
+                {
+                    Vector2 playerGridHex = playerHex;// Utility.WorldPointToHoneycombGrid(player.transform.position);
+                    Vector2 startGridHex = snakeHex; // Utility.WorldPointToHoneycombGrid(transform.position);
+                    Vector2 playerGridPos = findPathToHoneycomb(startGridHex, playerGridHex);
+                    return playerGridPos;
+                }
+                else return getRandomLoc();
             }
             else return getRandomLoc();
+
         }
         else
         {
