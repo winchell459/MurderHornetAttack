@@ -12,6 +12,7 @@ public class CameraController : MonoBehaviour
     //public Transform Layer2;
     //private float layer2Scale;
     public Transform[] Layers;
+    
     private List<float> scales = new List<float>();
     // Start is called before the first frame update
     void Start()
