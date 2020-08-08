@@ -22,7 +22,8 @@ public class MapHoneycomb
     {
         Embedded,
         Path,
-        Chamber
+        Chamber,
+        Tunnel
     }
     public LocationTypes LocationType;
 

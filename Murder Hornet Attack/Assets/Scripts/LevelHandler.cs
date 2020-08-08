@@ -12,6 +12,8 @@ public class LevelHandler : MonoBehaviour
     public GameObject PortalPrefab;
     public GameObject ChamberTriggerPrefab;
 
+    public Transform ExitTunnel;
+
     private Portal PlayerSpawn;
     private Portal Exit;
 
@@ -252,7 +254,7 @@ public class LevelHandler : MonoBehaviour
         Vector2 mapMax = origin + new Vector2(map.MapWidth, map.MapHeight) - new Vector2(15, 15);
 
         //create snake Chamber
-        Vector2 snakeChamberLoc = Utility.HoneycombGridToWorldPostion(new Vector2(40, 40));
+        Vector2 snakeChamberLoc = Utility.HoneycombGridToWorldPostion(new Vector2(150, 100));
         MapChamber snakeChamber = MapChamber.RandomChamber(snakeChamberLoc, 15);
         //ChamberTrigger snakeChamberTrigger = Instantiate(ChamberTriggerPrefab, snakeChamberLoc, Quaternion.identity).GetComponent<ChamberTrigger>();
         //addChamberTrigger(snakeChamberTrigger, snakeChamber);
@@ -271,18 +273,22 @@ public class LevelHandler : MonoBehaviour
             locations.Add(new Vector2(xLoc, yLoc));
         }
 
-        MapChamber endChamber = (MapChamber)newVoids[newVoids.Count - 1];
-        for(int i = 1; i < voidCount - 1; i+=1)
-        {
-            if(Vector2.Distance(spawnChamber.Location, endChamber.Location) < Vector2.Distance(spawnChamber.Location, ((MapChamber)newVoids[i]).Location)) {
-                endChamber = (MapChamber)newVoids[i];
-            }
-        }
-
+        //MapChamber endChamber = (MapChamber)newVoids[newVoids.Count - 1];
+        //for(int i = 1; i < voidCount - 1; i+=1)
+        //{
+        //    if(Vector2.Distance(spawnChamber.Location, endChamber.Location) < Vector2.Distance(spawnChamber.Location, ((MapChamber)newVoids[i]).Location)) {
+        //        endChamber = (MapChamber)newVoids[i];
+        //    }
+        //}
+        MapChamber endChamber = MapChamber.EndChamberTunnel(Player.position, 8);
+        newVoids.Add(endChamber);
+        connected.Add(false);
+        locations.Add(Utility.WorldPointToHoneycombPos(Player.position));
         //setup Exit tunnel
         //Exit = Instantiate(PortalPrefab, endChamber.Location, Quaternion.identity).GetComponent<Portal>();
         //addChamberTrigger(Exit, endChamber);
         Exit = (Portal)ChamberTrigger.SetupChamberTrigger(PortalPrefab, endChamber);
+        ExitTunnel.position = Exit.Chamber.Location;
 
         //connect chambers
         for(int i = 0; i < voidCount; i += 1)

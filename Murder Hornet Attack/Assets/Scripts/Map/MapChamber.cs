@@ -93,5 +93,13 @@ public class MapChamber : MapVoid
         return newChamber;
     }
 
+    public static MapChamber EndChamberTunnel(Vector2 location, float radius)
+    {
+        location = Utility.WorldPointToHoneycombPos(location);
+        MapChamber newChamber = new MapChamber(location);
+        newChamber.AddChamber(location, radius * 2);
+        return newChamber;
+    }
+
     //public static MapChamber RandomPortalChamber
 }
