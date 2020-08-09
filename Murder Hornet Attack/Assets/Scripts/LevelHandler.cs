@@ -61,7 +61,7 @@ public class LevelHandler : MonoBehaviour
         //Debug.Log("honeycomb (3,6) " + Utility.HoneycombGridToWorldPostion(new Vector2(3, 6)));
         //Debug.Log("honeycomb (6,6) " + Utility.HoneycombGridToWorldPostion(new Vector2(6, 6)));
 
-        displayLocation(Utility.WorldToHoneycomb(Exit.transform.position), EndLoc);
+        displayLocation(Utility.WorldPointToHoneycombGrid(Exit.transform.position), EndLoc);
         //displayLocation(Utility.WorldToHoneycomb(PlayerSpawn.transform.position), SpawnLoc);
     }
 
@@ -80,7 +80,7 @@ public class LevelHandler : MonoBehaviour
 
         if (Player)
         {
-            displayLocation(Utility.WorldToHoneycomb(Player.position), PlayerLoc);
+            displayLocation(Utility.WorldPointToHoneycombGrid(Player.position), PlayerLoc);
             displayLocation(Map.StaticMap.GetChunkIndex( Utility.GetMapChunk(Player.position)), SpawnLoc);
             //Debug.Log(Utility.GetMapChunk(Player.position).ChunkIndex + " chunkOffset: " + Utility.GetMapChunk(Player.position).mapOffset);
         }
@@ -180,23 +180,28 @@ public class LevelHandler : MonoBehaviour
 
     public void UpdatePlayerStats()
     {
-        PlayerHandler ph = FindObjectOfType<PlayerHandler>();
+        
         BeesMurderedText.text = PlayerHandler.BeesMurderedCount.ToString();
         HornetMurderedText.text = PlayerHandler.HornetMurderedCount.ToString();
 
+        PlayerHandler ph = FindObjectOfType<PlayerHandler>();
         HornetController hc = FindObjectOfType<HornetController>();
 
-        float barPercent = hc.Health / ph.GetMaxHealth();
-        HealthMeterBar.rectTransform.localScale = new Vector3(barPercent, 1, 1);
-        HealthMeterText.text = hc.Health.ToString();
+        if(ph && hc)
+        {
+            float barPercent = hc.Health / ph.GetMaxHealth();
+            HealthMeterBar.rectTransform.localScale = new Vector3(barPercent, 1, 1);
+            HealthMeterText.text = hc.Health.ToString();
 
-        float plasmaPercent = (float) hc.ShotCount / ph.GetMaxShot();
-        PlasmaMeterBar.rectTransform.localScale = new Vector3(plasmaPercent, plasmaPercent, 1);
-        PlasmaMeterText.text = hc.ShotCount.ToString();
+            float plasmaPercent = (float)hc.ShotCount / ph.GetMaxShot();
+            PlasmaMeterBar.rectTransform.localScale = new Vector3(plasmaPercent, plasmaPercent, 1);
+            PlasmaMeterText.text = hc.ShotCount.ToString();
 
-        PlasmaPowerText.text = (int) ph.GetPlasmaPower() + " " + (int) ph.GetPlasmaPowerBuffTime();
-        PlasmaChargeRateText.text = ph.GetPlasmaChargeRate() + " " + (int)ph.GetPlasmaChargeRateBuffTime();
-        PlasmaChargeCapacityText.text = ph.GetMaxShot() + " " + (int)ph.GetMaxShotBuffTime();
+            PlasmaPowerText.text = (int)ph.GetPlasmaPower() + " " + (int)ph.GetPlasmaPowerBuffTime();
+            PlasmaChargeRateText.text = ph.GetPlasmaChargeRate() + " " + (int)ph.GetPlasmaChargeRateBuffTime();
+            PlasmaChargeCapacityText.text = ph.GetMaxShot() + " " + (int)ph.GetMaxShotBuffTime();
+        }
+        
     }
 
     public void UpdatePlayerStats(int BeesDied, int HornetDied)
