@@ -110,6 +110,13 @@ public class Map : MonoBehaviour
                 else honeycombChunks[i].DestroyChunk();
             }
         }
+        else
+        {
+            foreach(MapChunk chunk in honeycombChunks)
+            {
+                chunk.DestroyChunk();
+            }
+        }
         
     }
 

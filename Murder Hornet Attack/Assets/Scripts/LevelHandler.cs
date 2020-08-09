@@ -37,6 +37,8 @@ public class LevelHandler : MonoBehaviour
     private List<MapVoid> mapVoids = new List<MapVoid>();
     private PlayerHandler ph;
 
+    private bool levelEnding = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -73,7 +75,7 @@ public class LevelHandler : MonoBehaviour
         //infiniteLevel();
         if (Exit && Exit.inChamber) {
             ExitPanel.SetActive(true);
-            if( Input.GetKeyDown(KeyCode.E)) ReloadLevel();
+            if (Input.GetKeyDown(KeyCode.E) && !levelEnding) LevelEndSequence();
         }
         else
         {
@@ -146,6 +148,24 @@ public class LevelHandler : MonoBehaviour
             drop.Duration = duration;
             drop.SetupLetters();
         }
+    }
+
+    private float levelEndStart;
+    private float levelEndCountdown = 6.0f;
+    private void LevelEndSequence()
+    {
+        levelEnding = true;
+        levelEndStart = Time.fixedTime;
+        ExitTunnel.GetComponent<Animator>().SetTrigger("Activate");
+        Map.StaticMap.Display = false;
+        StartCoroutine("LevelEndCoroutine");
+    }
+
+    IEnumerator LevelEndCoroutine()
+    {
+        while (levelEndStart + levelEndCountdown > Time.fixedTime)
+            yield return null;
+        ReloadLevel();
     }
 
     public void RestartLevel()
