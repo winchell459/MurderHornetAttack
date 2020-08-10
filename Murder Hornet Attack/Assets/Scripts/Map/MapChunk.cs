@@ -97,26 +97,12 @@ public class MapChunk
             {
                 if (insect) insect.gameObject.SetActive(true);
             }
-            //StartCoroutine(DisplayChunkCoroutine());
+            
         }
 
     }
 
-    IEnumerator DisplayChunkCoroutine()
-    {
-        Debug.Log("DisplayChunkCoroutine");
-        foreach (MapHoneycomb honeycomb in honeycombs)
-        {
-            honeycomb.DisplayHoneycomb();
-            yield return null;
-        }
-
-        foreach (Insect insect in enemiesInChunk)
-        {
-            if (insect) insect.gameObject.SetActive(true);
-            //yield return null;
-        }
-    }
+    
 
     public void DestroyChunk()
     {
@@ -145,39 +131,13 @@ public class MapChunk
                 }
 
             }
-            //StartCoroutine("DestoryChunkCoroutine");
+            
         }
         display = false;
 
     }
 
-    IEnumerator DestroyChunkCoroutine()
-    {
-        foreach (MapHoneycomb honeycomb in honeycombs)
-        {
-            honeycomb.HideHoneycomb();
-            yield return null;
-        }
-
-        for (int i = enemiesInChunk.Count - 1; i >= 0; i -= 1)
-        {
-            if (enemiesInChunk[i])
-            {
-                MapChunk chunk = Utility.GetMapChunk(enemiesInChunk[i].transform.position);
-                if (chunk == this)
-                {
-                    enemiesInChunk[i].gameObject.SetActive(false);
-                }
-                else
-                {
-
-                    chunk.AddEnemyToChunk(enemiesInChunk[i]);
-                    enemiesInChunk.RemoveAt(i);
-                }
-            }
-            yield return null;
-        }
-    }
+    
 
     public bool CheckPointInChunk(Vector2 point)
     {

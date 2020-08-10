@@ -49,7 +49,8 @@ public class MapPath : MapVoid
                 float distance = Utility.PointDistanceToPath(honeycomb.position, start, end);
                 if (distance < widths[i] / 2 || distance < 0.45f)
                 {
-                    display = false;
+                    if(honeycomb.LocationType <= MapHoneycomb.LocationTypes.Path) display = false;
+                    honeycomb.isFloor = true;
                     SetLocationType(honeycomb, MapHoneycomb.LocationTypes.Path);
                 }
                 else

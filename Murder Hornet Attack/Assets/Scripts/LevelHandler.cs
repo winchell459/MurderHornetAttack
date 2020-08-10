@@ -313,6 +313,8 @@ public class LevelHandler : MonoBehaviour
         Exit = (Portal)ChamberTrigger.SetupChamberTrigger(PortalPrefab, endChamber);
         ExitTunnel.position = Exit.Chamber.Location;
 
+
+
         //connect chambers
         for(int i = 0; i < voidCount; i += 1)
         {

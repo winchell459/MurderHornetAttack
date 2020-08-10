@@ -63,9 +63,10 @@ public class MapHoneycomb
     {
         if (display)
         {
+            
             if (isFloor)
             {
-                honeycomb = Map.GetHoneycombChamberFloor();
+                if(Map.StaticMap.DisplayFloor)honeycomb = Map.GetHoneycombChamberFloor();
             }
             else if((depth < 5 || depth < 7 &&  !isLargeLoc ) || ignoreLarge && !beeuilding)
             {
@@ -93,6 +94,13 @@ public class MapHoneycomb
                 honeycomb.GetComponent<Honeycomb>().LocationType = LocationType;
                 if (depth <= 2) capped = false;
                 if (isFloor) capped = true;
+                else
+                {
+                    //if (depth <= 3) honeycomb.GetComponent<Collider2D>().enabled = true;
+                    //else honeycomb.GetComponent<Collider2D>().enabled = false;
+                }
+
+                
 
                 if (beeuilding && !isLargeHoneycomb && !isFloor) honeycomb.GetComponent<HoneycombTower>().SetupBeeTower();
                 else 

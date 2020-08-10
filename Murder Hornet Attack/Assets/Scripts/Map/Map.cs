@@ -55,10 +55,11 @@ public class Map : MonoBehaviour
     }
 
     int currentChunk = 0;
-
+    public bool UseCoroutine = false; //----------------------------------------------------------------Use Coroutine-----------------------------------------------------------------------
+    public bool DisplayFloor = false;
     private void Update()
     {
-        Debug.Log("HoneycombCount: " + honeycombCount);
+        Debug.Log("HoneycombCount: " + honeycombCount + " HoneycombPool: " + HoneycombPool.Count + " HoneycombFloorPool: " + HoneycombFloorPool.Count);
         if (Display)
         {
             //Find which chunks the player camera is in
@@ -113,14 +114,21 @@ public class Map : MonoBehaviour
                         }
                     }
                 }
-
-                for (int i = 0; i < honeycombChunks.Count; i += 1)
+                if (!UseCoroutine)
                 {
+                    for (int i = 0; i < honeycombChunks.Count; i += 1)
+                    {
 
-                    if (displayChunks[i]) honeycombChunks[i].DisplayChunk();
-                    else honeycombChunks[i].DestroyChunk();
+                        if (displayChunks[i]) honeycombChunks[i].DisplayChunk();
+                        else honeycombChunks[i].DestroyChunk();
+                    }
                 }
-                //StartCoroutine(handldeChunkDisplay(displayChunks));
+                else
+                {
+                    StartCoroutine(handldeChunkDisplay(displayChunks));
+                }
+                
+                //
             }
 
             
@@ -146,8 +154,9 @@ public class Map : MonoBehaviour
                 
             }
             else honeycombChunks[i].DestroyChunk();
-            yield return null;
+            
         }
+        yield return null;
     }
 
     public MapChunk GetChunk(int col, int row)
@@ -255,10 +264,11 @@ public class Map : MonoBehaviour
         }
         return honeycomb;
     }
-
+    public bool DestroyHoneycombReturn = false;
     public static void ReturnHoneycomb(GameObject honeycomb)
     {
-        StaticMap.HoneycombPool.Add(honeycomb);
+        if(!Map.StaticMap.DestroyHoneycombReturn) StaticMap.HoneycombPool.Add(honeycomb);
+        else Destroy(honeycomb.gameObject);
     }
 
     public static GameObject GetHoneycombLarge()
@@ -325,6 +335,7 @@ public class Map : MonoBehaviour
     }
     public static void ReturnHoneycombChamberFloor(GameObject honeycombFloor)
     {
-        StaticMap.HoneycombFloorPool.Add(honeycombFloor);
+        if (!Map.StaticMap.DestroyHoneycombReturn) StaticMap.HoneycombFloorPool.Add(honeycombFloor);
+        else Destroy(honeycombFloor.gameObject);
     }
 }
