@@ -39,6 +39,8 @@ public class Map : MonoBehaviour
     public Camera cam;
     public bool Display;
 
+    private int honeycombCount = 0;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -51,64 +53,77 @@ public class Map : MonoBehaviour
             LayerScales.Add(HoneycombLayers[i].localScale.x);
         }
     }
-    
+
+    int currentChunk = 0;
+
     private void Update()
     {
+        Debug.Log("HoneycombCount: " + honeycombCount);
         if (Display)
         {
             //Find which chunks the player camera is in
             List<int> chunkLoc = new List<int>();
             int chunkCount = 0;
+            int tempChunk = 0;
+            List<bool> displayChunks = new List<bool>();
             for (int i = 0; i < honeycombChunks.Count; i+=1)
             {
                 MapChunk chunk = honeycombChunks[i];
                 if (chunk.CheckPointInChunk(cam.transform.position))
                 {
-                    displayChunks[i] = true;
+                    //displayChunks[i] = true;
+                    displayChunks.Add(true);
+                    tempChunk = i;
                     chunkLoc.Add(i);
                     chunkCount += 1;
                 }
-                else displayChunks[i] = false;
+                else displayChunks.Add(false);//displayChunks[i] = false;
             }
 
-            //Debug.Log("Chunk Count: " + chunkCount);
-
-            //loop through chunks and set to display if chunk is with 
-            int chunkRows = (int)Mathf.Ceil((MapHeight / VerticalSpacing) / (ChunkHeight));
-            int chunkCols = (int)Mathf.Ceil((MapWidth / HorizontalSpacing) / (ChunkWidth));
-            foreach(int index in chunkLoc)
+            if(currentChunk != tempChunk)
             {
-                int colCenter = index % chunkCols;
-                int rowCenter = index/ chunkCols;
-                //Debug.Log(col + " " + row);
-                for(int j = 0; j < ChunkRadius; j += 1)
+                currentChunk = tempChunk;
+                //loop through chunks and set to display if chunk is with 
+                int chunkRows = (int)Mathf.Ceil((MapHeight / VerticalSpacing) / (ChunkHeight));
+                int chunkCols = (int)Mathf.Ceil((MapWidth / HorizontalSpacing) / (ChunkWidth));
+                foreach (int index in chunkLoc)
                 {
-                    for(int i = 0; i <= ChunkRadius - j; i += 1)
+                    int colCenter = index % chunkCols;
+                    int rowCenter = index / chunkCols;
+                    //Debug.Log(col + " " + row);
+                    for (int j = 0; j < ChunkRadius; j += 1)
                     {
-                        int col = colCenter + i;
-                        int row = rowCenter + j;
-                        if(col < chunkCols && col >=0 && row < chunkRows && row >= 0) displayChunks[col + row * chunkCols] = true;
+                        for (int i = 0; i <= ChunkRadius - j; i += 1)
+                        {
+                            int col = colCenter + i;
+                            int row = rowCenter + j;
+                            if (col < chunkCols && col >= 0 && row < chunkRows && row >= 0) displayChunks[col + row * chunkCols] = true;
 
-                        col = colCenter - i;
-                        row = rowCenter - j;
-                        if (col < chunkCols && col >= 0 && row < chunkRows && row >= 0) displayChunks[col + row * chunkCols] = true;
+                            col = colCenter - i;
+                            row = rowCenter - j;
+                            if (col < chunkCols && col >= 0 && row < chunkRows && row >= 0) displayChunks[col + row * chunkCols] = true;
 
-                        col = colCenter + i;
-                        row = rowCenter - j;
-                        if (col < chunkCols && col >= 0 && row < chunkRows && row >= 0) displayChunks[col + row * chunkCols] = true;
+                            col = colCenter + i;
+                            row = rowCenter - j;
+                            if (col < chunkCols && col >= 0 && row < chunkRows && row >= 0) displayChunks[col + row * chunkCols] = true;
 
-                        col = colCenter - i;
-                        row = rowCenter + j;
-                        if (col < chunkCols && col >= 0 && row < chunkRows && row >= 0) displayChunks[col + row * chunkCols] = true;
+                            col = colCenter - i;
+                            row = rowCenter + j;
+                            if (col < chunkCols && col >= 0 && row < chunkRows && row >= 0) displayChunks[col + row * chunkCols] = true;
+                        }
                     }
                 }
+
+                for (int i = 0; i < honeycombChunks.Count; i += 1)
+                {
+
+                    if (displayChunks[i]) honeycombChunks[i].DisplayChunk();
+                    else honeycombChunks[i].DestroyChunk();
+                }
+                //StartCoroutine(handldeChunkDisplay(displayChunks));
             }
 
-            for(int i = 0; i < honeycombChunks.Count; i += 1)
-            {
-                if (displayChunks[i]) honeycombChunks[i].DisplayChunk();
-                else honeycombChunks[i].DestroyChunk();
-            }
+            
         }
         else
         {
@@ -118,6 +133,21 @@ public class Map : MonoBehaviour
             }
         }
         
+    }
+
+    IEnumerator handldeChunkDisplay(List<bool> displayChunks)
+    {
+        for (int i = 0; i < honeycombChunks.Count; i += 1)
+        {
+
+            if (displayChunks[i])
+            {
+                honeycombChunks[i].DisplayChunk();
+                
+            }
+            else honeycombChunks[i].DestroyChunk();
+            yield return null;
+        }
     }
 
     public MapChunk GetChunk(int col, int row)
@@ -220,7 +250,7 @@ public class Map : MonoBehaviour
             GameObject prefab = StaticMap.HoneycombCappedPrefab;
             
             honeycomb = Instantiate(prefab, StaticMap.transform.position, Quaternion.identity);
-            
+            StaticMap.honeycombCount += 1;
             //honeycomb.transform.parent = StaticMap.HoneycombLayers[0];
         }
         return honeycomb;
@@ -245,6 +275,7 @@ public class Map : MonoBehaviour
             GameObject prefab = StaticMap.HoneycombLargePrefab;
             
             honeycomb = Instantiate(prefab, StaticMap.transform.position, Quaternion.identity);
+            StaticMap.honeycombCount += 1;
             //honeycomb.transform.parent = StaticMap.HoneycombLayer_1;
             honeycomb.transform.parent = StaticMap.HoneycombLayers[0];
         }
@@ -267,7 +298,7 @@ public class Map : MonoBehaviour
         else
         {
             beeCity = Instantiate(StaticMap.BeeCityPrefab, StaticMap.transform.position, Quaternion.identity);
-
+            StaticMap.honeycombCount += 1;
         }
         return beeCity;
     }
@@ -288,6 +319,7 @@ public class Map : MonoBehaviour
         else
         {
             honeycomb = Instantiate(StaticMap.HoneycombChamberFloorPrefab, StaticMap.transform.position, Quaternion.identity);
+            StaticMap.honeycombCount += 1;
         }
         return honeycomb;
     }

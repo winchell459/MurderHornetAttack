@@ -39,6 +39,9 @@ public class LevelHandler : MonoBehaviour
 
     private bool levelEnding = false;
 
+    
+    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -177,7 +180,7 @@ public class LevelHandler : MonoBehaviour
 
     private void ReloadLevel()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
     }
 
     private void infiniteLevel()

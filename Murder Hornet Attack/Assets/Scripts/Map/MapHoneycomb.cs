@@ -65,7 +65,7 @@ public class MapHoneycomb
         {
             if (isFloor)
             {
-                //honeycomb = Map.GetHoneycombChamberFloor();
+                honeycomb = Map.GetHoneycombChamberFloor();
             }
             else if((depth < 5 || depth < 7 &&  !isLargeLoc ) || ignoreLarge && !beeuilding)
             {
@@ -124,7 +124,7 @@ public class MapHoneycomb
             honeycomb.SetActive(false);
             if (isFloor)
             {
-                //Map.ReturnHoneycombChamberFloor(honeycomb);
+                Map.ReturnHoneycombChamberFloor(honeycomb);
             }
             else if (!isLargeHoneycomb && honeycomb && !beeuilding)
             {

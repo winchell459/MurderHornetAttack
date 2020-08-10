@@ -10422,7 +10422,7 @@ MonoBehaviour:
   LayerScales: []
   ChunkHeight: 12
   ChunkWidth: 6
-  ChunkRadius: 9
+  ChunkRadius: 6
   cam: {fileID: 963194227}
   Display: 0
 --- !u!4 &1840310406
