@@ -59,7 +59,7 @@ public class Map : MonoBehaviour
     public bool DisplayFloor = false;
     private void Update()
     {
-        Debug.Log("HoneycombCount: " + honeycombCount + " HoneycombPool: " + HoneycombPool.Count + " HoneycombFloorPool: " + HoneycombFloorPool.Count);
+        //Debug.Log("HoneycombCount: " + honeycombCount + " HoneycombPool: " + HoneycombPool.Count + " HoneycombFloorPool: " + HoneycombFloorPool.Count);
         if (Display)
         {
             //Find which chunks the player camera is in

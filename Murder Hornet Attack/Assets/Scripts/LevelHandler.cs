@@ -13,6 +13,7 @@ public class LevelHandler : MonoBehaviour
     public GameObject ChamberTriggerPrefab;
 
     public Transform ExitTunnel;
+    public Transform SnakePit;
 
     private Portal PlayerSpawn;
     private Portal Exit;
@@ -283,6 +284,7 @@ public class LevelHandler : MonoBehaviour
         //addChamberTrigger(snakeChamberTrigger, snakeChamber);
         ChamberTrigger.SetupChamberTrigger(ChamberTriggerPrefab, snakeChamber);
         newVoids.Add(snakeChamber);
+        SnakePit.position = snakeChamberLoc;
 
         //create random chambers
         for(int i = 0; i < voidCount; i += 1)
