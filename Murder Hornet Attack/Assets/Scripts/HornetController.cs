@@ -22,6 +22,9 @@ public class HornetController : Insect
     public ControlTypes Controls;
 
     private PlayerHandler ph;
+
+    public bool MobileControls;
+    public bool ExitButtonPressed;
     
     // Start is called before the first frame update
     void Start()
@@ -45,21 +48,35 @@ public class HornetController : Insect
             transform.up = Vector2.MoveTowards(transform.up, deltaMove, SideSpeed * Time.deltaTime);
             //if (transform.position.x < mouseWorldXPos) HornetSprite.localScale = new Vector3(-1, 1, 1);
             //else if(transform.position.x > mouseWorldXPos) HornetSprite.localScale = new Vector3(1, 1, 1);
-        }else if(Controls == ControlTypes.DirectKeyboard)
+        }else if(Controls == ControlTypes.DirectKeyboard && !MobileControls)
         {
             float v = Input.GetAxis("Vertical");
             float h = Input.GetAxis("Horizontal");
-
-            //rb.AddForce(v * ForwardSpeed * transform.up);
-            //Debug.Log(rb.rotation);
-            //if (h != 0) rb.AddTorque(-h * SideSpeed);
-            //else rb.rotation = rb.rotation;
-
-            rb.velocity = ForwardSpeed * v * transform.up;
-            transform.Rotate(new Vector3(0, 0, -h * SideSpeed));
+            
+            MotionControl(v, h);
         }
 
 
+
+    }
+
+    public void MotionControl(float vertical, float horizontal)
+    {
+        rb.velocity = ForwardSpeed * vertical * transform.up;
+        transform.Rotate(new Vector3(0, 0, -horizontal * SideSpeed));
+    }
+
+    public void FirePlasma()
+    {
+        if(ShotCount > 0)
+        {
+            if (!ph) ph = FindObjectOfType<PlayerHandler>();
+            HornetPlasm.FirePlasma(HornetPlasmPrefab, transform.position, 10 * transform.up, ph.GetPlasmaPower());
+
+            ShotCount -= 1;
+
+            FindObjectOfType<LevelHandler>().UpdatePlayerStats();
+        }
 
     }
 
@@ -75,17 +92,25 @@ public class HornetController : Insect
         }
         else if (Controls == ControlTypes.DirectKeyboard)
         {
-            if (ShotCount > 0 && Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
                 //GameObject plasm = Instantiate(HornetPlasmPrefab, transform.position, Quaternion.identity);
                 //plasm.GetComponent<Rigidbody2D>().velocity = 10 * transform.up;
-                if (!ph) ph = FindObjectOfType<PlayerHandler>();
-                HornetPlasm.FirePlasma(HornetPlasmPrefab, transform.position, 10 * transform.up, ph.GetPlasmaPower());
-                
-                ShotCount -= 1;
-
-                FindObjectOfType<LevelHandler>().UpdatePlayerStats();
+                FirePlasma();
             }
+
+            if (!MobileControls)
+            {
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    ExitButtonPressed = true;
+                }
+                else
+                {
+                    ExitButtonPressed = false;
+                }
+            }
+            
         }
         
     }

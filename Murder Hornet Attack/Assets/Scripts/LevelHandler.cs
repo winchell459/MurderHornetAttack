@@ -79,7 +79,7 @@ public class LevelHandler : MonoBehaviour
         //infiniteLevel();
         if (Exit && Exit.inChamber) {
             ExitPanel.SetActive(true);
-            if (Input.GetKeyDown(KeyCode.E) && !levelEnding) LevelEndSequence();
+            if (Player.GetComponent<HornetController>().ExitButtonPressed && !levelEnding) LevelEndSequence();
         }
         else
         {
