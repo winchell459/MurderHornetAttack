@@ -13,6 +13,7 @@ public class MainMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Application.targetFrameRate = 60;
         touchToPlayDelayStart = Time.fixedTime;
         TouchToPlayText.gameObject.SetActive(false);
     }

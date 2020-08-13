@@ -4,6 +4,21 @@ using UnityEngine;
 
 public static class Utility 
 {
+    public static string FormatFloat(float value, int decimals)
+    {
+        
+        int valueInt = (int)value;
+        string valueStr = valueInt.ToString();
+        if (decimals > 0) valueStr += ".";
+        for(int i = 0; i < decimals; i += 1)
+        {
+            value -= valueInt;
+            value *= 10;
+            valueInt = (int)value;
+            valueStr += valueInt.ToString();
+        }
+        return valueStr;
+    }
     /// <summary>
     /// returns the shortest distance from a point to a line
     /// </summary>

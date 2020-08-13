@@ -102,11 +102,16 @@ public class PitchTest : MonoBehaviour
     }
     void setTestPanelParameters()
     {
+        string max = MaxPitch.ToString();
+        string min = MinPitch.ToString();
+        string pitch = Pitch.ToString();
+        string pitchRate = smoothing.ToString();
+
         if(TestingTypeDropdown)TestingTypeDropdown.value = (int)MyType;
-        if(inputMaxPitch)inputMaxPitch.text = MaxPitch.ToString();
-        if(inputMinPitch)inputMinPitch.text = MinPitch.ToString();
-        if(inputPitch)inputPitch.text = Pitch.ToString();
-        if(inputPitchRate)inputPitchRate.text = smoothing.ToString();
+        if(inputMaxPitch)inputMaxPitch.text = max;
+        if(inputMinPitch)inputMinPitch.text = min;
+        if(inputPitch)inputPitch.text = pitch;
+        if(inputPitchRate)inputPitchRate.text = pitchRate;
         if(VolumeSlider)VolumeSlider.value = 0.5f;
     }
 

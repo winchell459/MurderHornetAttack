@@ -27,6 +27,9 @@ public class LevelHandler : MonoBehaviour
     public RawImage PlasmaMeterBar;
 
     public Text PlasmaPowerText, PlasmaChargeRateText, PlasmaChargeCapacityText;
+    public Text FPSText;
+    public InputField VSensInput, HSensInput, JoystickBoarderSizeInput, JoystickSensitivityInput;
+    public Toggle InverseReverseToggle;
 
     public CameraController Cam;
 
@@ -71,6 +74,8 @@ public class LevelHandler : MonoBehaviour
 
         displayLocation(Utility.WorldPointToHoneycombGrid(Exit.transform.position), EndLoc);
         //displayLocation(Utility.WorldToHoneycomb(PlayerSpawn.transform.position), SpawnLoc);
+
+        ControlParameters.StaticControlParams.LoadControlParameters();
     }
 
     // Update is called once per frame
@@ -98,6 +103,7 @@ public class LevelHandler : MonoBehaviour
             MurderPanel.SetActive(true);
         }
         UpdatePlayerStats();
+        FPSText.text = Utility.FormatFloat(1 / Time.deltaTime, 1);
         //if(Player)Debug.Log("Player Chunk: " + Utility.GetMapChunk(Player.transform.position).mapOffset);
     }
 
@@ -224,7 +230,7 @@ public class LevelHandler : MonoBehaviour
             PlasmaMeterText.text = hc.ShotCount.ToString();
 
             PlasmaPowerText.text = (int)ph.GetPlasmaPower() + " " + (int)ph.GetPlasmaPowerBuffTime();
-            PlasmaChargeRateText.text = ph.GetPlasmaChargeRate() + " " + (int)ph.GetPlasmaChargeRateBuffTime();
+            PlasmaChargeRateText.text = Utility.FormatFloat(ph.GetPlasmaChargeRate(),2) + " " + (int)ph.GetPlasmaChargeRateBuffTime();
             PlasmaChargeCapacityText.text = ph.GetMaxShot() + " " + (int)ph.GetMaxShotBuffTime();
         }
         
@@ -383,4 +389,34 @@ public class LevelHandler : MonoBehaviour
             }
         }
     }
+
+    public void SetControlParameters()
+    {
+        try
+        {
+            float v = float.Parse(VSensInput.text);
+            float h = float.Parse(HSensInput.text);
+            float sensitivity = float.Parse(JoystickSensitivityInput.text);
+            float boarderSize = float.Parse(JoystickBoarderSizeInput.text);
+            Debug.Log(h);
+            bool inverseReverse = InverseReverseToggle.isOn;
+            ControlParameters.StaticControlParams.SetControlParameters(sensitivity, boarderSize, v, h, inverseReverse);
+        }
+        catch
+        {
+            Debug.Log("SetControlParameters Error");
+        }
+
+    }
+
+    public void SetControlParameters(float sensitivity, float joystickBoardSize, float v, float h, bool inverseReverse)
+    {
+        VSensInput.text = v.ToString();
+        HSensInput.text = h.ToString();
+        InverseReverseToggle.isOn = inverseReverse;
+        JoystickBoarderSizeInput.text = joystickBoardSize.ToString();
+        JoystickSensitivityInput.text = sensitivity.ToString();
+    }
+
+    
 }

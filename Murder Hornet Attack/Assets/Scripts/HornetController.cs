@@ -31,6 +31,9 @@ public class HornetController : Insect
     {
         rb = GetComponent<Rigidbody2D>();
         //rb.velocity = new Vector2(0, ForwardSpeed);
+#if UNITY_IOS
+        MobileControls = true;
+#endif
     }
 
     // Update is called once per frame
