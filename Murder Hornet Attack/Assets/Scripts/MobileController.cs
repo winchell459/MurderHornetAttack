@@ -35,9 +35,13 @@ public class MobileController : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        Vector2 move = TCKInput.GetAxis("Joystick");
-        if(cp.InverseReverse && move.y < 0) hornetController.MotionControl(move.y * cp.FlySensitivity, -move.x * cp.TurnSensitivity);
-        else hornetController.MotionControl(move.y * cp.FlySensitivity, move.x * cp.TurnSensitivity);
+        if (hornetController.MobileControls)
+        {
+            Vector2 move = TCKInput.GetAxis("Joystick");
+            if (cp.InverseReverse && move.y < 0) hornetController.MotionControl(move.y * cp.FlySensitivity, -move.x * cp.TurnSensitivity);
+            else hornetController.MotionControl(move.y * cp.FlySensitivity, move.x * cp.TurnSensitivity);
+        }
+        
     }
 
     public void SetSensitivityParameters()

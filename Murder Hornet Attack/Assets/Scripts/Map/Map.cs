@@ -178,17 +178,16 @@ public class Map : MonoBehaviour
         
         int xChunk = col / ChunkWidth;
         int yChunk = row / (ChunkHeight / 2);
-
-        //Debug.Log("xChunk: " + xChunk + " yChunk: " + yChunk);
-        MapChunk chunk = GetChunk(xChunk, yChunk);
-        //foreach(MapHoneycomb hc in chunk.GetAllMapHoneycombs())
-        //{
-        //    Debug.Log("List<honeycomb> " + hc.position);
-        //}
+        MapChunk chunk = GetChunk(xChunk, yChunk);      
         col = col % ChunkWidth;
         row = row % (ChunkHeight /2);
-        //Debug.Log("col: " + col + " row: " + row);
+
         return chunk.GetMapHoneycomb(col, row);
+    }
+
+    public MapHoneycomb GetHoneycomb(HoneycombPos pos)
+    {
+        return GetHoneycomb(pos.x, pos.y);
     }
     
     

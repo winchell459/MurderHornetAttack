@@ -15684,14 +15684,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 815703513, guid: c42050267f9da2c4b86aeaa6bc3547a4, type: 3}
-      propertyPath: TurnSensitivity
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 815703513, guid: c42050267f9da2c4b86aeaa6bc3547a4, type: 3}
-      propertyPath: FlySensitivity
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 2963273219893779830, guid: c42050267f9da2c4b86aeaa6bc3547a4,
         type: 3}
       propertyPath: m_Name

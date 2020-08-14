@@ -65,13 +65,13 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &2963273219893779831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,6 +99,8 @@ MonoBehaviour:
   Controls: 1
   MobileControls: 0
   ExitButtonPressed: 0
+  TakeHoneycombDamage: 1
+  ImpulseCoefficient: 25
 --- !u!114 &815703513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,8 +113,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 779dad9a0f0b2de43849e81bf2140aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FlySensitivity: 5
-  TurnSensitivity: 5
 --- !u!1 &2963273220353562594
 GameObject:
   m_ObjectHideFlags: 0

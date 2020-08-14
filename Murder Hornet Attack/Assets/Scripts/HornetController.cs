@@ -14,6 +14,7 @@ public class HornetController : Insect
 
     public int ShotCount;
     
+    
     public enum ControlTypes
     {
         MouseControl,
@@ -62,10 +63,26 @@ public class HornetController : Insect
 
 
     }
+    private Vector2 CollisionVelocity = Vector2.zero;
 
     public void MotionControl(float vertical, float horizontal)
     {
-        rb.velocity = ForwardSpeed * vertical * transform.up;
+        if (hadCollision && collisionControlTime + collisionTime > Time.fixedTime)
+        {
+            rb.velocity = CollisionVelocity;
+            Debug.Log("CollisionVelocity: " + CollisionVelocity);
+            CollisionVelocity = Vector2.zero;
+        } else if (hadCollision && collisionControlTime + collisionTime < Time.fixedTime)
+        {
+            hadCollision = false;
+        }
+        else
+        {
+            rb.velocity = ForwardSpeed * vertical * transform.up;
+            hadCollision = false;
+        }
+        
+        
         transform.Rotate(new Vector3(0, 0, -horizontal * SideSpeed));
     }
 
@@ -119,14 +136,28 @@ public class HornetController : Insect
     }
 
 
-
+    public bool TakeHoneycombDamage = true;
+    public float ImpulseCoefficient = 3;
+    private bool hadCollision;
+    private float collisionTime;
+    private float collisionControlTime = 0.2f;
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.transform.CompareTag("Honeycomb"))
         {
-            Destroy(collision.gameObject);
+            
             //hornetMurdered();
-            TakeDamage(Health);
+            if(!TakeHoneycombDamage) TakeDamage(Health);
+            else if (!hadCollision)
+            {
+                TakeDamage(5);
+                Vector2 impulse = ImpulseCoefficient * (transform.position - collision.transform.position).normalized;
+                CollisionVelocity += impulse;
+                collisionTime = Time.fixedTime;
+                hadCollision = true;
+            }
+            
+            Destroy(collision.gameObject);
         }
         
     }

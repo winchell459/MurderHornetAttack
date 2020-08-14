@@ -19,7 +19,17 @@ public class HornetPlasm : MonoBehaviour
             }
             else
             {
+                HoneycombPos hexPos = Utility.WorldPointToHoneycombGrid(collision.GetComponent<Honeycomb>().honeyGrid.position);
                 collision.GetComponent<Honeycomb>().DamageHoneycomb(Damage);
+                if (false) //for testing HoneycombPos.GetAdjecentHoneycomb()
+                {
+                    Map.StaticMap.GetHoneycomb(hexPos.GetAdjecentHoneycomb(0, 1)).honeycomb.GetComponent<Honeycomb>().DamageHoneycomb(10);
+                    Map.StaticMap.GetHoneycomb(hexPos.GetAdjecentHoneycomb(1, 1)).honeycomb.GetComponent<Honeycomb>().DamageHoneycomb(10);
+                    Map.StaticMap.GetHoneycomb(hexPos.GetAdjecentHoneycomb(1, -1)).honeycomb.GetComponent<Honeycomb>().DamageHoneycomb(10);
+                    Map.StaticMap.GetHoneycomb(hexPos.GetAdjecentHoneycomb(0, -1)).honeycomb.GetComponent<Honeycomb>().DamageHoneycomb(10);
+                    Map.StaticMap.GetHoneycomb(hexPos.GetAdjecentHoneycomb(-1, -1)).honeycomb.GetComponent<Honeycomb>().DamageHoneycomb(10);
+                    Map.StaticMap.GetHoneycomb(hexPos.GetAdjecentHoneycomb(-1, 1)).honeycomb.GetComponent<Honeycomb>().DamageHoneycomb(10);
+                }
                 Destroy(gameObject);
             }
            

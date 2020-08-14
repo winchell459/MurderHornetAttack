@@ -7,7 +7,7 @@ public class MapHoneycomb
 {
     public bool display;
     public Vector2 position;
-    private GameObject honeycomb;
+    public GameObject honeycomb;
     private GameObject EnemyPrefab;
 
     //private List<Transform> honeycombChildren = new List<Transform>();
