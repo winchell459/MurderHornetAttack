@@ -9132,6 +9132,26 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 847612664829739618, guid: 42bd51c68e00b334f90065f2c0cdab53,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 847612664829739618, guid: 42bd51c68e00b334f90065f2c0cdab53,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.14901961
+      objectReference: {fileID: 0}
+    - target: {fileID: 847612664829739618, guid: 42bd51c68e00b334f90065f2c0cdab53,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.2784314
+      objectReference: {fileID: 0}
+    - target: {fileID: 847612664829739618, guid: 42bd51c68e00b334f90065f2c0cdab53,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 847612664829739619, guid: 42bd51c68e00b334f90065f2c0cdab53,
         type: 3}
       propertyPath: identifier
@@ -9157,6 +9177,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: tunnelBtn
       objectReference: {fileID: 0}
+    - target: {fileID: 847612665072776097, guid: 42bd51c68e00b334f90065f2c0cdab53,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.91372555
+      objectReference: {fileID: 0}
+    - target: {fileID: 847612665072776097, guid: 42bd51c68e00b334f90065f2c0cdab53,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.85882354
+      objectReference: {fileID: 0}
+    - target: {fileID: 847612665072776097, guid: 42bd51c68e00b334f90065f2c0cdab53,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.098039225
+      objectReference: {fileID: 0}
+    - target: {fileID: 847612665072776097, guid: 42bd51c68e00b334f90065f2c0cdab53,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0.6039216
+      objectReference: {fileID: 0}
     - target: {fileID: 847612665072776099, guid: 42bd51c68e00b334f90065f2c0cdab53,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -9166,6 +9206,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 298
+      objectReference: {fileID: 0}
+    - target: {fileID: 847612665072776099, guid: 42bd51c68e00b334f90065f2c0cdab53,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 255
+      objectReference: {fileID: 0}
+    - target: {fileID: 847612665072776099, guid: 42bd51c68e00b334f90065f2c0cdab53,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 255
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42bd51c68e00b334f90065f2c0cdab53, type: 3}
