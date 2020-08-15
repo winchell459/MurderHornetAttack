@@ -70,7 +70,7 @@ public class HornetController : Insect
         if (hadCollision && collisionControlTime + collisionTime > Time.fixedTime)
         {
             rb.velocity = CollisionVelocity;
-            Debug.Log("CollisionVelocity: " + CollisionVelocity);
+            //Debug.Log("CollisionVelocity: " + CollisionVelocity);
             CollisionVelocity = Vector2.zero;
         } else if (hadCollision && collisionControlTime + collisionTime < Time.fixedTime)
         {

@@ -175,4 +175,17 @@ public class MapHoneycomb
         //honeycomb.GetComponent<CircleCollider2D>().enabled = active;
         honeycomb.GetComponent<HoneycombCell>().EnemyTrigger.enabled = active;
     }
+
+    public void DamageHoneycomb(int depth)
+    {
+        if (display && depth < this.depth)
+        {
+            HideHoneycomb();
+            SetDepth(depth);
+            
+            DisplayHoneycomb();
+            if ((depth <= Map.StaticMap.TunnelDestructionDepth || (isLargeLoc || beeuilding)) && honeycomb) honeycomb.GetComponent<Honeycomb>().DamageAdjecentHoneycomb(depth + 1); 
+        }
+        
+    }
 }

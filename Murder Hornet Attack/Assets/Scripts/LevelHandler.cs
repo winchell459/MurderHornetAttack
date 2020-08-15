@@ -134,7 +134,7 @@ public class LevelHandler : MonoBehaviour
         {
             int dropItem = Random.Range(0, 10); //0-2 Health 3 Power 4-6 Storage 7-9 Rapid
             float power;
-            float duration = Random.Range(1 , 7) * 5;
+            float duration = Random.Range(6 , 12) * 5;
             if(dropItem < 7)
             {
                 power = Random.Range(10, 30);
@@ -157,6 +157,7 @@ public class LevelHandler : MonoBehaviour
             drop.Power = power;
             drop.Duration = duration;
             drop.SetupLetters();
+
         }
     }
 

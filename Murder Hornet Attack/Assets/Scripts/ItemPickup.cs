@@ -5,6 +5,7 @@ using UnityEngine;
 public class ItemPickup : MonoBehaviour
 {
     public GameObject S, R, P, H;
+    public TextMesh ValueText;
     
     public enum PickupTypes
     {
@@ -22,6 +23,7 @@ public class ItemPickup : MonoBehaviour
     private void Awake()
     {
         SetupLetters();
+        
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -53,6 +55,7 @@ public class ItemPickup : MonoBehaviour
         else if (PickupType == PickupTypes.Power) P.SetActive(true);
         else if (PickupType == PickupTypes.Rapid) R.SetActive(true);
         else if (PickupType == PickupTypes.Storage) S.SetActive(true);
+        ValueText.text = Utility.FormatFloat(Power, 2);
     }
 
     private void hideLetters()

@@ -71,8 +71,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -304884675
+  m_SortingLayer: 4
   m_SortingOrder: 50
   m_Sprite: {fileID: -2945215489366195241, guid: 631857418fde7ff41a8b21eb3927e6f0,
     type: 3}
@@ -172,8 +172,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -304884675
+  m_SortingLayer: 4
   m_SortingOrder: 35
   m_Sprite: {fileID: 7018147405821456804, guid: 631857418fde7ff41a8b21eb3927e6f0,
     type: 3}
@@ -254,8 +254,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -304884675
+  m_SortingLayer: 4
   m_SortingOrder: 40
   m_Sprite: {fileID: -2945215489366195241, guid: 631857418fde7ff41a8b21eb3927e6f0,
     type: 3}
@@ -335,6 +335,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BeeCity_Base
+      objectReference: {fileID: 0}
+    - target: {fileID: 6245906290856175831, guid: 879f3cdd40c60f04db345861fcce6a34,
+        type: 3}
+      propertyPath: m_SortingLayerID
+      value: -304884675
+      objectReference: {fileID: 0}
+    - target: {fileID: 6245906290856175831, guid: 879f3cdd40c60f04db345861fcce6a34,
+        type: 3}
+      propertyPath: m_SortingLayer
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 879f3cdd40c60f04db345861fcce6a34, type: 3}

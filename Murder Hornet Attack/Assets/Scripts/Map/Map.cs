@@ -40,6 +40,7 @@ public class Map : MonoBehaviour
     public bool Display;
 
     private int honeycombCount = 0;
+    public int TunnelDestructionDepth = 3;
 
     // Start is called before the first frame update
     void Awake()
