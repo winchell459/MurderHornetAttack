@@ -8,6 +8,7 @@ ScriptsOnlyBuild:
     - ControlParametersTest
     - EnemyPhysics
     - EnemyPhysicsBoundry
+    - FPSHandler
     - HoneycombCell
     - HoneycombEnemyTrigger
     - HoneycombTower
@@ -126,6 +127,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 21
       Script: {instanceID: 0}
+    - Class: 23
+      Script: {instanceID: 0}
     - Class: 28
       Script: {instanceID: 0}
     - Class: 48
@@ -151,6 +154,8 @@ ScriptsOnlyBuild:
     - Class: 91
       Script: {instanceID: 0}
     - Class: 95
+      Script: {instanceID: 0}
+    - Class: 102
       Script: {instanceID: 0}
     - Class: 104
       Script: {instanceID: 0}
@@ -240,6 +245,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 13306}
     - Class: 114
       Script: {instanceID: 13326}
+    - Class: 114
+      Script: {instanceID: 21626}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -267,6 +274,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 21
       Script: {instanceID: 0}
+    - Class: 23
+      Script: {instanceID: 0}
     - Class: 28
       Script: {instanceID: 0}
     - Class: 48
@@ -290,6 +299,8 @@ ScriptsOnlyBuild:
     - Class: 91
       Script: {instanceID: 0}
     - Class: 95
+      Script: {instanceID: 0}
+    - Class: 102
       Script: {instanceID: 0}
     - Class: 104
       Script: {instanceID: 0}
@@ -563,7 +574,7 @@ ScriptsOnlyBuild:
     className: SignalAsset
   - hash:
       serializedVersion: 2
-      Hash: 8399cd9dc28ee335ee2b7a471c31c214
+      Hash: 13f7cd40e6e92f76b1acf9e4ebec78ca
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Map
@@ -611,7 +622,7 @@ ScriptsOnlyBuild:
     className: TMP_SubMeshUI
   - hash:
       serializedVersion: 2
-      Hash: 4510a97764ec6f448646248149f940c0
+      Hash: 23d55a0208bde6bdd0d33036b3b62124
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: LevelHandler
@@ -719,7 +730,7 @@ ScriptsOnlyBuild:
     className: ChunkBounds
   - hash:
       serializedVersion: 2
-      Hash: 5ea482493417fdb3550e44eb1e031341
+      Hash: f255ff57bd40802fb8123f125c83aec6
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: ItemPickup
@@ -1047,6 +1058,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
+  - hash:
+      serializedVersion: 2
+      Hash: b806193a3bf96f7babbacc61e3fb1fc0
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: FPSHandler
   platform: 9
   scenePathNames:
   - Assets/Scenes/SplashScene.unity

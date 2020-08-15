@@ -27,7 +27,7 @@ public class LevelHandler : MonoBehaviour
     public RawImage PlasmaMeterBar;
 
     public Text PlasmaPowerText, PlasmaChargeRateText, PlasmaChargeCapacityText;
-    public Text FPSText;
+    //public Text FPSText;
     public InputField VSensInput, HSensInput, JoystickBoarderSizeInput, JoystickSensitivityInput;
     public Toggle InverseReverseToggle;
 
@@ -103,7 +103,7 @@ public class LevelHandler : MonoBehaviour
             MurderPanel.SetActive(true);
         }
         UpdatePlayerStats();
-        FPSText.text = Utility.FormatFloat(1 / Time.deltaTime, 1);
+        //FPSText.text = Utility.FormatFloat(1 / Time.deltaTime, 1);
         //if(Player)Debug.Log("Player Chunk: " + Utility.GetMapChunk(Player.transform.position).mapOffset);
     }
 
