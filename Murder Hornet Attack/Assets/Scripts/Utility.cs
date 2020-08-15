@@ -4,6 +4,21 @@ using UnityEngine;
 
 public static class Utility 
 {
+    public static string FormatFloat(float value, int decimals)
+    {
+        
+        int valueInt = (int)value;
+        string valueStr = valueInt.ToString();
+        if (decimals > 0) valueStr += ".";
+        for(int i = 0; i < decimals; i += 1)
+        {
+            value -= valueInt;
+            value *= 10;
+            valueInt = (int)value;
+            valueStr += valueInt.ToString();
+        }
+        return valueStr;
+    }
     /// <summary>
     /// returns the shortest distance from a point to a line
     /// </summary>
@@ -85,7 +100,7 @@ public static class Utility
         return HoneycombGridToWorldPostion(WorldPointToHoneycombGrid(point));
     }
 
-    public static Vector2 HoneycombGridToWorldPostion(Vector2 honeyPos)
+    public static Vector2 HoneycombGridToWorldPostion(HoneycombPos honeyPos)
     {
         Map map = Map.StaticMap;
         float xPos = honeyPos.x * map.HorizontalSpacing;
@@ -95,7 +110,7 @@ public static class Utility
         return new Vector2(xPos, yPos) + new Vector2(map.MapOrigin.x * map.HorizontalSpacing, map.MapOrigin.y * map.VerticalSpacing);
     }
 
-    public static Vector2 WorldPointToHoneycombGrid(Vector2 worldPos)
+    public static HoneycombPos WorldPointToHoneycombGrid(Vector2 worldPos)
     {
         Map map = Map.StaticMap;
         int x = (int)((worldPos.x + map.HorizontalSpacing / 3) / map.HorizontalSpacing - map.MapOrigin.x );
@@ -118,7 +133,7 @@ public static class Utility
             for(int j = yMin; j <= yMax; j += 1)
             {
                 //debugStr += " (" + i + ", " + j + ")";
-                float check = Vector2.Distance(worldPos, HoneycombGridToWorldPostion(new Vector2(i, j)));
+                float check = Vector2.Distance(worldPos, HoneycombGridToWorldPostion(new HoneycombPos(i, j)));
                 if (check < distance)
                 {
                     distance = check;
@@ -129,40 +144,40 @@ public static class Utility
         }
         //debugStr += " Closest: ("  + x + ", " + y + ")";
         //Debug.Log(debugStr);
-        return new Vector2(x, y);
+        return new HoneycombPos(x, y);
     }
 
 
     public static MapChunk GetMapChunk(Vector2 worldPos)
     {
-        Vector2 honeyIndex = WorldPointToHoneycombGrid(worldPos);
+        HoneycombPos honeyIndex = WorldPointToHoneycombGrid(worldPos);
         Map map = Map.StaticMap;
         int xChunk = (int)honeyIndex.x / map.ChunkWidth;
         int yChunk = (int)honeyIndex.y / (map.ChunkHeight/2);
         //int chunkIndex = xChunk * yChunk + xChunk;
         return map.GetChunk(xChunk, yChunk);
     }
-    public static List<MapHoneycomb> GetHoneycombPath(Vector2 start, Vector2 dir, int honeyDistance)
+    public static List<MapHoneycomb> GetHoneycombPath(HoneycombPos start, HoneycombDir dir, int honeyDistance)
     {
         List<MapHoneycomb> path = new List<MapHoneycomb>();
         //start = WorldToHoneycomb(start);
         for(int i = 1; i <= honeyDistance; i += 1)
         {
-            Vector2 honeyCell = GetHoneycombDirection(start, dir, i);
+            HoneycombPos honeyCell = GetHoneycombDirection(start, dir, i);
             //Debug.Log(honeyCell);
             path.Add(Map.StaticMap.GetHoneycomb((int)honeyCell.x, (int)honeyCell.y));
         }
         return path;
     }
 
-    public static MapHoneycomb GetHoneycombFreePath(Vector2 startHex, Vector2 hexDir, int hexDistance)
+    public static MapHoneycomb GetHoneycombFreePath(HoneycombPos startHex, HoneycombDir hexDir, int hexDistance)
     {
         List<MapHoneycomb> path = GetHoneycombPath(startHex, hexDir, hexDistance);
         MapHoneycomb newTarget = null;
         foreach (MapHoneycomb honeycomb in path)
         {
             //Debug.Log(honeycomb.position);
-            if (!honeycomb.display && honeycomb.LocationType == MapHoneycomb.LocationTypes.Chamber)
+            if ((!honeycomb.display || honeycomb.isFloor) && honeycomb.LocationType == MapHoneycomb.LocationTypes.Chamber)
             {
                 newTarget = honeycomb;
                 
@@ -183,31 +198,38 @@ public static class Utility
     /// <param name="dir"></param>
     /// <param name="honeyDistance"></param>
     /// <returns></returns>
-    public static Vector2 GetHoneycombDirection(Vector2 start, Vector2 dir, int honeyDistance)
+    public static HoneycombPos GetHoneycombDirection(HoneycombPos start, HoneycombDir dir, int honeyDistance)
     {
         //start = Utility.WorldPointToHoneycombGrid(start);
-        Vector2 end = start;
+        HoneycombPos end = start;
         end.x += dir.x * honeyDistance;
         if (dir.x == 0) end.y += dir.y * honeyDistance;
         else if (start.x % 2 == 0 && dir.y > 0 || start.x % 2 != 0 && dir.y < 0)
         {
-            end.y += Mathf.Sign(dir.y) * Mathf.Ceil((float)honeyDistance / 2);
+            //end.y += Mathf.Sign(dir.y) * Mathf.Ceil((float)honeyDistance / 2);
+            end.y += (int)( Mathf.Sign(dir.y) * Mathf.Ceil((float)honeyDistance / 2));
         }
         else
         {
-            end.y += Mathf.Sign(dir.y) * Mathf.Ceil(((float)honeyDistance - 1) / 2);
+            //end.y += Mathf.Sign(dir.y) * Mathf.Ceil(((float)honeyDistance - 1) / 2);
+            end.y += (int)(Mathf.Sign(dir.y) * Mathf.Ceil(((float)honeyDistance - 1) / 2));
         }
 
         return end;
     }
 
-    public static Vector2 WorldDirToHoneycombDir(Vector2 worldDir)
+    public static HoneycombDir WorldDirToHoneycombDir(Vector2 worldDir)
     {
-        if (worldDir.x > 0) worldDir.x = 1;
-        else if (worldDir.x < 0) worldDir.x = 1;
-        if (worldDir.y > 0) worldDir.y = 1;
-        else if (worldDir.y < 0) worldDir.y = -1;
-        return worldDir;
+        HoneycombDir honeyDir = new HoneycombDir();
+        if (worldDir.x > 0) honeyDir.x = 1;
+        else if (worldDir.x < 0) honeyDir.x = 1;
+        if (worldDir.y > 0) honeyDir.y = 1;
+        else if (worldDir.y < 0) honeyDir.y = -1;
+        return honeyDir;
     }
 
+    public static float DistanceBetweenHoneycomb(HoneycombPos hexOne, HoneycombPos hexTwo)
+    {
+        return Vector2.Distance(HoneycombGridToWorldPostion( hexOne), HoneycombGridToWorldPostion( hexTwo));
+    }
 }

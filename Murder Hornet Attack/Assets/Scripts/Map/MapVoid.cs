@@ -20,6 +20,10 @@ public abstract class MapVoid
             SetLocationType(honeycomb, locationType);
             
         }
+        else
+        {
+            
+        }
         
     }
 

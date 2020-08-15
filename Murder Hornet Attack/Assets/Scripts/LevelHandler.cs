@@ -12,6 +12,9 @@ public class LevelHandler : MonoBehaviour
     public GameObject PortalPrefab;
     public GameObject ChamberTriggerPrefab;
 
+    public Transform ExitTunnel;
+    public Transform SnakePit;
+
     private Portal PlayerSpawn;
     private Portal Exit;
 
@@ -24,6 +27,9 @@ public class LevelHandler : MonoBehaviour
     public RawImage PlasmaMeterBar;
 
     public Text PlasmaPowerText, PlasmaChargeRateText, PlasmaChargeCapacityText;
+    public Text FPSText;
+    public InputField VSensInput, HSensInput, JoystickBoarderSizeInput, JoystickSensitivityInput;
+    public Toggle InverseReverseToggle;
 
     public CameraController Cam;
 
@@ -34,6 +40,11 @@ public class LevelHandler : MonoBehaviour
 
     private List<MapVoid> mapVoids = new List<MapVoid>();
     private PlayerHandler ph;
+
+    private bool levelEnding = false;
+
+    
+    
 
     // Start is called before the first frame update
     void Start()
@@ -61,8 +72,10 @@ public class LevelHandler : MonoBehaviour
         //Debug.Log("honeycomb (3,6) " + Utility.HoneycombGridToWorldPostion(new Vector2(3, 6)));
         //Debug.Log("honeycomb (6,6) " + Utility.HoneycombGridToWorldPostion(new Vector2(6, 6)));
 
-        displayLocation(Utility.WorldPointToHoneycombGrid(Exit.transform.position), EndLoc);
+        displayLocation(Utility.WorldPointToHoneycombGrid(Exit.transform.position).vector2, EndLoc);
         //displayLocation(Utility.WorldToHoneycomb(PlayerSpawn.transform.position), SpawnLoc);
+
+        ControlParameters.StaticControlParams.LoadControlParameters();
     }
 
     // Update is called once per frame
@@ -71,7 +84,7 @@ public class LevelHandler : MonoBehaviour
         //infiniteLevel();
         if (Exit && Exit.inChamber) {
             ExitPanel.SetActive(true);
-            if( Input.GetKeyDown(KeyCode.E)) ReloadLevel();
+            if (Player.GetComponent<HornetController>().ExitButtonPressed && !levelEnding) LevelEndSequence();
         }
         else
         {
@@ -80,7 +93,7 @@ public class LevelHandler : MonoBehaviour
 
         if (Player)
         {
-            displayLocation(Utility.WorldPointToHoneycombGrid(Player.position), PlayerLoc);
+            displayLocation(Utility.WorldPointToHoneycombGrid(Player.position).vector2, PlayerLoc);
             displayLocation(Map.StaticMap.GetChunkIndex( Utility.GetMapChunk(Player.position)), SpawnLoc);
             //Debug.Log(Utility.GetMapChunk(Player.position).ChunkIndex + " chunkOffset: " + Utility.GetMapChunk(Player.position).mapOffset);
         }
@@ -90,6 +103,7 @@ public class LevelHandler : MonoBehaviour
             MurderPanel.SetActive(true);
         }
         UpdatePlayerStats();
+        FPSText.text = Utility.FormatFloat(1 / Time.deltaTime, 1);
         //if(Player)Debug.Log("Player Chunk: " + Utility.GetMapChunk(Player.transform.position).mapOffset);
     }
 
@@ -120,7 +134,7 @@ public class LevelHandler : MonoBehaviour
         {
             int dropItem = Random.Range(0, 10); //0-2 Health 3 Power 4-6 Storage 7-9 Rapid
             float power;
-            float duration = Random.Range(1 , 7) * 5;
+            float duration = Random.Range(6 , 12) * 5;
             if(dropItem < 7)
             {
                 power = Random.Range(10, 30);
@@ -143,7 +157,26 @@ public class LevelHandler : MonoBehaviour
             drop.Power = power;
             drop.Duration = duration;
             drop.SetupLetters();
+
         }
+    }
+
+    private float levelEndStart;
+    private float levelEndCountdown = 6.0f;
+    private void LevelEndSequence()
+    {
+        levelEnding = true;
+        levelEndStart = Time.fixedTime;
+        ExitTunnel.GetComponent<Animator>().SetTrigger("Activate");
+        Map.StaticMap.Display = false;
+        StartCoroutine("LevelEndCoroutine");
+    }
+
+    IEnumerator LevelEndCoroutine()
+    {
+        while (levelEndStart + levelEndCountdown > Time.fixedTime)
+            yield return null;
+        ReloadLevel();
     }
 
     public void RestartLevel()
@@ -155,7 +188,7 @@ public class LevelHandler : MonoBehaviour
 
     private void ReloadLevel()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
     }
 
     private void infiniteLevel()
@@ -198,7 +231,7 @@ public class LevelHandler : MonoBehaviour
             PlasmaMeterText.text = hc.ShotCount.ToString();
 
             PlasmaPowerText.text = (int)ph.GetPlasmaPower() + " " + (int)ph.GetPlasmaPowerBuffTime();
-            PlasmaChargeRateText.text = ph.GetPlasmaChargeRate() + " " + (int)ph.GetPlasmaChargeRateBuffTime();
+            PlasmaChargeRateText.text = Utility.FormatFloat(ph.GetPlasmaChargeRate(),2) + " " + (int)ph.GetPlasmaChargeRateBuffTime();
             PlasmaChargeCapacityText.text = ph.GetMaxShot() + " " + (int)ph.GetMaxShotBuffTime();
         }
         
@@ -252,12 +285,13 @@ public class LevelHandler : MonoBehaviour
         Vector2 mapMax = origin + new Vector2(map.MapWidth, map.MapHeight) - new Vector2(15, 15);
 
         //create snake Chamber
-        Vector2 snakeChamberLoc = Utility.HoneycombGridToWorldPostion(new Vector2(40, 40));
+        Vector2 snakeChamberLoc = Utility.HoneycombGridToWorldPostion(new HoneycombPos(150, 100));
         MapChamber snakeChamber = MapChamber.RandomChamber(snakeChamberLoc, 15);
         //ChamberTrigger snakeChamberTrigger = Instantiate(ChamberTriggerPrefab, snakeChamberLoc, Quaternion.identity).GetComponent<ChamberTrigger>();
         //addChamberTrigger(snakeChamberTrigger, snakeChamber);
         ChamberTrigger.SetupChamberTrigger(ChamberTriggerPrefab, snakeChamber);
         newVoids.Add(snakeChamber);
+        SnakePit.position = snakeChamberLoc;
 
         //create random chambers
         for(int i = 0; i < voidCount; i += 1)
@@ -271,18 +305,24 @@ public class LevelHandler : MonoBehaviour
             locations.Add(new Vector2(xLoc, yLoc));
         }
 
-        MapChamber endChamber = (MapChamber)newVoids[newVoids.Count - 1];
-        for(int i = 1; i < voidCount - 1; i+=1)
-        {
-            if(Vector2.Distance(spawnChamber.Location, endChamber.Location) < Vector2.Distance(spawnChamber.Location, ((MapChamber)newVoids[i]).Location)) {
-                endChamber = (MapChamber)newVoids[i];
-            }
-        }
-
+        //MapChamber endChamber = (MapChamber)newVoids[newVoids.Count - 1];
+        //for(int i = 1; i < voidCount - 1; i+=1)
+        //{
+        //    if(Vector2.Distance(spawnChamber.Location, endChamber.Location) < Vector2.Distance(spawnChamber.Location, ((MapChamber)newVoids[i]).Location)) {
+        //        endChamber = (MapChamber)newVoids[i];
+        //    }
+        //}
+        MapChamber endChamber = MapChamber.EndChamberTunnel(Player.position, 8);
+        newVoids.Add(endChamber);
+        connected.Add(false);
+        locations.Add(Utility.WorldPointToHoneycombPos(Player.position));
         //setup Exit tunnel
         //Exit = Instantiate(PortalPrefab, endChamber.Location, Quaternion.identity).GetComponent<Portal>();
         //addChamberTrigger(Exit, endChamber);
         Exit = (Portal)ChamberTrigger.SetupChamberTrigger(PortalPrefab, endChamber);
+        ExitTunnel.position = Exit.Chamber.Location;
+
+
 
         //connect chambers
         for(int i = 0; i < voidCount; i += 1)
@@ -350,4 +390,34 @@ public class LevelHandler : MonoBehaviour
             }
         }
     }
+
+    public void SetControlParameters()
+    {
+        try
+        {
+            float v = float.Parse(VSensInput.text);
+            float h = float.Parse(HSensInput.text);
+            float sensitivity = float.Parse(JoystickSensitivityInput.text);
+            float boarderSize = float.Parse(JoystickBoarderSizeInput.text);
+            Debug.Log(h);
+            bool inverseReverse = InverseReverseToggle.isOn;
+            ControlParameters.StaticControlParams.SetControlParameters(sensitivity, boarderSize, v, h, inverseReverse);
+        }
+        catch
+        {
+            Debug.Log("SetControlParameters Error");
+        }
+
+    }
+
+    public void SetControlParameters(float sensitivity, float joystickBoardSize, float v, float h, bool inverseReverse)
+    {
+        VSensInput.text = v.ToString();
+        HSensInput.text = h.ToString();
+        InverseReverseToggle.isOn = inverseReverse;
+        JoystickBoarderSizeInput.text = joystickBoardSize.ToString();
+        JoystickSensitivityInput.text = sensitivity.ToString();
+    }
+
+    
 }

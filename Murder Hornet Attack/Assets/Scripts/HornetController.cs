@@ -14,6 +14,7 @@ public class HornetController : Insect
 
     public int ShotCount;
     
+    
     public enum ControlTypes
     {
         MouseControl,
@@ -22,12 +23,18 @@ public class HornetController : Insect
     public ControlTypes Controls;
 
     private PlayerHandler ph;
+
+    public bool MobileControls;
+    public bool ExitButtonPressed;
     
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         //rb.velocity = new Vector2(0, ForwardSpeed);
+#if UNITY_IOS
+        MobileControls = true;
+#endif
     }
 
     // Update is called once per frame
@@ -45,21 +52,51 @@ public class HornetController : Insect
             transform.up = Vector2.MoveTowards(transform.up, deltaMove, SideSpeed * Time.deltaTime);
             //if (transform.position.x < mouseWorldXPos) HornetSprite.localScale = new Vector3(-1, 1, 1);
             //else if(transform.position.x > mouseWorldXPos) HornetSprite.localScale = new Vector3(1, 1, 1);
-        }else if(Controls == ControlTypes.DirectKeyboard)
+        }else if(Controls == ControlTypes.DirectKeyboard && !MobileControls)
         {
             float v = Input.GetAxis("Vertical");
             float h = Input.GetAxis("Horizontal");
-
-            //rb.AddForce(v * ForwardSpeed * transform.up);
-            //Debug.Log(rb.rotation);
-            //if (h != 0) rb.AddTorque(-h * SideSpeed);
-            //else rb.rotation = rb.rotation;
-
-            rb.velocity = ForwardSpeed * v * transform.up;
-            transform.Rotate(new Vector3(0, 0, -h * SideSpeed));
+            
+            MotionControl(v, h);
         }
 
 
+
+    }
+    private Vector2 CollisionVelocity = Vector2.zero;
+
+    public void MotionControl(float vertical, float horizontal)
+    {
+        if (hadCollision && collisionControlTime + collisionTime > Time.fixedTime)
+        {
+            rb.velocity = CollisionVelocity;
+            //Debug.Log("CollisionVelocity: " + CollisionVelocity);
+            CollisionVelocity = Vector2.zero;
+        } else if (hadCollision && collisionControlTime + collisionTime < Time.fixedTime)
+        {
+            hadCollision = false;
+        }
+        else
+        {
+            rb.velocity = ForwardSpeed * vertical * transform.up;
+            hadCollision = false;
+        }
+        
+        
+        transform.Rotate(new Vector3(0, 0, -horizontal * SideSpeed));
+    }
+
+    public void FirePlasma()
+    {
+        if(ShotCount > 0)
+        {
+            if (!ph) ph = FindObjectOfType<PlayerHandler>();
+            HornetPlasm.FirePlasma(HornetPlasmPrefab, transform.position, 10 * transform.up, ph.GetPlasmaPower());
+
+            ShotCount -= 1;
+
+            FindObjectOfType<LevelHandler>().UpdatePlayerStats();
+        }
 
     }
 
@@ -75,30 +112,52 @@ public class HornetController : Insect
         }
         else if (Controls == ControlTypes.DirectKeyboard)
         {
-            if (ShotCount > 0 && Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
                 //GameObject plasm = Instantiate(HornetPlasmPrefab, transform.position, Quaternion.identity);
                 //plasm.GetComponent<Rigidbody2D>().velocity = 10 * transform.up;
-                if (!ph) ph = FindObjectOfType<PlayerHandler>();
-                HornetPlasm.FirePlasma(HornetPlasmPrefab, transform.position, 10 * transform.up, ph.GetPlasmaPower());
-                
-                ShotCount -= 1;
-
-                FindObjectOfType<LevelHandler>().UpdatePlayerStats();
+                FirePlasma();
             }
+
+            if (!MobileControls)
+            {
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    ExitButtonPressed = true;
+                }
+                else
+                {
+                    ExitButtonPressed = false;
+                }
+            }
+            
         }
         
     }
 
 
-
+    public bool TakeHoneycombDamage = true;
+    public float ImpulseCoefficient = 3;
+    private bool hadCollision;
+    private float collisionTime;
+    private float collisionControlTime = 0.2f;
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.transform.CompareTag("Honeycomb"))
         {
-            Destroy(collision.gameObject);
+            
             //hornetMurdered();
-            TakeDamage(Health);
+            if(!TakeHoneycombDamage) TakeDamage(Health);
+            else if (!hadCollision)
+            {
+                TakeDamage(5);
+                Vector2 impulse = ImpulseCoefficient * (transform.position - collision.transform.position).normalized;
+                CollisionVelocity += impulse;
+                collisionTime = Time.fixedTime;
+                hadCollision = true;
+            }
+            
+            Destroy(collision.gameObject);
         }
         
     }

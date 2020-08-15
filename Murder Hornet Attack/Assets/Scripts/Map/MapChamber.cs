@@ -23,7 +23,12 @@ public class MapChamber : MapVoid
             if (Vector2.Distance(honeycomb.position, locations[i]) <= widths[i] / 2)
             {
                 SetLocationType(honeycomb, MapHoneycomb.LocationTypes.Chamber);
-                display = false;
+                //display = false;
+                if (display)
+                {
+                    honeycomb.isFloor = true;
+                }
+                
             }
             else
             {
@@ -85,6 +90,14 @@ public class MapChamber : MapVoid
 
 
         }
+        return newChamber;
+    }
+
+    public static MapChamber EndChamberTunnel(Vector2 location, float radius)
+    {
+        location = Utility.WorldPointToHoneycombPos(location);
+        MapChamber newChamber = new MapChamber(location);
+        newChamber.AddChamber(location, radius * 2);
         return newChamber;
     }
 

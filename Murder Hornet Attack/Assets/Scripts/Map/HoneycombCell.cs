@@ -9,8 +9,8 @@ public class HoneycombCell : Honeycomb
     public Collider2D EnemyTrigger;
     
     private bool capped = true;
-    
 
+    public GameObject HoneycombBase;
 
     public override void DestroyHoneycomb()
     {
@@ -43,7 +43,13 @@ public class HoneycombCell : Honeycomb
             //depth -= 1;
             //honeyGrid.SetDepth(depth);
             //if (depth < 4) SetCapped(capped = false);
+            if(depth > 2)
+            {
+                DamageAdjecentHoneycomb(1);
+            }
             DestroyHoneycomb();
         }
     }
+
+    
 }

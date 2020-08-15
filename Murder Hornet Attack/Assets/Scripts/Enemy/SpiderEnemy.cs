@@ -85,8 +85,13 @@ public class SpiderEnemy : Insect
 
     private void UpdatePlayerLocation()
     {
-        playerLocation = GameObject.FindWithTag("Player").transform.position;
-        playerDistance = Vector2.Distance(playerLocation, transform.position);
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player)
+        {
+            playerLocation = GameObject.FindWithTag("Player").transform.position;
+            playerDistance = Vector2.Distance(playerLocation, transform.position);
+        }
+        
 
     }
 

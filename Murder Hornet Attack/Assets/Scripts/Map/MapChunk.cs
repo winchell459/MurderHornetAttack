@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //-------------------------------------MapChunk------------------------------------------------------------------------
-public class MapChunk
+public class MapChunk 
 {
     public Vector2 mapOffset;
     public Vector2 ChunkIndex;
@@ -93,13 +93,16 @@ public class MapChunk
                 honeycomb.DisplayHoneycomb();
             }
 
-            foreach(Insect insect in enemiesInChunk)
+            foreach (Insect insect in enemiesInChunk)
             {
-                if(insect)insect.gameObject.SetActive(true);
+                if (insect) insect.gameObject.SetActive(true);
             }
+            
         }
 
     }
+
+    
 
     public void DestroyChunk()
     {
@@ -110,7 +113,7 @@ public class MapChunk
                 honeycomb.HideHoneycomb();
             }
 
-            for(int i = enemiesInChunk.Count - 1; i >= 0; i -= 1)
+            for (int i = enemiesInChunk.Count - 1; i >= 0; i -= 1)
             {
                 if (enemiesInChunk[i])
                 {
@@ -126,12 +129,15 @@ public class MapChunk
                         enemiesInChunk.RemoveAt(i);
                     }
                 }
-                
+
             }
+            
         }
         display = false;
 
     }
+
+    
 
     public bool CheckPointInChunk(Vector2 point)
     {

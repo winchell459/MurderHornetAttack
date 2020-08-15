@@ -7,7 +7,7 @@ public class MapHoneycomb
 {
     public bool display;
     public Vector2 position;
-    private GameObject honeycomb;
+    public GameObject honeycomb;
     private GameObject EnemyPrefab;
 
     //private List<Transform> honeycombChildren = new List<Transform>();
@@ -16,12 +16,14 @@ public class MapHoneycomb
     private bool beeuilding;
     public bool isLargeLoc = false;
     private bool isLargeHoneycomb;
+    public bool isFloor;
 
     public enum LocationTypes
     {
         Embedded,
         Path,
-        Chamber
+        Chamber,
+        Tunnel
     }
     public LocationTypes LocationType;
 
@@ -56,17 +58,23 @@ public class MapHoneycomb
     }
     public int GetDepth() { return depth; }
 
-    bool ignoreLarge = false;
+    bool ignoreLarge = false; //---------------------------------------------------------------ignoreLarge---------------------------------------------------------------
     public void DisplayHoneycomb()
     {
         if (display)
         {
-            if ((depth < 5 || depth < 7 &&  !isLargeLoc ) || ignoreLarge && !beeuilding)
+            
+            if (isFloor)
+            {
+                if(Map.StaticMap.DisplayFloor)honeycomb = Map.GetHoneycombChamberFloor();
+            }
+            else if((depth < 5 || depth < 7 &&  !isLargeLoc ) || ignoreLarge && !beeuilding)
             {
                 honeycomb = Map.GetHoneycomb();
                 isLargeHoneycomb = false;
                 beeuilding = false;
                 if(EnemyPrefab) setupEnemyTrigger(true);
+                
             }
             else if (beeuilding)
             {
@@ -85,9 +93,29 @@ public class MapHoneycomb
                 honeycomb.SetActive(true);
                 honeycomb.GetComponent<Honeycomb>().LocationType = LocationType;
                 if (depth <= 2) capped = false;
+                if (isFloor) capped = true;
+                else
+                {
+                    //if (depth <= 3) honeycomb.GetComponent<Collider2D>().enabled = true;
+                    //else honeycomb.GetComponent<Collider2D>().enabled = false;
+                }
 
-                if (beeuilding && !isLargeHoneycomb) honeycomb.GetComponent<HoneycombTower>().SetupBeeTower();
-                else honeycomb.GetComponent<HoneycombCell>().SetCapped(capped);
+                
+
+                if (beeuilding && !isLargeHoneycomb && !isFloor) honeycomb.GetComponent<HoneycombTower>().SetupBeeTower();
+                else 
+                {
+                    honeycomb.GetComponent<HoneycombCell>().SetCapped(capped);
+                    //if (depth <= 3 && !isFloor)
+                    //{
+                    //    honeycomb.GetComponent<HoneycombCell>().HoneycombBase.SetActive(true);
+                    //    honeycomb.GetComponent<HoneycombCell>().HoneycombBase.transform.parent = Map.StaticMap.HoneycombLayers[0];
+                        
+                    //}
+                    //honeycomb.transform.parent = Map.StaticMap.HoneycombLayers[1];
+                    //honeycomb.transform.localPosition = honeycomb.transform.localPosition * Map.StaticMap.HoneycombLayers[1].localScale.x;
+
+                }
             }
 
         }
@@ -102,7 +130,20 @@ public class MapHoneycomb
 
             honeycomb.GetComponent<Honeycomb>().HideHoneycomb();
             honeycomb.SetActive(false);
-            if (!isLargeHoneycomb && honeycomb && !beeuilding) Map.ReturnHoneycomb(honeycomb);
+            if (isFloor)
+            {
+                Map.ReturnHoneycombChamberFloor(honeycomb);
+            }
+            else if (!isLargeHoneycomb && honeycomb && !beeuilding)
+            {
+
+                GameObject honeycombBase = honeycomb.GetComponent<HoneycombCell>().HoneycombBase;
+                honeycombBase.SetActive(false);
+                honeycombBase.transform.parent = honeycomb.transform ;
+                honeycombBase.transform.localPosition = Vector2.zero;
+                Map.ReturnHoneycomb(honeycomb);
+                
+            }
             else if (honeycomb && !beeuilding) Map.ReturnHoneycombLarge(honeycomb);
             else if (honeycomb)
             {
@@ -133,5 +174,18 @@ public class MapHoneycomb
     {
         //honeycomb.GetComponent<CircleCollider2D>().enabled = active;
         honeycomb.GetComponent<HoneycombCell>().EnemyTrigger.enabled = active;
+    }
+
+    public void DamageHoneycomb(int depth)
+    {
+        if (display && depth < this.depth)
+        {
+            HideHoneycomb();
+            SetDepth(depth);
+            
+            DisplayHoneycomb();
+            if ((depth <= Map.StaticMap.TunnelDestructionDepth || (isLargeLoc || beeuilding)) && honeycomb) honeycomb.GetComponent<Honeycomb>().DamageAdjecentHoneycomb(depth + 1); 
+        }
+        
     }
 }

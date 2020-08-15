@@ -70,8 +70,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 213352591
+  m_SortingLayer: 2
   m_SortingOrder: 100
   m_Sprite: {fileID: 7768066593250263288, guid: 995b81cd5f988284f90cec5b261d5df1,
     type: 3}
@@ -144,22 +144,16 @@ MonoBehaviour:
   Path: []
   TargetThreshold: 0.01
   Velocity: 2
-  Direction: {x: -1, y: 1}
   headIndex: 0
   SnakeLinkPrefab: {fileID: 2010293437201622713}
   SpawnRate: 3
   SnakeSpacing: 1
+  AttackRadius: 5
   PathType: 0
   MyPath:
-  - Direction: {x: 1, y: 1}
-    Distance: 9
-  - Direction: {x: 0, y: 1}
-    Distance: 9
-  - Direction: {x: -1, y: 1}
-    Distance: 9
-  - Direction: {x: -1, y: -1}
-    Distance: 9
-  - Direction: {x: 0, y: -1}
-    Distance: 9
-  - Direction: {x: 1, y: -1}
-    Distance: 9
+  - Distance: 9
+  - Distance: 9
+  - Distance: 9
+  - Distance: 9
+  - Distance: 9
+  - Distance: 9
