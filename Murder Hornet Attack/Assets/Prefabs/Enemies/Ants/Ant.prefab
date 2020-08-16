@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 6899312501256822510}
   - component: {fileID: 6899312501256822505}
   - component: {fileID: 9013831581090565507}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Ant
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -120,7 +120,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &9013831581090565507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,5 +139,6 @@ MonoBehaviour:
   InsectPrefab: {fileID: 0}
   Marching: 0
   speed: 1
+  forwardMarch: 1
   MarchingPoints: []
   CurrentPointIndex: 0

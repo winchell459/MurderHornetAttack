@@ -7,6 +7,10 @@ public class Ant : Insect
     public bool Marching = false;
     public float speed = 5f;
 
+    public float PlayerDamage = 1f;
+
+    public bool forwardMarch = true;
+
     private Rigidbody2D rb;
 
     public Vector2[] MarchingPoints;
@@ -15,7 +19,7 @@ public class Ant : Insect
 
     public int CurrentPointIndex = 0;
 
-    private Vector2 velocity;
+    private Vector2 vector;
     private Vector2 position;
 
     private void Start()
@@ -33,54 +37,49 @@ public class Ant : Insect
         {
             if (Vector2.Distance(transform.position, MarchingPoints[CurrentPointIndex]) <= epsilon)
             {
-                CurrentPointIndex++;
-                CurrentPointIndex %= MarchingPoints.Length;
+                if (forwardMarch)
+                {
+                    CurrentPointIndex++;
+                }
+                else
+                {
+                    CurrentPointIndex--;
+                }
+
+                if (CurrentPointIndex < 0)
+                {
+                    CurrentPointIndex = 0;
+                    forwardMarch = true;
+                }
+                else if (CurrentPointIndex >= MarchingPoints.Length)
+                {
+                    CurrentPointIndex = MarchingPoints.Length - 1;
+                    forwardMarch = false;
+                }
+
+                float angle = 0;
+
+                Vector3 relative = transform.InverseTransformPoint(MarchingPoints[CurrentPointIndex]);
+                angle = Mathf.Atan2(relative.x, relative.y) * Mathf.Rad2Deg;
+                transform.Rotate(0, 0, -angle);
+
             }
-
-            velocity = (MarchingPoints[CurrentPointIndex] - position).normalized;
-            rb.MovePosition(rb.position + velocity * speed * Time.fixedDeltaTime);
-
+            vector = (MarchingPoints[CurrentPointIndex] - position).normalized;
+            rb.MovePosition(rb.position + vector * speed * Time.fixedDeltaTime);
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Marching)
-        {
-            float angle = 0;
+        //if (Marching)
+        //{
+        //    float angle = 0;
 
-            Vector3 relative = transform.InverseTransformPoint(MarchingPoints[CurrentPointIndex]);
-            angle = Mathf.Atan2(relative.x, relative.y) * Mathf.Rad2Deg;
-            transform.Rotate(0, 0, -angle);
-
-            //transform.up = rb.velocity.normalized;
-
-            //if (Vector2.Distance(transform.position, MarchingPoints[CurrentPointIndex]) <= epsilon)
-            //{
-            //    CurrentPointIndex++;
-            //    CurrentPointIndex %= MarchingPoints.Length;
-            //}
-            //float step = speed * Time.deltaTime;
-            //transform.position = Vector2.MoveTowards(transform.position, MarchingPoints[CurrentPointIndex], step);
-
-
-            //// Determine which direction to rotate towards
-            //Vector3 targetDirection = MarchingPoints[CurrentPointIndex] - position;
-
-            //// The step size is equal to speed times frame time.
-            //float singleStep = speed * Time.deltaTime;
-
-            //// Rotate the forward vector towards the target direction by one step
-            //Vector3 newDirection = Vector3.RotateTowards(transform.forward, targetDirection, singleStep, 0.0f);
-
-            ////// Draw a ray pointing at our target in
-            ////Debug.DrawRay(transform.position, newDirection, Color.red);
-
-            //// Calculate a rotation a step closer to the target and applies rotation to this object
-            //transform.rotation = Quaternion.LookRotation(newDirection);
-
-        }
+        //    Vector3 relative = transform.InverseTransformPoint(MarchingPoints[CurrentPointIndex]);
+        //    angle = Mathf.Atan2(relative.x, relative.y) * Mathf.Rad2Deg;
+        //    transform.Rotate(0, 0, -angle);
+        //}
     }
 
     public void March(float MarchDelay)
@@ -100,6 +99,19 @@ public class Ant : Insect
         this.MarchingPoints = MarchingPoints;
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        string tag = collision.tag;
+        if (tag.Equals("Honeycomb"))
+        {
+            collision.GetComponent<Honeycomb>().DamageHoneycomb(float.PositiveInfinity);
+        }
+        else if (tag.Equals("Player"))
+        {
+            collision.GetComponent<HornetController>().TakeDamage(PlayerDamage);
+        }
+
+    }
     public override void TakeDamage(float damage)
     {
         Health -= damage;

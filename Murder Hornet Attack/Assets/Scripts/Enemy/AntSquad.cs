@@ -49,7 +49,9 @@ public class AntSquad : MonoBehaviour
             ant.SetMarchingPoints(MarchingPoints);
             ant.March(MarchDelay * i);
             ant.speed = speed;
+
         }
+
     }
 
     // Update is called once per frame
