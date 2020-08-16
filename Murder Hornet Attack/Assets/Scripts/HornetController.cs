@@ -88,6 +88,7 @@ public class HornetController : Insect
 
     public void FirePlasma()
     {
+
         if(ShotCount > 0)
         {
             if (!ph) ph = FindObjectOfType<PlayerHandler>();
@@ -148,13 +149,13 @@ public class HornetController : Insect
             
             //hornetMurdered();
             if(!TakeHoneycombDamage) TakeDamage(Health);
-            else if (!hadCollision)
+            else //if (!hadCollision)
             {
-                TakeDamage(5);
+                //TakeDamage(5);
                 Vector2 impulse = ImpulseCoefficient * (transform.position - collision.transform.position).normalized;
-                CollisionVelocity += impulse;
-                collisionTime = Time.fixedTime;
-                hadCollision = true;
+                //CollisionVelocity += impulse;
+                TakeDamage(5, impulse);
+                
             }
             
             Destroy(collision.gameObject);
@@ -169,7 +170,7 @@ public class HornetController : Insect
         {
             Insect collider = collision.transform.GetComponent<Insect>();
             
-            TakeDamage(collider.CollisionDamage);
+            TakeDamage(collider.CollisionDamage, collision.GetComponent<Insect>().GetCollisionVelocity(transform, rb.velocity));
             collider.TakeDamage(GetComponent<Insect>().CollisionDamage);
         }
     }
@@ -182,6 +183,19 @@ public class HornetController : Insect
         {
             hornetMurdered();
         }
+    }
+
+    public override void TakeDamage(float Damage, Vector2 KickBackVelocity)
+    {
+        if (!hadCollision)
+        {
+            collisionTime = Time.fixedTime;
+            hadCollision = true;
+            CollisionVelocity += KickBackVelocity;
+            Debug.Log("KickBackVelocity: " + KickBackVelocity);
+        }
+        
+        TakeDamage(Damage);
     }
 
     public void AddedHealth(float Healing)

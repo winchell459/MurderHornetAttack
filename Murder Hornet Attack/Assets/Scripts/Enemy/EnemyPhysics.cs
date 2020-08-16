@@ -213,4 +213,10 @@ public class EnemyPhysics : Insect
             Destroy(gameObject);
         }
     }
+
+    public override Vector2 GetCollisionVelocity(Transform collidingObject, Vector2 collidingVelocity)
+    {
+        Debug.Log("GetCollisionVelocity");
+        return 25 * (collidingObject.position - transform.position).normalized;
+    }
 }

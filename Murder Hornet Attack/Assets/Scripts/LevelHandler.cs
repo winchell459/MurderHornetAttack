@@ -28,7 +28,7 @@ public class LevelHandler : MonoBehaviour
 
     public Text PlasmaPowerText, PlasmaChargeRateText, PlasmaChargeCapacityText;
     //public Text FPSText;
-    public InputField VSensInput, HSensInput, JoystickBoarderSizeInput, JoystickSensitivityInput;
+    public InputField CameraTrackingInput, VSensInput, HSensInput, JoystickBoarderSizeInput, JoystickSensitivityInput;
     public Toggle InverseReverseToggle;
 
     public CameraController Cam;
@@ -395,13 +395,14 @@ public class LevelHandler : MonoBehaviour
     {
         try
         {
+            float cameraSpeed = float.Parse(CameraTrackingInput.text);
             float v = float.Parse(VSensInput.text);
             float h = float.Parse(HSensInput.text);
             float sensitivity = float.Parse(JoystickSensitivityInput.text);
             float boarderSize = float.Parse(JoystickBoarderSizeInput.text);
             Debug.Log(h);
             bool inverseReverse = InverseReverseToggle.isOn;
-            ControlParameters.StaticControlParams.SetControlParameters(sensitivity, boarderSize, v, h, inverseReverse);
+            ControlParameters.StaticControlParams.SetControlParameters(cameraSpeed, sensitivity, boarderSize, v, h, inverseReverse);
         }
         catch
         {
@@ -410,8 +411,9 @@ public class LevelHandler : MonoBehaviour
 
     }
 
-    public void SetControlParameters(float sensitivity, float joystickBoardSize, float v, float h, bool inverseReverse)
+    public void SetControlParameters(float cameraSpeed, float sensitivity, float joystickBoardSize, float v, float h, bool inverseReverse)
     {
+        CameraTrackingInput.text = cameraSpeed.ToString();
         VSensInput.text = v.ToString();
         HSensInput.text = h.ToString();
         InverseReverseToggle.isOn = inverseReverse;

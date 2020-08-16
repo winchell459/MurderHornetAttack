@@ -4,23 +4,25 @@ using UnityEngine;
 
 public class ControlParameters : MonoBehaviour
 {
+    public float CameraSpeed = 3;
     public float FlySensitivity = 3, TurnSensitivity = 3;
     public bool InverseReverse;
     public float JoystickSensitivity = 1;
     public float JoystickBoarderSize = 4.85f;
     public static ControlParameters StaticControlParams;
-    private string flySensitivityTag = "FlySensitivity", turnSensitivityTag = "TurnSensitivity", joystickSensitivityTag = "JoystickSensitivity", joystickBoarderSizeTag = "JoystickBoarderSize", inverseReverseTag = "InverseReverse";
+    private string cameraSpeedTag = "CameraSpeedTag", flySensitivityTag = "FlySensitivity", turnSensitivityTag = "TurnSensitivity", joystickSensitivityTag = "JoystickSensitivity", joystickBoarderSizeTag = "JoystickBoarderSize", inverseReverseTag = "InverseReverse";
 
     private void Awake()
     {
         if (StaticControlParams) Destroy(gameObject);
         else StaticControlParams = this;
         LoadControlParameters();
-        FindObjectOfType<LevelHandler>().SetControlParameters(JoystickSensitivity,JoystickBoarderSize, FlySensitivity, TurnSensitivity, InverseReverse);
+        FindObjectOfType<LevelHandler>().SetControlParameters(CameraSpeed, JoystickSensitivity,JoystickBoarderSize, FlySensitivity, TurnSensitivity, InverseReverse);
     }
 
-    public void SetControlParameters(float JoystickSensitivity, float JoystickBoarderSize, float FlySensitivity, float TurnSensitivity, bool InverseReverse)
+    public void SetControlParameters(float CameraTrackingSpeed, float JoystickSensitivity, float JoystickBoarderSize, float FlySensitivity, float TurnSensitivity, bool InverseReverse)
     {
+        CameraSpeed = CameraTrackingSpeed;
         this.FlySensitivity = FlySensitivity;
         this.TurnSensitivity = TurnSensitivity;
         this.InverseReverse = InverseReverse;
@@ -32,6 +34,7 @@ public class ControlParameters : MonoBehaviour
 
     public void SaveControlParameters()
     {
+        PlayerPrefs.SetFloat(cameraSpeedTag, CameraSpeed);
         PlayerPrefs.SetFloat(flySensitivityTag, FlySensitivity);
         PlayerPrefs.SetFloat(turnSensitivityTag, TurnSensitivity);
         PlayerPrefs.SetFloat(joystickSensitivityTag, JoystickSensitivity);
@@ -41,6 +44,7 @@ public class ControlParameters : MonoBehaviour
 
     public void LoadControlParameters()
     {
+        CameraSpeed = PlayerPrefs.HasKey(cameraSpeedTag) ? PlayerPrefs.GetFloat(cameraSpeedTag) : CameraSpeed;
         FlySensitivity = PlayerPrefs.HasKey(flySensitivityTag) ? PlayerPrefs.GetFloat(flySensitivityTag) : FlySensitivity;
         TurnSensitivity = PlayerPrefs.HasKey(turnSensitivityTag) ? PlayerPrefs.GetFloat(turnSensitivityTag) : TurnSensitivity;
         JoystickSensitivity = PlayerPrefs.HasKey(joystickSensitivityTag) ? PlayerPrefs.GetFloat(joystickSensitivityTag) : JoystickSensitivity;

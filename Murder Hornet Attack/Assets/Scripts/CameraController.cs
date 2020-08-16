@@ -35,7 +35,7 @@ public class CameraController : MonoBehaviour
         //if(Target)transform.position = new Vector3(transform.position.x, Target.position.y + offset.y, transform.position.z);
         if (Target)
         {
-            transform.position = Vector3.MoveTowards(transform.position, new Vector3(Target.position.x, Target.position.y, transform.position.z), TrackingSpeed*Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(Target.position.x, Target.position.y, transform.position.z), ControlParameters.StaticControlParams.CameraSpeed*Time.deltaTime);
             //transform.up = Target.up;
             transform.eulerAngles = Target.eulerAngles;
             for(int i = 1; i < Layers.Length; i+=1)
