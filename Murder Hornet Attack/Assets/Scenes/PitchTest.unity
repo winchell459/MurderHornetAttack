@@ -776,7 +776,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -315.8, y: -41.80005}
+  m_AnchoredPosition: {x: -315.8, y: -41.799805}
   m_SizeDelta: {x: 158.2, y: 67.48}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &70041854
@@ -9055,7 +9055,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 249.40002}
+  m_AnchoredPosition: {x: 0, y: 249.40039}
   m_SizeDelta: {x: 150, y: 200}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &998032037
@@ -17167,11 +17167,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c793646a6fc4144cbbb12cf388ba2ddc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FlySensitivity: 3
-  TurnSensitivity: 2
+  FlySensitivity: 2
+  TurnSensitivity: 3
   InverseReverse: 0
-  JoystickSensitivity: 1
-  JoystickBoarderSize: 4.85
+  JoystickSensitivity: 1.1
+  JoystickBoarderSize: 3
 --- !u!4 &2144639598
 Transform:
   m_ObjectHideFlags: 0

@@ -10,11 +10,14 @@ public class FPSHandler : MonoBehaviour
     private int fps = 60;
     private float valueChangedTime = float.NegativeInfinity;
     private bool valueChanged = false;
+    private float calcStartTime;
+    private float fpsAverage = 0;
     
     // Start is called before the first frame update
     void Start()
     {
         ToggleFPS(fps);
+        startCalc();
     }
 
     private void Update()
@@ -26,7 +29,8 @@ public class FPSHandler : MonoBehaviour
             valueChanged = false;
         }
 
-        FPSText.text = Utility.FormatFloat(1 / Time.deltaTime, 1);
+        handleFPSCalc();
+        
     }
 
     public void ToggleFPS(int fps)
@@ -56,5 +60,22 @@ public class FPSHandler : MonoBehaviour
             }
         }
         
+    }
+
+    private void startCalc()
+    {
+        calcStartTime = Time.fixedTime;
+        fpsAverage = 0;
+    }
+
+    private void handleFPSCalc()
+    {
+        fpsAverage += 1;
+        if (calcStartTime + 1 < Time.fixedTime)
+        {
+            
+            FPSText.text = Utility.FormatFloat(fpsAverage / (Time.fixedTime - calcStartTime), 1);
+            startCalc();
+        }
     }
 }
