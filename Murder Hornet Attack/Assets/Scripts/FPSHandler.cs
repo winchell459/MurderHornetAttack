@@ -25,7 +25,7 @@ public class FPSHandler : MonoBehaviour
         if(valueChanged && valueChangedTime + 1 < Time.fixedTime)
         {
             Application.targetFrameRate = fps;
-            Debug.Log("FPS set to " + fps);
+            //Debug.Log("FPS set to " + fps);
             valueChanged = false;
         }
 

@@ -10,6 +10,9 @@ public abstract class MapVoid
     private List<MapHoneycomb> voidWalls = new List<MapHoneycomb>();
     public MapHoneycomb.LocationTypes VoidType;
 
+    //public Vector2 Location;//{ public get; private set; }
+    //public bool Connected;
+
     protected void CheckDepth(float distance, MapHoneycomb honeycomb, MapHoneycomb.LocationTypes locationType)
     {
         int depth = (int)Mathf.Ceil(distance / Map.StaticMap.HorizontalSpacing);

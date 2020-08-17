@@ -23,6 +23,9 @@ public class MapHoneycomb
         Embedded,
         Path,
         Chamber,
+        Garden,
+        Nest,
+        Farm,
         Tunnel
     }
     public LocationTypes LocationType;

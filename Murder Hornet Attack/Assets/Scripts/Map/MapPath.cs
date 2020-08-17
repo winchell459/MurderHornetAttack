@@ -7,6 +7,7 @@ public class MapPath : MapVoid
     private List<Vector2> Points = new List<Vector2>();
     private List<float> widths = new List<float>();
     public int Count = 0;
+    
     //public List<Vector2> End = new List<Vector2>();
 
     public MapPath(Vector2 start, Vector2 end, float width)
@@ -49,13 +50,13 @@ public class MapPath : MapVoid
                 float distance = Utility.PointDistanceToPath(honeycomb.position, start, end);
                 if (distance < widths[i] / 2 || distance < 0.45f)
                 {
-                    if(honeycomb.LocationType <= MapHoneycomb.LocationTypes.Path) display = false;
+                    if(honeycomb.LocationType <= VoidType) display = false;
                     honeycomb.isFloor = true;
-                    SetLocationType(honeycomb, MapHoneycomb.LocationTypes.Path);
+                    SetLocationType(honeycomb, VoidType);
                 }
                 else
                 {
-                    CheckDepth(distance - widths[i] / 2, honeycomb, MapHoneycomb.LocationTypes.Path);
+                    CheckDepth(distance - widths[i] / 2, honeycomb, VoidType);
                 //if(distance < widths[i] / 2 + Map.StaticMap.HorizontalSpacing*2)
                 //{
                 //    honeycomb.SetCapped(false);

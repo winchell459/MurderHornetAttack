@@ -71,7 +71,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 213352591
-  m_SortingLayer: 2
+  m_SortingLayer: -1
   m_SortingOrder: 50
   m_Sprite: {fileID: 21300000, guid: a5879ddbb78e044fd8e96693e2478898, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -97,8 +97,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CollisionDamage: 0
-  Health: 1
-  MaxHealth: 1
+  Health: 15
+  MaxHealth: 15
+  CollisionForce: {x: 0, y: 0}
   InsectPrefab: {fileID: 0}
   speed: 4
   attackRadius: 3

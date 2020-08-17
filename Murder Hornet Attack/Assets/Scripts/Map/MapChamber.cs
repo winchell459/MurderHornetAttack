@@ -7,7 +7,12 @@ public class MapChamber : MapVoid
     public List<Vector2> locations = new List<Vector2>();
     public List<float> widths = new List<float>();
     public Vector2 Location;//{ public get; private set; }
+    public bool Connected;
 
+    public MapChamber()
+    {
+
+    }
     public MapChamber(Vector2 Location)
     {
         this.Location = Location;
@@ -22,7 +27,7 @@ public class MapChamber : MapVoid
             //if (!display) break;
             if (Vector2.Distance(honeycomb.position, locations[i]) <= widths[i] / 2)
             {
-                SetLocationType(honeycomb, MapHoneycomb.LocationTypes.Chamber);
+                SetLocationType(honeycomb, VoidType);
                 //display = false;
                 if (display)
                 {
@@ -32,7 +37,7 @@ public class MapChamber : MapVoid
             }
             else
             {
-                CheckDepth(Vector2.Distance(honeycomb.position, locations[i]) - widths[i] / 2, honeycomb, MapHoneycomb.LocationTypes.Chamber);
+                CheckDepth(Vector2.Distance(honeycomb.position, locations[i]) - widths[i] / 2, honeycomb, VoidType);
                 //if (Vector2.Distance(honeycomb.position, locations[i]) < widths[i] / 2 + Map.StaticMap.HorizontalSpacing * 2)
                 //{
                 //    honeycomb.SetCapped(false);
@@ -57,6 +62,7 @@ public class MapChamber : MapVoid
         int index = 0;
         for(int i = 0; i < locations.Count; i+= 1)
         {
+            Debug.Log("locations.count = " + locations.Count + " widths.count = " + widths.Count);
             float distanceCheck = Vector2.Distance(locations[i], point) - widths[i]/2;
             if(distanceCheck < distance)
             {

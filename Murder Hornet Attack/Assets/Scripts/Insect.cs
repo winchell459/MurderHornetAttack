@@ -20,6 +20,7 @@ public abstract class Insect : MonoBehaviour
     public GameObject InsectPrefab;
     public virtual Vector2 GetCollisionVelocity(Transform collidingObject, Vector2 collidingVelocity)
     {
-        return CollisionForce;
+        //return CollisionForce;
+        return 25 * (collidingObject.position - transform.position).normalized; 
     }
 }

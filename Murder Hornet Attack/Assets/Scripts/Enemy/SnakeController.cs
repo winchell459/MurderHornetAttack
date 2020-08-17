@@ -117,7 +117,7 @@ public class SnakeController : Insect
         if (Tail) Tail.spawnTail();
         else
         {
-            SnakeController tail = Instantiate(FindObjectOfType<LevelHandler>().SnakePrefab, transform.position - (-transform.right.normalized)*Time.deltaTime, Quaternion.identity).GetComponent<SnakeController>();
+            SnakeController tail = Instantiate(FindObjectOfType<MapGenerator>().SnakePrefab, transform.position - (-transform.right.normalized)*Time.deltaTime, Quaternion.identity).GetComponent<SnakeController>();
             Tail = tail;
             tail.Head = this;
            
