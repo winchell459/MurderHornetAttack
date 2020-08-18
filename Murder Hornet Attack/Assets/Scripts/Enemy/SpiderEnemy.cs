@@ -194,6 +194,7 @@ public class SpiderEnemy : Insect
         Health -= Damage;
         if (Health <= 0)
         {
+            FindObjectOfType<LevelHandler>().EnemyDeath(gameObject);
             Destroy(gameObject);
         }
     }

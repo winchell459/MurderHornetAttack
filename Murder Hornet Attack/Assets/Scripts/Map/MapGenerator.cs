@@ -24,9 +24,13 @@ public class MapGenerator : MonoBehaviour
     public void GenerateMap(Transform Player)
     {
         //createVoids();
+        float start = System.DateTime.Now.Second;
         createRandomMap(Player, 10);
+        Debug.Log("createRandomMap Time: " + (System.DateTime.Now.Second - start));
 
+        start = System.DateTime.Now.Second;
         Map.StaticMap.DisplayChunks();
+        Debug.Log("DisplayChunks Time: " + (System.DateTime.Now.Second - start));
 
         //setup enemies in Paths
         addPathEnemies();
@@ -64,7 +68,7 @@ public class MapGenerator : MonoBehaviour
         Player.position = PlayerSpawn.Chamber.locations[0];
 
 
-        CreateSpiderNest(Utility.HoneycombGridToWorldPostion(new HoneycombPos(35, 75)));
+        CreateSpiderNest(Utility.HoneycombGridToWorldPostion(new HoneycombPos(75, 105)));
 
 
         Map map = Map.StaticMap;
@@ -73,7 +77,7 @@ public class MapGenerator : MonoBehaviour
         Vector2 mapMax = origin + new Vector2(map.MapWidth, map.MapHeight) - new Vector2(15, 15);
 
         //create snake Chamber
-        Vector2 snakeChamberLoc = Utility.HoneycombGridToWorldPostion(new HoneycombPos(150, 100));
+        Vector2 snakeChamberLoc = Utility.HoneycombGridToWorldPostion(new HoneycombPos(150, 80));
         CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc);
 
         //create random chambers
@@ -98,7 +102,8 @@ public class MapGenerator : MonoBehaviour
 
 
 
-        Exit = CreateExitTunnel(PortalPrefab, Player.position);
+        //Exit = CreateExitTunnel(PortalPrefab, Player.position);
+        Exit = CreateExitTunnel(PortalPrefab, Utility.HoneycombGridToWorldPostion(new HoneycombPos(200, 200)));
         ExitTunnel.position = Exit.Chamber.Location;
 
 
@@ -171,12 +176,14 @@ public class MapGenerator : MonoBehaviour
 
     public void CreateSpiderNest(Vector2 position)
     {
-        newVoids.Add(MapNest.CreateRandomNest(position, 5, 15, SpiderHole));
+        MapNest nest = MapNest.CreateRandomNest(position, 5, 10, SpiderHole);
+        connectChambers(nest);
+        newVoids.Add(nest);
     }
 
     private void connectChambers(List<MapVoid> chambers)
     {
-        int voidCount = chambers.Count - 1;
+        int voidCount = chambers.Count ;
         for (int i = 0; i < voidCount; i += 1)
         {
             //Debug.Log("newConnected: " + newConnected.Count + " voidCount: " + voidCount);
@@ -192,4 +199,24 @@ public class MapGenerator : MonoBehaviour
             }
         }
     }
+
+    private void connectChambers(MapNest nest)
+    {
+        int voidCount = nest.chambers.Count - 1;
+        for (int i = 0; i < voidCount; i += 1)
+        {
+            //Debug.Log("newConnected: " + newConnected.Count + " voidCount: " + voidCount);
+            while (!((MapChamber)nest.chambers[i]).Connected)
+            {
+                int connecting = (int)Random.Range(0, voidCount - 1);
+                if (connecting != i)
+                {
+                    //chambers.Add(MapPath.CreateJoggingPath(((MapChamber)chambers[i]).ClosestEntrancePoint(newLocations[connecting]), newLocations[connecting], -2, 2, 2, 6, 2, 2));
+                    nest.paths.Add(MapPath.CreateJoggingPath((nest.chambers[i]).ClosestEntrancePoint((nest.chambers[connecting]).Location), ((MapChamber)nest.chambers[connecting]).Location, -2, 2, 2, 6, 2, 2));
+                    ((MapChamber)nest.chambers[i]).Connected = true;
+                }
+            }
+        }
+    }
+    
 }

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class MapNest : MapChamber
 {
-    List<MapChamber> chambers = new List<MapChamber>();
-    List<MapPath> paths = new List<MapPath>();
+    public List<MapChamber> chambers = new List<MapChamber>();
+    public List<MapPath> paths = new List<MapPath>();
     //public Vector2 Location;
      
 
@@ -19,7 +19,7 @@ public class MapNest : MapChamber
         bool display = honeycomb.display;
         foreach(MapChamber chamber in chambers)
         {
-            Debug.Log("MapNest.Check");
+            //Debug.Log("MapNest.Check");
             if (!chamber.Check(honeycomb)) display = false;
         }
 
@@ -37,24 +37,58 @@ public class MapNest : MapChamber
         MapNest nest = new MapNest(pos);
         nest.locations.Add(pos);
         nest.widths.Add(radius * 2);
-        float distributionAngle = Mathf.PI / nestCount;
+        float distributionAngle = 2 * Mathf.PI / nestCount;
+
+        List<Circle> circles = new List<Circle>();
         for(int i = 0; i < nestCount; i+= 1)
         {
-            float angle = i * distributionAngle - distributionAngle / 2;
-            angle = Random.Range(angle, angle + distributionAngle);
-            float distance = Random.Range(radius, radius);
-            float x = distance * Mathf.Cos(angle);
-            float y = distance * Mathf.Sin(angle);
-            Vector2 loc = pos + new Vector2(x, y);
-            GameObject.Instantiate(nestPrefab, loc, Quaternion.identity);
+            Circle circle = new Circle();
+            float minRadius = 0;
+            float maxRadius = radius;
+            do
+            {
+                float angle = i * distributionAngle - distributionAngle / 2;
+                angle = Random.Range(angle, angle + distributionAngle);
+                float distance = Random.Range(minRadius, maxRadius);
+                float x = distance * Mathf.Cos(angle);
+                float y = distance * Mathf.Sin(angle);
+                Vector2 loc = pos + new Vector2(x, y);
+                circle.r = radius / 2;
+                circle.pos = loc;
+                maxRadius += radius / 4;
+            }
+            while (ShapeOverlappped(circle, circles));
+
+            circles.Add(circle);
+        }
+
+        foreach(Circle circle in circles)
+        {
+            GameObject.Instantiate(nestPrefab, circle.pos, Quaternion.identity);
             //nest.locations.Add(loc);
-            
-            MapChamber chamber = new MapChamber(loc);
+
+            MapChamber chamber = new MapChamber(circle.pos);
             chamber.VoidType = MapHoneycomb.LocationTypes.Garden;
-            chamber.AddChamber(chamber.Location, 10);
+            chamber.AddChamber(chamber.Location, radius);
             nest.chambers.Add(chamber);
         }
 
         return nest;
+    }
+
+    private struct Circle
+    {
+        public Vector2 pos;
+        public float r;
+    }
+
+    private static bool ShapeOverlappped(Circle circle, List<Circle> circles)
+    {
+        bool overlap = false;
+        foreach(Circle c in circles)
+        {
+            if (Vector2.Distance(c.pos, circle.pos) < c.r + circle.r) overlap = true;
+        }
+        return overlap;
     }
 }

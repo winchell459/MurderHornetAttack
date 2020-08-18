@@ -5026,7 +5026,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 516643013}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 4, y: 67.5, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 963194228}
@@ -12219,12 +12219,12 @@ PrefabInstance:
     - target: {fileID: 4713034296474697243, guid: a36d3aeabb0924681ace5b5e3930ac30,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 50.7
       objectReference: {fileID: 0}
     - target: {fileID: 4713034296474697243, guid: a36d3aeabb0924681ace5b5e3930ac30,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.56
+      value: 37.2
       objectReference: {fileID: 0}
     - target: {fileID: 4713034296474697243, guid: a36d3aeabb0924681ace5b5e3930ac30,
         type: 3}
@@ -16297,8 +16297,8 @@ MonoBehaviour:
     type: 3}
   HoneycombChamberFloorPrefab: {fileID: 1451932472498554745, guid: ef5566033753aa14da70c0b7fa6079f6,
     type: 3}
-  MapWidth: 100
-  MapHeight: 80
+  MapWidth: 200
+  MapHeight: 160
   MapOrigin: {x: -70, y: -130}
   VerticalSpacing: 0.27
   HorizontalSpacing: 0.45
@@ -18978,12 +18978,12 @@ PrefabInstance:
     - target: {fileID: 2963273219893779834, guid: c42050267f9da2c4b86aeaa6bc3547a4,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2963273219893779834, guid: c42050267f9da2c4b86aeaa6bc3547a4,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.5
+      value: 65
       objectReference: {fileID: 0}
     - target: {fileID: 2963273219893779834, guid: c42050267f9da2c4b86aeaa6bc3547a4,
         type: 3}

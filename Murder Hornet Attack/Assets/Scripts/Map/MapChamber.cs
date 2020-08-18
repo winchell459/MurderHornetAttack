@@ -62,7 +62,7 @@ public class MapChamber : MapVoid
         int index = 0;
         for(int i = 0; i < locations.Count; i+= 1)
         {
-            Debug.Log("locations.count = " + locations.Count + " widths.count = " + widths.Count);
+            //Debug.Log("locations.count = " + locations.Count + " widths.count = " + widths.Count);
             float distanceCheck = Vector2.Distance(locations[i], point) - widths[i]/2;
             if(distanceCheck < distance)
             {

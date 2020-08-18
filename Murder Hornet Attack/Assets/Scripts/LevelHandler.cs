@@ -117,6 +117,7 @@ public class LevelHandler : MonoBehaviour
     {
         int dropCheck = 8;
         if (enemy.GetComponent<SnakeController>()) dropCheck = 2;
+        if (enemy.GetComponent<SpiderEnemy>()) dropCheck = 0;
         if(Random.Range(0,10) > dropCheck)
         {
             int dropItem = Random.Range(0, 10); //0-2 Health 3 Power 4-6 Storage 7-9 Rapid
