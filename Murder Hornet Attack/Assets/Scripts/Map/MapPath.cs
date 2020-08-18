@@ -43,6 +43,7 @@ public class MapPath : MapVoid
         bool display = honeycomb.display;
         for (int i = 0; i < Count; i++)
         {
+            Debug.Log("PathCheck");
             //if (display)
             {
                 Vector2 start = Start(i);

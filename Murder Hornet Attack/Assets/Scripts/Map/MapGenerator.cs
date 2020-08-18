@@ -24,10 +24,12 @@ public class MapGenerator : MonoBehaviour
     public void GenerateMap(Transform Player)
     {
         //createVoids();
+        float start = Time.fixedTime;
         createRandomMap(Player, 10);
+        Debug.Log("Map Creation Time: " + (Time.fixedTime - start));
 
         Map.StaticMap.DisplayChunks();
-
+        Debug.Log("Map Display Time: " + (Time.fixedTime - start));
         //setup enemies in Paths
         addPathEnemies();
     }
@@ -64,7 +66,7 @@ public class MapGenerator : MonoBehaviour
         Player.position = PlayerSpawn.Chamber.locations[0];
 
 
-        CreateSpiderNest(Utility.HoneycombGridToWorldPostion(new HoneycombPos(35, 75)));
+        //CreateSpiderNest(Utility.HoneycombGridToWorldPostion(new HoneycombPos(35, 75)));
 
 
         Map map = Map.StaticMap;
@@ -74,19 +76,19 @@ public class MapGenerator : MonoBehaviour
 
         //create snake Chamber
         Vector2 snakeChamberLoc = Utility.HoneycombGridToWorldPostion(new HoneycombPos(150, 100));
-        CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc);
+        //CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc);
 
         //create random chambers
-        for (int i = 0; i < voidCount; i += 1)
-        {
-            float xLoc = Random.Range(mapMin.x, mapMax.x);
-            float yLoc = Random.Range(mapMin.y, mapMax.y);
-            float radius = Random.Range(5, 15);
-            newVoids.Add(MapChamber.RandomChamber(new Vector2(xLoc, yLoc), radius));
-            //newConnected.Add(false);
+        //for (int i = 0; i < voidCount; i += 1)
+        //{
+        //    float xLoc = Random.Range(mapMin.x, mapMax.x);
+        //    float yLoc = Random.Range(mapMin.y, mapMax.y);
+        //    float radius = Random.Range(5, 15);
+        //    newVoids.Add(MapChamber.RandomChamber(new Vector2(xLoc, yLoc), radius));
+        //    //newConnected.Add(false);
 
-            //newLocations.Add(new Vector2(xLoc, yLoc));
-        }
+        //    //newLocations.Add(new Vector2(xLoc, yLoc));
+        //}
 
         //MapChamber endChamber = (MapChamber)newVoids[newVoids.Count - 1];
         //for(int i = 1; i < voidCount - 1; i+=1)
@@ -171,7 +173,7 @@ public class MapGenerator : MonoBehaviour
 
     public void CreateSpiderNest(Vector2 position)
     {
-        newVoids.Add(MapNest.CreateRandomNest(position, 5, 15, SpiderHole));
+        newVoids.Add(MapNest.CreateRandomNest(position, 5, 10, SpiderHole));
     }
 
     private void connectChambers(List<MapVoid> chambers)

@@ -21,9 +21,11 @@ public class MapChamber : MapVoid
     public override bool Check(MapHoneycomb honeycomb)
     {
         bool display = honeycomb.display;
+
         
         for(int i = 0; i < locations.Count; i++)
         {
+            Debug.Log("ChamberCheck");
             //if (!display) break;
             if (Vector2.Distance(honeycomb.position, locations[i]) <= widths[i] / 2)
             {
@@ -62,7 +64,7 @@ public class MapChamber : MapVoid
         int index = 0;
         for(int i = 0; i < locations.Count; i+= 1)
         {
-            Debug.Log("locations.count = " + locations.Count + " widths.count = " + widths.Count);
+            //Debug.Log("locations.count = " + locations.Count + " widths.count = " + widths.Count);
             float distanceCheck = Vector2.Distance(locations[i], point) - widths[i]/2;
             if(distanceCheck < distance)
             {

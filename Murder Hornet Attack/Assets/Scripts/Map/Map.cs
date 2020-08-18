@@ -260,7 +260,7 @@ public class Map : MonoBehaviour
             
             honeycomb = Instantiate(prefab, StaticMap.transform.position, Quaternion.identity);
             StaticMap.honeycombCount += 1;
-            //honeycomb.transform.parent = StaticMap.HoneycombLayers[0];
+            honeycomb.transform.parent = StaticMap.HoneycombLayers[0];
         }
         return honeycomb;
     }
@@ -330,6 +330,7 @@ public class Map : MonoBehaviour
         {
             honeycomb = Instantiate(StaticMap.HoneycombChamberFloorPrefab, StaticMap.transform.position, Quaternion.identity);
             StaticMap.honeycombCount += 1;
+            honeycomb.transform.parent = StaticMap.HoneycombLayers[0];
         }
         return honeycomb;
     }
