@@ -18,17 +18,8 @@ public class MapHoneycomb
     private bool isLargeHoneycomb;
     public bool isFloor;
 
-    public enum LocationTypes
-    {
-        Embedded,
-        Path,
-        Chamber,
-        Garden,
-        Nest,
-        Farm,
-        Tunnel
-    }
-    public LocationTypes LocationType;
+    
+    public HoneycombTypes.Variety LocationType;
 
     
     public MapHoneycomb(bool display, Vector2 position, bool capped, bool isLargeLoc)

@@ -735,7 +735,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpiderPrefab: {fileID: 4325080624073552591, guid: 52c3f2882b267476ca294fbb8bdbf43b,
     type: 3}
-  SpawnCoolDown: 5
+  SpawnCoolDown: 20
 --- !u!58 &8205679417617777359
 CircleCollider2D:
   m_ObjectHideFlags: 0

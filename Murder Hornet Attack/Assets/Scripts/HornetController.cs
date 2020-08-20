@@ -157,8 +157,9 @@ public class HornetController : Insect
                 TakeDamage(5, impulse);
                 
             }
-            
-            Destroy(collision.gameObject);
+
+            //Destroy(collision.gameObject);
+            collision.transform.GetComponent<Honeycomb>().DestroyHoneycomb();
         }
         
     }

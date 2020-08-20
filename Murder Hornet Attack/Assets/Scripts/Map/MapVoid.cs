@@ -8,12 +8,12 @@ public abstract class MapVoid
 
     private const int locationDepthThreshold = 4;
     private List<MapHoneycomb> voidWalls = new List<MapHoneycomb>();
-    public MapHoneycomb.LocationTypes VoidType;
+    public HoneycombTypes.Variety VoidType;
 
     //public Vector2 Location;//{ public get; private set; }
     //public bool Connected;
 
-    protected void CheckDepth(float distance, MapHoneycomb honeycomb, MapHoneycomb.LocationTypes locationType)
+    protected void CheckDepth(float distance, MapHoneycomb honeycomb, HoneycombTypes.Variety locationType)
     {
         int depth = (int)Mathf.Ceil(distance / Map.StaticMap.HorizontalSpacing);
         if (depth < honeycomb.GetDepth()) honeycomb.SetDepth(depth);
@@ -30,7 +30,7 @@ public abstract class MapVoid
         
     }
 
-    protected void SetLocationType(MapHoneycomb honeycomb, MapHoneycomb.LocationTypes locationType)
+    protected void SetLocationType(MapHoneycomb honeycomb, HoneycombTypes.Variety locationType)
     {
         if (locationType > honeycomb.LocationType)
         {

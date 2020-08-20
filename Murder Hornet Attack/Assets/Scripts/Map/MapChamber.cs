@@ -16,7 +16,7 @@ public class MapChamber : MapVoid
     public MapChamber(Vector2 Location)
     {
         this.Location = Location;
-        VoidType = MapHoneycomb.LocationTypes.Chamber;
+        VoidType = HoneycombTypes.Variety.Chamber;
     }
     public override bool Check(MapHoneycomb honeycomb)
     {

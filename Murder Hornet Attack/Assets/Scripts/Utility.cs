@@ -4,6 +4,10 @@ using UnityEngine;
 
 public static class Utility 
 {
+    public static float GetTime()
+    {
+        return (System.DateTime.Now.Hour * 60 + System.DateTime.Now.Minute) * 60 + System.DateTime.Now.Second;
+    }
     public static string FormatFloat(float value, int decimals)
     {
         
@@ -177,7 +181,7 @@ public static class Utility
         foreach (MapHoneycomb honeycomb in path)
         {
             //Debug.Log(honeycomb.position);
-            if ((!honeycomb.display || honeycomb.isFloor) && honeycomb.LocationType == MapHoneycomb.LocationTypes.Chamber)
+            if ((!honeycomb.display || honeycomb.isFloor) && honeycomb.LocationType == HoneycombTypes.Variety.Chamber)
             {
                 newTarget = honeycomb;
                 

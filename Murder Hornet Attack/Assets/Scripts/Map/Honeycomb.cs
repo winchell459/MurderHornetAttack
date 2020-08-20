@@ -6,7 +6,7 @@ public abstract class Honeycomb : MonoBehaviour
 {
     public MapHoneycomb honeyGrid;
 
-    public MapHoneycomb.LocationTypes LocationType;
+    public HoneycombTypes.Variety LocationType;
 
     public abstract void DamageHoneycomb(float damage);
     public abstract void DestroyHoneycomb();

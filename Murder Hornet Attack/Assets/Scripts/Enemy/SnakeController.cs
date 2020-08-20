@@ -197,7 +197,7 @@ public class SnakeController : Insect
                 HoneycombPos playerHex = Utility.WorldPointToHoneycombGrid(player.transform.position);
                 HoneycombPos snakeHex = Utility.WorldPointToHoneycombGrid(transform.position);
 
-                if (true && player && Utility.DistanceBetweenHoneycomb(playerHex, snakeHex) < AttackRadius && Map.StaticMap.GetHoneycomb((int)playerHex.x, (int)playerHex.y).LocationType == MapHoneycomb.LocationTypes.Chamber)
+                if (true && player && Utility.DistanceBetweenHoneycomb(playerHex, snakeHex) < AttackRadius && Map.StaticMap.GetHoneycomb((int)playerHex.x, (int)playerHex.y).LocationType == HoneycombTypes.Variety.Chamber)
                 {
                     HoneycombPos playerGridHex = playerHex;// Utility.WorldPointToHoneycombGrid(player.transform.position);
                     HoneycombPos startGridHex = snakeHex; // Utility.WorldPointToHoneycombGrid(transform.position);

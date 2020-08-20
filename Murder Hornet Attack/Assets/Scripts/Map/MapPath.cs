@@ -16,12 +16,12 @@ public class MapPath : MapVoid
         Points.Add(end);
         widths.Add(width);
         Count += 1;
-        VoidType = MapHoneycomb.LocationTypes.Path;
+        VoidType = HoneycombTypes.Variety.Path;
     }
     private MapPath(Vector2 start)
     {
         Points.Add(start);
-        VoidType = MapHoneycomb.LocationTypes.Path;
+        VoidType = HoneycombTypes.Variety.Path;
     }
     public void Add(Vector2 point, float width)
     {

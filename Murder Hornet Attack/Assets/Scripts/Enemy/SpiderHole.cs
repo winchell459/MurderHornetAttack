@@ -13,8 +13,13 @@ public class SpiderHole : MonoBehaviour
         {
             if(lastSpawnTime + SpawnCoolDown < Time.fixedTime) 
             {
-                GameObject spider = Instantiate(SpiderPrefab, transform.position, Quaternion.identity);
+                Insect spider = Instantiate(SpiderPrefab, transform.position, Quaternion.identity).GetComponent<Insect>();
                 spider.transform.up = transform.position - collision.transform.position;
+
+                //set enemy in chunk for despawning when player leaves chunk
+                MapChunk chunk = Utility.GetMapChunk(spider.transform.position);
+                chunk.AddEnemyToChunk(spider);
+                spider.InsectPrefab = transform.parent.GetComponent<HoneycombCell>().honeyGrid.GetEnemyPrefab();
 
                 lastSpawnTime = Time.fixedTime;
             } 

@@ -10,6 +10,7 @@ public class MapGenerator : MonoBehaviour
     public GameObject ChamberTriggerPrefab;
     public GameObject EnemyPrefabs;
     public GameObject SnakePrefab;
+    public AntSquad AntSquadPrefab;
 
     public Transform ExitTunnel;
     public Transform SnakePit;
@@ -24,13 +25,13 @@ public class MapGenerator : MonoBehaviour
     public void GenerateMap(Transform Player)
     {
         //createVoids();
-        float start = System.DateTime.Now.Second;
+        float start = Utility.GetTime();
         createRandomMap(Player, 10);
-        Debug.Log("createRandomMap Time: " + (System.DateTime.Now.Second - start));
+        Debug.Log("createRandomMap Time: " + (Utility.GetTime() - start) + " seconds.");
 
-        start = System.DateTime.Now.Second;
+        start = Utility.GetTime();
         Map.StaticMap.DisplayChunks();
-        Debug.Log("DisplayChunks Time: " + (System.DateTime.Now.Second - start));
+        Debug.Log("DisplayChunks Time: " + (Utility.GetTime() - start) + " seconds.");
 
         //setup enemies in Paths
         addPathEnemies();
@@ -127,7 +128,7 @@ public class MapGenerator : MonoBehaviour
     {
         foreach (MapVoid mv in mapVoids)
         {
-            if (mv.VoidType == MapHoneycomb.LocationTypes.Path)
+            if (mv.VoidType == HoneycombTypes.Variety.Path)
             {
                 List<MapHoneycomb> walls = mv.GetVoidWalls();
                 //Debug.Log(walls.Count);

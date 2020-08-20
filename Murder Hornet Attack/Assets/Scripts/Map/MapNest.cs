@@ -2,35 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapNest : MapChamber
+public class MapNest : MapArea
 {
-    public List<MapChamber> chambers = new List<MapChamber>();
-    public List<MapPath> paths = new List<MapPath>();
-    //public Vector2 Location;
-     
+    
+    
 
     public MapNest(Vector2 Location)
     {
         this.Location = Location;
+        AreaType = HoneycombTypes.Areas.Nest;
     }
 
-    public override bool Check(MapHoneycomb honeycomb)
-    {
-        bool display = honeycomb.display;
-        foreach(MapChamber chamber in chambers)
-        {
-            //Debug.Log("MapNest.Check");
-            if (!chamber.Check(honeycomb)) display = false;
-        }
-
-        foreach (MapPath path in paths)
-        {
-            if (!path.Check(honeycomb)) display = false;
-        }
-        //Debug.Log("MapNest.Check");
-        
-        return display;
-    }
+    
 
     public static MapNest CreateRandomNest(Vector2 pos, int nestCount, float radius, GameObject nestPrefab)
     {
@@ -68,7 +51,7 @@ public class MapNest : MapChamber
             //nest.locations.Add(loc);
 
             MapChamber chamber = new MapChamber(circle.pos);
-            chamber.VoidType = MapHoneycomb.LocationTypes.Garden;
+            chamber.VoidType = HoneycombTypes.Variety.Chamber;
             chamber.AddChamber(chamber.Location, radius);
             nest.chambers.Add(chamber);
         }
