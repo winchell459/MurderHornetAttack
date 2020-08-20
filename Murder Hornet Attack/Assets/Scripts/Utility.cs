@@ -98,6 +98,18 @@ public static class Utility
         return linePoint;
     }
 
+    public static bool CheckIntersecting(Vector2 p1_1, Vector2 p2_1, Vector2 p1_2, Vector2 p2_2)
+    {
+        /*find intersection of two lines
+         * https://www.topcoder.com/community/competitive-programming/tutorials/geometry-concepts-line-intersection-and-its-applications/#:~:text=To%20find%20the%20point%20at,two%20unknowns%2C%20x%20and%20y.&text=Finally%2C%20divide%20both%20sides%20by,y%20can%20be%20derived%20similarly.
+
+         */
+        bool intersects = false;
+
+        return intersects;
+    }
+
+    //-------------------------------------------------Honeycomb.Utility------------------------------------------------------------
     public static Vector2 WorldPointToHoneycombPos(Vector2 point)
     {
        
