@@ -25,7 +25,7 @@ public class MapFarm : MapArea
         foreach(HoneycombPos node in farm.maze)
         {
             MapChamber chamber = new MapChamber(node.worldPos);
-            Debug.Log("node.pos " + node);
+            //Debug.Log("node.pos " + node);
             chamber.VoidType = HoneycombTypes.Variety.Chamber;
             chamber.AddChamber(chamber.Location, 5);
             farm.chambers.Add(chamber);
@@ -78,16 +78,36 @@ public class MapFarm : MapArea
 
     private List<HoneycombPos> connectNodes(List<HoneycombPos> edges, HoneycombPos node)
     {
+        List<HoneycombPos> newEdges = new List<HoneycombPos>();
         if (edges.Contains(node) || (edges.Count > 0 && checkIntersecting(node, edges))) return edges;
-        else edges.Add(node);
+        else
+        {
+            foreach (HoneycombPos pos in edges)
+            {
+                newEdges.Add(pos);
+
+            }
+            newEdges.Add(node);
+        }
         for (int i = 1; i < maze.Count; i += 1)
         {
-            Debug.Log(i + " edges.Count = " + edges.Count);
-            if (edges.Count == maze.Count) break;
-            if (!edges.Contains(maze[i])) edges = connectNodes(edges, maze[i]);
+            Debug.Log(i + " edges.Count = " + newEdges.Count);
+            if (newEdges.Count == maze.Count) break;
+            if (!newEdges.Contains(maze[i]))
+            {
+                List<HoneycombPos> tempEdges = connectNodes(newEdges, maze[i]);
+                if (tempEdges.Count == maze.Count)
+                {
+                    newEdges.Clear();
+                    foreach (HoneycombPos pos in tempEdges)
+                    {
+                        newEdges.Add(pos);
+                    }
+                }
+            }
             
         }
-        return edges;
+        return newEdges;
     }
     private void generateBranches()
     {
