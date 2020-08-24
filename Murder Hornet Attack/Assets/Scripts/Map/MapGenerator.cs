@@ -15,6 +15,7 @@ public class MapGenerator : MonoBehaviour
     public Transform ExitTunnel;
     public Transform SnakePit;
     public GameObject SpiderHole;
+    public Transform AntSquad;
 
     public Portal PlayerSpawn { get; set; }
     public Portal Exit { get; set; }
@@ -70,6 +71,7 @@ public class MapGenerator : MonoBehaviour
 
 
         CreateSpiderNest(Utility.HoneycombGridToWorldPostion(new HoneycombPos(75, 105)));
+        CreateAntFarm(Utility.WorldPointToHoneycombGrid(AntSquad.position));
 
 
         Map map = Map.StaticMap;
@@ -82,16 +84,16 @@ public class MapGenerator : MonoBehaviour
         CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc);
 
         //create random chambers
-        for (int i = 0; i < voidCount; i += 1)
-        {
-            float xLoc = Random.Range(mapMin.x, mapMax.x);
-            float yLoc = Random.Range(mapMin.y, mapMax.y);
-            float radius = Random.Range(5, 15);
-            newVoids.Add(MapChamber.RandomChamber(new Vector2(xLoc, yLoc), radius));
-            //newConnected.Add(false);
+        //for (int i = 0; i < voidCount; i += 1)
+        //{
+        //    float xLoc = Random.Range(mapMin.x, mapMax.x);
+        //    float yLoc = Random.Range(mapMin.y, mapMax.y);
+        //    float radius = Random.Range(5, 15);
+        //    newVoids.Add(MapChamber.RandomChamber(new Vector2(xLoc, yLoc), radius));
+        //    //newConnected.Add(false);
 
-            //newLocations.Add(new Vector2(xLoc, yLoc));
-        }
+        //    //newLocations.Add(new Vector2(xLoc, yLoc));
+        //}
 
         //MapChamber endChamber = (MapChamber)newVoids[newVoids.Count - 1];
         //for(int i = 1; i < voidCount - 1; i+=1)
@@ -110,7 +112,7 @@ public class MapGenerator : MonoBehaviour
 
 
         //connect chambers
-        connectChambers(newVoids);
+        //connectChambers(newVoids);
 
         map.AddVoid(newVoids);
 
@@ -180,6 +182,12 @@ public class MapGenerator : MonoBehaviour
         MapNest nest = MapNest.CreateRandomNest(position, 5, 10, SpiderHole);
         connectChambers(nest);
         newVoids.Add(nest);
+    }
+
+    public void CreateAntFarm(HoneycombPos position)
+    {
+        MapFarm farm = MapFarm.CreateRandomMaze(position, position + new HoneycombPos(50, 50), 2, 7, AntSquadPrefab.gameObject);
+        newVoids.Add(farm);
     }
 
     private void connectChambers(List<MapVoid> chambers)

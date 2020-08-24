@@ -40,7 +40,7 @@ public class MapNest : MapArea
                 circle.pos = loc;
                 maxRadius += radius / 4;
             }
-            while (ShapeOverlappped(circle, circles));
+            while (Utility.ShapeOverlappped(circle, circles));
 
             circles.Add(circle);
         }
@@ -59,19 +59,9 @@ public class MapNest : MapArea
         return nest;
     }
 
-    private struct Circle
-    {
-        public Vector2 pos;
-        public float r;
-    }
+    
 
-    private static bool ShapeOverlappped(Circle circle, List<Circle> circles)
-    {
-        bool overlap = false;
-        foreach(Circle c in circles)
-        {
-            if (Vector2.Distance(c.pos, circle.pos) < c.r + circle.r) overlap = true;
-        }
-        return overlap;
-    }
+    
+
+    
 }

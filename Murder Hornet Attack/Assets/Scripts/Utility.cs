@@ -98,15 +98,42 @@ public static class Utility
         return linePoint;
     }
 
-    public static bool CheckIntersecting(Vector2 p1_1, Vector2 p2_1, Vector2 p1_2, Vector2 p2_2)
+    public static bool CheckIntersecting(Vector2 p1_1, Vector2 p1_2, Vector2 p2_1, Vector2 p2_2)
     {
+        bool intersects = false;
         /*find intersection of two lines
          * https://www.topcoder.com/community/competitive-programming/tutorials/geometry-concepts-line-intersection-and-its-applications/#:~:text=To%20find%20the%20point%20at,two%20unknowns%2C%20x%20and%20y.&text=Finally%2C%20divide%20both%20sides%20by,y%20can%20be%20derived%20similarly.
 
          */
-        bool intersects = false;
+        float A1 = p1_2.y - p1_1.y; //A1 = y1_2 - y1_1
+        float B1 = p1_1.x - p1_2.x;
+        float C1 = A1*p1_1.x + B1*p1_1.y;
+        float A2 = p2_2.y - p2_1.y; //A2 = y2_2 - y2_1
+        float B2 = p2_1.x - p2_2.x;
+        float C2 = A2 * p2_1.x + B2 * p2_1.y;
+
+        float det = A1 * B2 - A2 * B1;
+        if(det != 0)
+        {
+            float x = (B2 * C1 - B1 * C2) / det;
+            float y = (A1 * C2 - A2 * C1) / det;
+            //Debug.Log(x + ", " + y);
+            if (!((x > p1_1.x && x > p1_2.x) || (x < p1_1.x && x < p1_2.x)) && !((x < p2_1.x && x < p2_2.x) || (x > p2_1.x && x > p2_2.x))) intersects = true;
+            
+
+        }
 
         return intersects;
+    }
+
+    public static bool ShapeOverlappped(Circle circle, List<Circle> circles)
+    {
+        bool overlap = false;
+        foreach (Circle c in circles)
+        {
+            if (Vector2.Distance(c.pos, circle.pos) < c.r + circle.r) overlap = true;
+        }
+        return overlap;
     }
 
     //-------------------------------------------------Honeycomb.Utility------------------------------------------------------------

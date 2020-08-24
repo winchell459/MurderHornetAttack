@@ -193,7 +193,7 @@ public class HornetController : Insect
             collisionTime = Time.fixedTime;
             hadCollision = true;
             CollisionVelocity += KickBackVelocity;
-            Debug.Log("KickBackVelocity: " + KickBackVelocity);
+            //Debug.Log("KickBackVelocity: " + KickBackVelocity);
         }
         
         TakeDamage(Damage);

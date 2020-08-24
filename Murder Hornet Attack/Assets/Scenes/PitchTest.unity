@@ -10487,10 +10487,13 @@ MonoBehaviour:
     type: 3}
   SnakePrefab: {fileID: 2010293437201622713, guid: 0b283abda00c04e44b2914c947b99923,
     type: 3}
+  AntSquadPrefab: {fileID: 4713034296474697244, guid: a36d3aeabb0924681ace5b5e3930ac30,
+    type: 3}
   ExitTunnel: {fileID: 1940638273}
   SnakePit: {fileID: 59793792}
   SpiderHole: {fileID: 8205679417617777352, guid: 352b3535e94855241a9e30dc7086d55e,
     type: 3}
+  AntSquad: {fileID: 1696449734}
 --- !u!1 &1052509049
 GameObject:
   m_ObjectHideFlags: 0
@@ -12219,12 +12222,12 @@ PrefabInstance:
     - target: {fileID: 4713034296474697243, guid: a36d3aeabb0924681ace5b5e3930ac30,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 50.7
+      value: 107.5
       objectReference: {fileID: 0}
     - target: {fileID: 4713034296474697243, guid: a36d3aeabb0924681ace5b5e3930ac30,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 37.2
+      value: 68.5
       objectReference: {fileID: 0}
     - target: {fileID: 4713034296474697243, guid: a36d3aeabb0924681ace5b5e3930ac30,
         type: 3}
@@ -15042,6 +15045,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1684968732}
   m_CullTransparentMesh: 0
+--- !u!4 &1696449734 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4713034296474697243, guid: a36d3aeabb0924681ace5b5e3930ac30,
+    type: 3}
+  m_PrefabInstance: {fileID: 1277088816}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1697971532
 GameObject:
   m_ObjectHideFlags: 0
