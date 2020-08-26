@@ -17,6 +17,8 @@ public class AntSquad : MonoBehaviour
     public int NumPoints = 5;
     public Vector2[] MarchingPoints;
 
+    private bool marchStarted;
+    public bool RandomMarch = false;
 
     // Start is called before the first frame update
     void Start()
@@ -31,16 +33,34 @@ public class AntSquad : MonoBehaviour
             AntNum = 1;
         }
 
-        MarchingPoints = new Vector2[NumPoints];
-        for (int i = 0; i < NumPoints; i++)
+        if (RandomMarch)
         {
-            float x = Random.Range(Radius * -1, Radius) + transform.position.x;
-            float y = Random.Range(Radius * -1, Radius) + transform.position.y;
-            MarchingPoints[i] = new Vector2(x, y);
+            MarchingPoints = getRandomMarchingPoints();
+            StartMarch();
         }
+        
 
+        
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if(marchStarted && transform.childCount == 0)
+        {
+            //
+            //  Create the red ant object to chase player
+            //
+            Destroy(gameObject);
+        }
+    }
+
+    public void StartMarch() 
+    {
+        marchStarted = true;
         Squad = new GameObject[AntNum];
-        for(int i = 0; i < AntNum; i++)
+        for (int i = 0; i < AntNum; i++)
         {
             Squad[i] = Instantiate(AntPrefab, new Vector3(0, 0, 0), Quaternion.identity);
             Squad[i].transform.parent = this.transform;
@@ -51,18 +71,48 @@ public class AntSquad : MonoBehaviour
             ant.speed = speed;
 
         }
-
     }
 
-    // Update is called once per frame
-    void Update()
+    private Vector2[] getRandomMarchingPoints()
     {
-        if(transform.childCount == 0)
+        Vector2[] MarchingPoints = new Vector2[NumPoints];
+        for (int i = 0; i < NumPoints; i++)
         {
-            //
-            //  Create the red ant object to chase player
-            //
-            Destroy(gameObject);
+            float x = Random.Range(Radius * -1, Radius) + transform.position.x;
+            float y = Random.Range(Radius * -1, Radius) + transform.position.y;
+            MarchingPoints[i] = new Vector2(x, y);
+        }
+        return MarchingPoints;
+    }
+
+    public void SetMarchingPoints(Vector2[] marchingPoints)
+    {
+        MarchingPoints = marchingPoints;
+    }
+
+    public void AddMarchingPoints(Vector2[] newPoints)
+    {
+        Vector2[] newMarchingPoints = new Vector2[MarchingPoints.Length + newPoints.Length];
+        for (int i = 0; i < MarchingPoints.Length; i += 1)
+        {
+            newMarchingPoints[i + newPoints.Length] = MarchingPoints[i];
+        }
+        for (int i = 0; i < newPoints.Length; i += 1)
+        {
+            newMarchingPoints[i /* + MarchingPoints.Length*/] = newPoints[i];
+        }
+
+        MarchingPoints = newMarchingPoints;
+        foreach (GameObject antObj in Squad)
+        {
+            if (antObj)
+            {
+                Ant ant = antObj.GetComponent<Ant>();
+                ant.March(1);
+                ant.MarchingPoints = MarchingPoints;
+                ant.CurrentPointIndex = ant.CurrentPointIndex + newPoints.Length;
+            }
         }
     }
+
 }

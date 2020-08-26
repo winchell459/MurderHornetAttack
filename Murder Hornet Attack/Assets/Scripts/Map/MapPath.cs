@@ -102,4 +102,9 @@ public class MapPath : MapVoid
         }
         return path;
     }
+
+    public Vector2 GetPoint(int index)
+    {
+        return Points[index];
+    }
 }

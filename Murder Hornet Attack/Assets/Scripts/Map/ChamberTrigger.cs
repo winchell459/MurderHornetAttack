@@ -44,10 +44,6 @@ public abstract class ChamberTrigger : MonoBehaviour
     {
         Chamber = chamber;
 
-        //gameObject.AddComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
-        //gameObject.AddComponent<CompositeCollider2D>().isTrigger = true;
-        //GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
-
         foreach (Vector2 loc in chamber.locations)
         {
             gameObject.AddComponent<CircleCollider2D>();//.usedByComposite = true ;

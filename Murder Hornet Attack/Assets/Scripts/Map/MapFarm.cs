@@ -22,16 +22,30 @@ public class MapFarm : MapArea
         farm.startPoint = startPoint;
         farm.endPoint = endPoint;
         farm.generateMaze(nodeCount);
+
+        List<MapPath> edges = farm.generateEdges(farm.maze);
+
+        List<ChamberAntFarmTrigger> triggers = new List<ChamberAntFarmTrigger>();
+        //bool lastSet = false;
         foreach(HoneycombPos node in farm.maze)
         {
             MapChamber chamber = new MapChamber(node.worldPos);
-            //Debug.Log("node.pos " + node);
+            Debug.Log("node.pos " + node);
             chamber.VoidType = HoneycombTypes.Variety.Chamber;
             chamber.AddChamber(chamber.Location, 5);
+            ChamberAntFarmTrigger trigger = (ChamberAntFarmTrigger)ChamberTrigger.SetupChamberTrigger(AntSquadTriggerPrefab, chamber);
+
+            triggers.Add(trigger);
             farm.chambers.Add(chamber);
         }
 
+        for(int i = 0; i < triggers.Count; i += 1)
+        {
+            if(i > 0)triggers[i].PreviousNode = triggers[i - 1];
+            if(i < triggers.Count - 1) triggers[i].AntPath = edges[i];
+        }
         
+        //farm.paths = edges;
 
         return farm;
     }
@@ -91,7 +105,7 @@ public class MapFarm : MapArea
         }
         for (int i = 1; i < maze.Count; i += 1)
         {
-            Debug.Log(i + " edges.Count = " + newEdges.Count);
+            //Debug.Log(i + " edges.Count = " + newEdges.Count);
             if (newEdges.Count == maze.Count) break;
             if (!newEdges.Contains(maze[i]))
             {
@@ -116,6 +130,16 @@ public class MapFarm : MapArea
             //Vector2 start = (Utility.HoneycombGridToWorldPostion(endPoint) - Utility.HoneycombGridToWorldPostion(startPoint)).normalized * 
             //MapPath.CreateJoggingPath()
         }
+    }
+
+    private List<MapPath> generateEdges(List<HoneycombPos> nodes)
+    {
+        List<MapPath> edges = new List<MapPath>();
+        for(int i = 1; i < nodes.Count; i += 1)
+        {
+            edges.Add(MapPath.CreateJoggingPath(nodes[i].worldPos, nodes[i - 1].worldPos, 1, 2, 2, 3, 2, 3));
+        }
+        return edges;
     }
     private bool checkIntersecting(HoneycombPos point, List<HoneycombPos> edges)
     {

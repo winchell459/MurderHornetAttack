@@ -10,7 +10,7 @@ public class MapGenerator : MonoBehaviour
     public GameObject ChamberTriggerPrefab;
     public GameObject EnemyPrefabs;
     public GameObject SnakePrefab;
-    public AntSquad AntSquadPrefab;
+    public ChamberAntFarmTrigger ChamberAntFarmTriggerPrefab;
 
     public Transform ExitTunnel;
     public Transform SnakePit;
@@ -186,7 +186,7 @@ public class MapGenerator : MonoBehaviour
 
     public void CreateAntFarm(HoneycombPos position)
     {
-        MapFarm farm = MapFarm.CreateRandomMaze(position, position + new HoneycombPos(50, 50), 2, 7, AntSquadPrefab.gameObject);
+        MapFarm farm = MapFarm.CreateRandomMaze(position, position + new HoneycombPos(50, 50), 2, 7, ChamberAntFarmTriggerPrefab.gameObject);
         newVoids.Add(farm);
     }
 
