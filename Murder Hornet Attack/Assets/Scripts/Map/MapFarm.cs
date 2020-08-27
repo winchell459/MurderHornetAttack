@@ -11,7 +11,7 @@ public class MapFarm : MapArea
     public MapFarm(Vector2 Location)
     {
         this.Location = Location;
-        AreaType = HoneycombTypes.Areas.Nest;
+        AreaType = HoneycombTypes.Areas.Farm;
     }
 
     public static MapFarm CreateRandomMaze(HoneycombPos startPoint, HoneycombPos endPoint, float edgeWidth, int nodeCount, GameObject AntSquadTriggerPrefab)
@@ -44,7 +44,9 @@ public class MapFarm : MapArea
             if(i > 0)triggers[i].PreviousNode = triggers[i - 1];
             if(i < triggers.Count - 1) triggers[i].AntPath = edges[i];
         }
-        
+
+        farm.StartPoints.Add(farm.maze[0]);
+        farm.EndPoints.Add(farm.maze[farm.maze.Count - 1]);
         //farm.paths = edges;
 
         return farm;

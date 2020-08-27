@@ -52,9 +52,13 @@ public class MapNest : MapArea
 
             MapChamber chamber = new MapChamber(circle.pos);
             chamber.VoidType = HoneycombTypes.Variety.Chamber;
+
             chamber.AddChamber(chamber.Location, radius);
             nest.chambers.Add(chamber);
+            nest.AltPoints.Add(Utility.WorldPointToHoneycombGrid(circle.pos));
         }
+
+        
 
         return nest;
     }

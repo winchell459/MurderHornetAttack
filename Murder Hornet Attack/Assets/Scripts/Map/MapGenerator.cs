@@ -112,7 +112,7 @@ public class MapGenerator : MonoBehaviour
 
 
         //connect chambers
-        //connectChambers(newVoids);
+        connectChambers(newVoids);
 
         map.AddVoid(newVoids);
 
@@ -168,12 +168,14 @@ public class MapGenerator : MonoBehaviour
 
     public void CreateCaterpillarGarden(GameObject ChamberTriggerPrefab, Vector2 position)
     {
-        
-        MapChamber snakeChamber = MapChamber.RandomChamber(position, 15);
-        //ChamberTrigger snakeChamberTrigger = Instantiate(ChamberTriggerPrefab, snakeChamberLoc, Quaternion.identity).GetComponent<ChamberTrigger>();
-        //addChamberTrigger(snakeChamberTrigger, snakeChamber);
-        ChamberTrigger.SetupChamberTrigger(ChamberTriggerPrefab, snakeChamber);
-        newVoids.Add(snakeChamber);
+
+        //MapChamber snakeChamber = MapChamber.RandomChamber(position, 15);
+        ////ChamberTrigger snakeChamberTrigger = Instantiate(ChamberTriggerPrefab, snakeChamberLoc, Quaternion.identity).GetComponent<ChamberTrigger>();
+        ////addChamberTrigger(snakeChamberTrigger, snakeChamber);
+        //ChamberTrigger.SetupChamberTrigger(ChamberTriggerPrefab, snakeChamber);
+        //newVoids.Add(snakeChamber);
+        MapGarden garden = MapGarden.CreateRandomGarden(position, 15, ChamberTriggerPrefab);
+        newVoids.Add(garden);
         SnakePit.position = position;
     }
 
@@ -202,7 +204,7 @@ public class MapGenerator : MonoBehaviour
                 if (connecting != i)
                 {
                     //chambers.Add(MapPath.CreateJoggingPath(((MapChamber)chambers[i]).ClosestEntrancePoint(newLocations[connecting]), newLocations[connecting], -2, 2, 2, 6, 2, 2));
-                    chambers.Add(MapPath.CreateJoggingPath(((MapChamber)chambers[i]).ClosestEntrancePoint(((MapChamber)chambers[connecting]).Location), ((MapChamber)chambers[connecting]).Location, -2, 2, 2, 6, 2, 2));
+                    chambers.Add(MapPath.CreateJoggingPath(((MapChamber)chambers[i]).ClosestEntrancePoint(((MapChamber)chambers[connecting]).Location), ((MapChamber)chambers[connecting]).Location, -2, 2, 2, 6, 3, 6));
                     ((MapChamber)chambers[i]).Connected = true;
                 }
             }

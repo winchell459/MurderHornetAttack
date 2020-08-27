@@ -9,6 +9,7 @@ public abstract class MapVoid
     private const int locationDepthThreshold = 4;
     private List<MapHoneycomb> voidWalls = new List<MapHoneycomb>();
     public HoneycombTypes.Variety VoidType;
+    //public HoneycombTypes.Areas AreaType;
 
     //public Vector2 Location;//{ public get; private set; }
     //public bool Connected;
