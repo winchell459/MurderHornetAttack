@@ -87,11 +87,12 @@ MonoBehaviour:
   CollisionDamage: 1
   Health: 50
   MaxHealth: 50
+  CollisionForce: {x: 0, y: 0}
   InsectPrefab: {fileID: 0}
   ForwardSpeed_Defualt: 2
-  ForwardSpeed: 2
+  ForwardSpeed: 4
   SideSpeed: 1
-  SideSpeed_Defualt: 1
+  SideSpeed_Defualt: 2
   HornetSprite: {fileID: 2963273221294690423}
   HornetPlasmPrefab: {fileID: 2269173016302982693, guid: 0e2180129fdfb6d499cd9a31c12cf81b,
     type: 3}
@@ -159,6 +160,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -181,7 +183,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1650036597
-  m_SortingLayer: 1
+  m_SortingLayer: -2
   m_SortingOrder: 50
   m_Sprite: {fileID: 197018303046088185, guid: bf133697ee03e274c8de0e497e3c59b0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
