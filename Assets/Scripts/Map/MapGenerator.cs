@@ -58,6 +58,10 @@ public class MapGenerator : MonoBehaviour
     List<MapVoid> newVoids = new List<MapVoid>();
     //List<bool> newConnected = new List<bool>();
     //List<Vector2> newLocations = new List<Vector2>();
+    private void CreatePerlinNoiseMap(Transform player)
+    {
+
+    }
     private void createRandomMap(Transform Player, float voidCount)
     {
 

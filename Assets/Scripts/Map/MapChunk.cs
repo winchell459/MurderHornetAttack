@@ -59,6 +59,7 @@ public class MapChunk
                     //if(i%6==0 && j%6==0 || i % 6 == 0 && j % 6 == 0)
                     if (i % 3 == 0 && j % 3 == 0)
                     {
+                        //is large honeycomb location
                         honeycombs.Add(new MapHoneycomb(true, new Vector2((i + mapOffset.x) * horizontalSpacing, (j + mapOffset.y) * (verticalSpacing)), true, true));
 
                         /*Debug.Log("isLarge");*/
