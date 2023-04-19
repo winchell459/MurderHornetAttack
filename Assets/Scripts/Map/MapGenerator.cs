@@ -65,15 +65,34 @@ public class MapGenerator : MonoBehaviour
     //List<Vector2> newLocations = new List<Vector2>();
     private void CreatePerlinNoiseMap(Transform player)
     {
-        int mapWidth = (int)Mathf.Ceil(Map.StaticMap.MapWidth / Map.StaticMap.HorizontalSpacing);
-        int mapHeight = (int)Mathf.Ceil(Map.StaticMap.MapHeight / Map.StaticMap.VerticalSpacing);
+        int mapWidth = (int)/*Mathf.Ceil*/(Map.StaticMap.MapWidth / Map.StaticMap.HorizontalSpacing);
+        int mapHeight = (int)/*Mathf.Ceil*/(Map.StaticMap.MapHeight / Map.StaticMap.VerticalSpacing)/2;
         PerlineNoiseVoid perlineNoiseVoid = new PerlineNoiseVoid(perlinNoise, mapWidth, mapHeight);
-        Map.StaticMap.AddVoid(perlineNoiseVoid);
+        //Map.StaticMap.AddVoid(perlineNoiseVoid);
 
-        Exit = CreateExitTunnel(PortalPrefab, Utility.HoneycombGridToWorldPostion(new HoneycombPos(150, 100)));
+        System.Random random = new System.Random(perlinNoise.seed);
+        //Added player spawn point
+        int spawnPointX = random.Next(0, mapWidth);
+        int spawnPointY = random.Next(0, mapHeight);
+        PlayerSpawn = CreatePlayerSpawn(PortalPrefab, player.position);
+        player.position = PlayerSpawn.Chamber.locations[0];
+
+        Exit = CreateExitTunnel(PortalPrefab, Utility.HoneycombGridToWorldPostion(new HoneycombPos(200, 200)));
         ExitTunnel.position = Exit.Chamber.Location;
 
+        //create snake Chamber
+        Vector2 snakeChamberLoc = Utility.HoneycombGridToWorldPostion(new HoneycombPos(150, 80));
+        CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc);
+
+        CreateSpiderNest(Utility.HoneycombGridToWorldPostion(new HoneycombPos(75, 105)));
+        CreateAntFarm(Utility.WorldPointToHoneycombGrid(AntSquad.position));
+
+        //createRandomMap(player,10);
+
+
+        mapVoids = newVoids;
         mapVoids.Add(perlineNoiseVoid);
+        Map.StaticMap.AddVoid(mapVoids);
     }
     
     private void createRandomMap(Transform Player, float voidCount)
@@ -158,7 +177,7 @@ public class MapGenerator : MonoBehaviour
                     if (Random.Range(0, 10) < 1)
                     {
                         mhc.AddEnemy(EnemyPrefabs);
-                        Debug.Log("Enemy Added");
+                        //Debug.Log("Enemy Added");
                     }
                 }
             }

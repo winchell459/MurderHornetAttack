@@ -37,6 +37,7 @@ public class MapChamber : MapVoid
             }
             else
             {
+                //Debug.Log("MapChamber checkDepth");
                 CheckDepth(Vector2.Distance(honeycomb.position, locations[i]) - widths[i] / 2, honeycomb, VoidType);
                 //if (Vector2.Distance(honeycomb.position, locations[i]) < widths[i] / 2 + Map.StaticMap.HorizontalSpacing * 2)
                 //{

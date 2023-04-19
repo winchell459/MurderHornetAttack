@@ -248,11 +248,15 @@ public class SnakeController : Insect
 
         //Debug.Log("--------------------------- new Path End----------------------------");
         //return Utility.HoneycombGridToWorldPostion( Utility.GetHoneycombDirection(Utility.WorldToHoneycomb(Target), Direction, randDist));
-        if (newTarget != null) return newTarget.position;
+        if (newTarget != null)
+        {
+            pathAttempts = 0;
+            return newTarget.position;
+        }
         else
         {
             pathAttempts += 1;
-            //if (pathAttempts > 3) return Vector2.zero;
+            if (pathAttempts > 3) return Vector2.zero;
             return getRandomLoc();
         }
         

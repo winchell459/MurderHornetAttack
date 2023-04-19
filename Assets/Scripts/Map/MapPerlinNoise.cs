@@ -134,16 +134,42 @@ public class PerlineNoiseVoid : MapVoid
         map = mapPerlinNoise.GenerateNoiseMap(width+1, height+1);
         VoidType = HoneycombTypes.Variety.Path;
     }
+    int maxX = int.MinValue, minX = int.MaxValue, maxY = int.MinValue, minY = int.MaxValue;
     public override bool Check(MapHoneycomb honeycomb)
     {
         HoneycombPos honeycombPos = Utility.WorldPointToHoneycombGrid(honeycomb.position);
+
+        //bool changed = false;
+        //if (honeycombPos.x > maxX)
+        //{
+        //    maxX = honeycombPos.x;
+        //    changed = true;
+        //}
+        //if (honeycombPos.y > maxY)
+        //{
+        //    maxY = honeycombPos.y;
+        //    changed = true;
+        //}
+        //if (honeycombPos.x < minX)
+        //{
+        //    minX = honeycombPos.x;
+        //    changed = true;
+        //}
+        //if (honeycombPos.y < minY)
+        //{
+        //    minY = honeycombPos.y;
+        //    changed = true;
+        //}
+
+        //if (changed) Debug.Log($"(minX,minY):({minX},{minY}) | (maxX,maxY):({maxX},{maxY})");
+
         float perlinValue = map[honeycombPos.x/* % width*/, honeycombPos.y /*% height*/];
         //Debug.Log(honeycombPos);
         if (perlinValue > threshold)
         {
             float depth = mapPerlinNoise.depthCurve.Evaluate(perlinValue);
             //Debug.Log(depth);
-            honeycomb.SetDepth((int)depth);
+            if (honeycomb.GetDepth() > depth) honeycomb.SetDepth((int)depth);
             CheckDepth((int)depth, honeycomb, VoidType);
             return true;
         }
@@ -152,6 +178,8 @@ public class PerlineNoiseVoid : MapVoid
             honeycomb.isFloor = true;
             return false;
         }
+
+        
             
     }
 }
