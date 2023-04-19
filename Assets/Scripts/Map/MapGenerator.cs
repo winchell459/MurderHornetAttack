@@ -20,14 +20,19 @@ public class MapGenerator : MonoBehaviour
     public Portal PlayerSpawn { get; set; }
     public Portal Exit { get; set; }
 
-    
 
+    public MapPerlinNoise perlinNoise;
+    public enum GenerationTypes { randomVoids, perlinNoise}
+    public GenerationTypes generationType;
 
     public void GenerateMap(Transform Player)
     {
         //createVoids();
         float start = Utility.GetTime();
-        createRandomMap(Player, 10);
+        if(generationType == GenerationTypes.randomVoids)
+            createRandomMap(Player, 10);
+        else if(generationType == GenerationTypes.perlinNoise)
+            CreatePerlinNoiseMap(Player);
         Debug.Log("createRandomMap Time: " + (Utility.GetTime() - start) + " seconds.");
 
         start = Utility.GetTime();
@@ -60,8 +65,17 @@ public class MapGenerator : MonoBehaviour
     //List<Vector2> newLocations = new List<Vector2>();
     private void CreatePerlinNoiseMap(Transform player)
     {
+        int mapWidth = (int)Mathf.Ceil(Map.StaticMap.MapWidth / Map.StaticMap.HorizontalSpacing);
+        int mapHeight = (int)Mathf.Ceil(Map.StaticMap.MapHeight / Map.StaticMap.VerticalSpacing);
+        PerlineNoiseVoid perlineNoiseVoid = new PerlineNoiseVoid(perlinNoise, mapWidth, mapHeight);
+        Map.StaticMap.AddVoid(perlineNoiseVoid);
 
+        Exit = CreateExitTunnel(PortalPrefab, Utility.HoneycombGridToWorldPostion(new HoneycombPos(150, 100)));
+        ExitTunnel.position = Exit.Chamber.Location;
+
+        mapVoids.Add(perlineNoiseVoid);
     }
+    
     private void createRandomMap(Transform Player, float voidCount)
     {
 
@@ -134,16 +148,17 @@ public class MapGenerator : MonoBehaviour
     {
         foreach (MapVoid mv in mapVoids)
         {
+            Debug.Log(mv.VoidType);
             if (mv.VoidType == HoneycombTypes.Variety.Path)
             {
                 List<MapHoneycomb> walls = mv.GetVoidWalls();
-                //Debug.Log(walls.Count);
+                Debug.Log(walls.Count);
                 foreach (MapHoneycomb mhc in walls)
                 {
                     if (Random.Range(0, 10) < 1)
                     {
                         mhc.AddEnemy(EnemyPrefabs);
-                        //Debug.Log("Enemy Added");
+                        Debug.Log("Enemy Added");
                     }
                 }
             }

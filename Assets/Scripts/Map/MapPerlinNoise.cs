@@ -8,14 +8,39 @@ public class MapPerlinNoise : MonoBehaviour
     public int seed;
     public float scale;
     public int octaves;
+    [Range(0, 1)]
     public float persistance;
     public float lacunarity;
     public Vector2 offset;
     public NormalizeMode normalizeMode;
+    public AnimationCurve depthCurve;
+
+    public bool randomSeed = false;
+
+    public enum FalloffTypes { none, honecomb}
+    public FalloffTypes falloffType;
+    
 
     public float[,] GenerateNoiseMap(int mapWidth, int mapHeight)
     {
-        return GenerateNoiseMap(mapWidth, mapHeight, seed, scale, octaves, persistance, lacunarity, offset, normalizeMode);
+        seed = randomSeed ? Random.Range(0,1<<20) : seed;
+        
+        float[,] noiseMap = GenerateNoiseMap(mapWidth, mapHeight, seed, scale, octaves, persistance, lacunarity, offset, normalizeMode);
+
+        if(falloffType == FalloffTypes.honecomb)
+        {
+            float[,] falloff = FalloffGenerator.GenerateFalloffMap(mapWidth, mapHeight);
+            for(int i = 0; i < mapWidth; i++)
+            {
+                for(int j = 0; j<mapHeight; j++)
+                {
+                    noiseMap[i, j] = Mathf.Clamp01(noiseMap[i, j] + falloff[i, j]);
+                }
+            }
+
+        }
+        FindObjectOfType<MapDisplay>().DrawTexture(TextureGenerator.TextureFromHeightMap(noiseMap));
+        return noiseMap;
     }
 
     public static float[,] GenerateNoiseMap(int mapWidth, int mapHeight, int seed, float scale, int octaves, float persistance, float lacunarity, Vector2 offset, NormalizeMode normalizeMode)
@@ -93,3 +118,41 @@ public class MapPerlinNoise : MonoBehaviour
         return noiseMap;
     }
 }
+
+public class PerlineNoiseVoid : MapVoid
+{
+    private MapPerlinNoise mapPerlinNoise;
+    private int width, height;
+    private float[,] map;
+    private float threshold = 0.5f;
+    
+    public PerlineNoiseVoid(MapPerlinNoise mapPerlinNoise, int width, int height)
+    {
+        this.mapPerlinNoise = mapPerlinNoise;
+        this.height = height;
+        this.width = width;
+        map = mapPerlinNoise.GenerateNoiseMap(width+1, height+1);
+        VoidType = HoneycombTypes.Variety.Path;
+    }
+    public override bool Check(MapHoneycomb honeycomb)
+    {
+        HoneycombPos honeycombPos = Utility.WorldPointToHoneycombGrid(honeycomb.position);
+        float perlinValue = map[honeycombPos.x/* % width*/, honeycombPos.y /*% height*/];
+        //Debug.Log(honeycombPos);
+        if (perlinValue > threshold)
+        {
+            float depth = mapPerlinNoise.depthCurve.Evaluate(perlinValue);
+            //Debug.Log(depth);
+            honeycomb.SetDepth((int)depth);
+            CheckDepth((int)depth, honeycomb, VoidType);
+            return true;
+        }
+        else
+        {
+            honeycomb.isFloor = true;
+            return false;
+        }
+            
+    }
+}
+
