@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
-public class MapPerlinNoise : MonoBehaviour
+public class PerlinNoise : MonoBehaviour
 {
     public enum NormalizeMode { Local, Global };
     public int seed;
@@ -13,33 +14,89 @@ public class MapPerlinNoise : MonoBehaviour
     public float lacunarity;
     public Vector2 offset;
     public NormalizeMode normalizeMode;
+
     public AnimationCurve depthCurve;
+    public float threshold = 0.5f;
 
     public bool randomSeed = false;
 
     public enum FalloffTypes { none, honecomb}
     public FalloffTypes falloffType;
     
+    public int[,] GenerateDepthMap(int mapWidth, int mapHeight)
+    {
+        float[,] noiseMap = GenerateNoiseMap(mapWidth, mapHeight);
+        int[,] depthMap = new int[mapWidth, mapHeight];
+
+        for (int x = 0; x < mapWidth; x++)
+        {
+            for(int y = 0; y <mapHeight; y++)
+            {
+                if(noiseMap[x,y] > threshold)
+                {
+                    depthMap[x,y] = (int)depthCurve.Evaluate(noiseMap[x, y]);
+                    
+                }
+                else
+                {
+                    depthMap[x, y] = 0;
+                }
+ 
+            }
+        }
+
+
+        //--------------- depth display on miniMap ----------------------------
+        float[,] antiChamberDepthMap = new float[mapWidth, mapHeight];
+        float[,] chamberDepthMap = new float[mapWidth, mapHeight];
+        for (int x = 0; x < mapWidth; x++)
+        {
+            for (int y = 0; y < mapHeight; y++)
+            {
+                //setup antiChamberDepthMap
+                if (depthMap[x, y] == 0) antiChamberDepthMap[x, y] = 0;
+                else if (depthMap[x, y] <= 2) antiChamberDepthMap[x, y] = 0.25f;
+                else if (depthMap[x, y] < 5) antiChamberDepthMap[x, y] = 0.5f;
+                else antiChamberDepthMap[x, y] = 1f;
+
+
+                //setup chamberDepthMap
+                if (depthMap[x, y] == 0)
+                {
+                    chamberDepthMap[x, y] = noiseMap[x,y];
+                }
+                else if (depthMap[x, y] <= 2) chamberDepthMap[x, y] = 0.25f;
+                else if (depthMap[x, y] < 5) chamberDepthMap[x, y] = 0.5f;
+                else chamberDepthMap[x, y] = 1f;
+
+            }
+        }
+        MiniMap.singleton.AddHeatMap(antiChamberDepthMap);
+        MiniMap.singleton.AddHeatMap(chamberDepthMap);
+
+        return depthMap;
+    }
 
     public float[,] GenerateNoiseMap(int mapWidth, int mapHeight)
     {
         seed = randomSeed ? Random.Range(0,1<<20) : seed;
         
         float[,] noiseMap = GenerateNoiseMap(mapWidth, mapHeight, seed, scale, octaves, persistance, lacunarity, offset, normalizeMode);
-
-        if(falloffType == FalloffTypes.honecomb)
+        float[,] displayMap = new float[noiseMap.GetLength(0), noiseMap.GetLength(1)];
+        if (falloffType == FalloffTypes.honecomb)
         {
             float[,] falloff = FalloffGenerator.GenerateFalloffMap(mapWidth, mapHeight);
-            for(int i = 0; i < mapWidth; i++)
+            for (int i = 0; i < mapWidth; i++)
             {
-                for(int j = 0; j<mapHeight; j++)
+                for (int j = 0; j < mapHeight; j++)
                 {
                     noiseMap[i, j] = Mathf.Clamp01(noiseMap[i, j] + falloff[i, j]);
+
                 }
             }
 
         }
-        FindObjectOfType<MapDisplay>().DrawTexture(TextureGenerator.TextureFromHeightMap(noiseMap));
+        
         return noiseMap;
     }
 
@@ -117,70 +174,9 @@ public class MapPerlinNoise : MonoBehaviour
         }
         return noiseMap;
     }
-}
 
-public class PerlineNoiseVoid : MapVoid
-{
-    private MapPerlinNoise mapPerlinNoise;
-    private int width, height;
-    private float[,] map;
-    private float threshold = 0.5f;
     
-    public PerlineNoiseVoid(MapPerlinNoise mapPerlinNoise, int width, int height)
-    {
-        this.mapPerlinNoise = mapPerlinNoise;
-        this.height = height;
-        this.width = width;
-        map = mapPerlinNoise.GenerateNoiseMap(width+1, height+1);
-        VoidType = HoneycombTypes.Variety.Path;
-    }
-    int maxX = int.MinValue, minX = int.MaxValue, maxY = int.MinValue, minY = int.MaxValue;
-    public override bool Check(MapHoneycomb honeycomb)
-    {
-        HoneycombPos honeycombPos = Utility.WorldPointToHoneycombGrid(honeycomb.position);
 
-        //bool changed = false;
-        //if (honeycombPos.x > maxX)
-        //{
-        //    maxX = honeycombPos.x;
-        //    changed = true;
-        //}
-        //if (honeycombPos.y > maxY)
-        //{
-        //    maxY = honeycombPos.y;
-        //    changed = true;
-        //}
-        //if (honeycombPos.x < minX)
-        //{
-        //    minX = honeycombPos.x;
-        //    changed = true;
-        //}
-        //if (honeycombPos.y < minY)
-        //{
-        //    minY = honeycombPos.y;
-        //    changed = true;
-        //}
-
-        //if (changed) Debug.Log($"(minX,minY):({minX},{minY}) | (maxX,maxY):({maxX},{maxY})");
-
-        float perlinValue = map[honeycombPos.x/* % width*/, honeycombPos.y /*% height*/];
-        //Debug.Log(honeycombPos);
-        if (perlinValue > threshold)
-        {
-            float depth = mapPerlinNoise.depthCurve.Evaluate(perlinValue);
-            //Debug.Log(depth);
-            if (honeycomb.GetDepth() > depth) honeycomb.SetDepth((int)depth);
-            CheckDepth((int)depth, honeycomb, VoidType);
-            return true;
-        }
-        else
-        {
-            honeycomb.isFloor = true;
-            return false;
-        }
-
-        
-            
-    }
 }
+
 

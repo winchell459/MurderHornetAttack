@@ -40,7 +40,7 @@ public class MapNest : MapArea
                 circle.pos = loc;
                 maxRadius += radius / 4;
             }
-            while (Utility.ShapeOverlappped(circle, circles));
+            while (Utility.Utility.ShapeOverlappped(circle, circles));
 
             circles.Add(circle);
         }
@@ -55,7 +55,7 @@ public class MapNest : MapArea
 
             chamber.AddChamber(chamber.Location, radius);
             nest.chambers.Add(chamber);
-            nest.AltPoints.Add(Utility.WorldPointToHoneycombGrid(circle.pos));
+            nest.AltPoints.Add(Utility.Honeycomb.WorldPointToHoneycombGrid(circle.pos));
         }
 
         

@@ -38,7 +38,7 @@ public abstract class MapArea : MapChamber
             HoneycombPos startPoint = StartPoints[0];
             foreach(HoneycombPos pos in StartPoints)
             {
-                if(Utility.DistanceBetweenHoneycomb(sourcePos, startPoint) > Utility.DistanceBetweenHoneycomb(sourcePos, pos))
+                if(Utility.Honeycomb.DistanceBetweenHoneycomb(sourcePos, startPoint) > Utility.Honeycomb.DistanceBetweenHoneycomb(sourcePos, pos))
                 {
                     startPoint = pos;
                 }
@@ -58,7 +58,7 @@ public abstract class MapArea : MapChamber
             HoneycombPos endPoint = EndPoints[0];
             foreach (HoneycombPos pos in EndPoints)
             {
-                if (Utility.DistanceBetweenHoneycomb(sourcePos, endPoint) > Utility.DistanceBetweenHoneycomb(sourcePos, pos))
+                if (Utility.Honeycomb.DistanceBetweenHoneycomb(sourcePos, endPoint) > Utility.Honeycomb.DistanceBetweenHoneycomb(sourcePos, pos))
                 {
                     endPoint = pos;
                 }
@@ -78,7 +78,7 @@ public abstract class MapArea : MapChamber
             HoneycombPos altPoint = AltPoints[0];
             foreach (HoneycombPos pos in AltPoints)
             {
-                if (Utility.DistanceBetweenHoneycomb(sourcePos, altPoint) > Utility.DistanceBetweenHoneycomb(sourcePos, pos))
+                if (Utility.Honeycomb.DistanceBetweenHoneycomb(sourcePos, altPoint) > Utility.Honeycomb.DistanceBetweenHoneycomb(sourcePos, pos))
                 {
                     altPoint = pos;
                 }
@@ -87,12 +87,12 @@ public abstract class MapArea : MapChamber
         }
         else
         {
-            HoneycombPos altPoint = Utility.WorldPointToHoneycombGrid(locations[0]);
+            HoneycombPos altPoint = Utility.Honeycomb.WorldPointToHoneycombGrid(locations[0]);
             foreach(Vector2 pos in locations)
             {
-                if(Utility.DistanceBetweenHoneycomb(sourcePos,altPoint) > Utility.DistanceBetweenHoneycomb(sourcePos, Utility.WorldPointToHoneycombGrid(pos)))
+                if(Utility.Honeycomb.DistanceBetweenHoneycomb(sourcePos,altPoint) > Utility.Honeycomb.DistanceBetweenHoneycomb(sourcePos, Utility.Honeycomb.WorldPointToHoneycombGrid(pos)))
                 {
-                    altPoint = Utility.WorldPointToHoneycombGrid(pos);
+                    altPoint = Utility.Honeycomb.WorldPointToHoneycombGrid(pos);
                 }
             }
             return altPoint;

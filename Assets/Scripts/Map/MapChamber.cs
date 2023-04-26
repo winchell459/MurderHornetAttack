@@ -6,7 +6,7 @@ public class MapChamber : MapVoid
 {
     public List<Vector2> locations = new List<Vector2>();
     public List<float> widths = new List<float>();
-    public Vector2 Location;//{ public get; private set; }
+    public Vector2 Location{ get;  protected set; }
     public bool Connected;
 
     public MapChamber()
@@ -102,7 +102,7 @@ public class MapChamber : MapVoid
 
     public static MapChamber EndChamberTunnel(Vector2 location, float radius)
     {
-        location = Utility.WorldPointToHoneycombPos(location);
+        location = Utility.Honeycomb.WorldPointToHoneycombPos(location);
         MapChamber newChamber = new MapChamber(location);
         newChamber.AddChamber(location, radius * 2);
         return newChamber;

@@ -12,7 +12,7 @@ public class HoneycombEnemyTrigger : MonoBehaviour
             Insect insect = Instantiate(transform.parent.GetComponent<HoneycombCell>().honeyGrid.GetEnemyPrefab(), transform.position, Quaternion.identity).GetComponent<Insect>();
 
             //set enemy in chunk for despawning when player leaves chunk
-            MapChunk chunk = Utility.GetMapChunk(insect.transform.position);
+            MapChunk chunk = Utility.Honeycomb.GetMapChunk(insect.transform.position);
             chunk.AddEnemyToChunk(insect);
             insect.InsectPrefab = transform.parent.GetComponent<HoneycombCell>().honeyGrid.GetEnemyPrefab();
 

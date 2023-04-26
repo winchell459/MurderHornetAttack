@@ -45,24 +45,24 @@ public class LevelHandler : MonoBehaviour
         ExitPanel.SetActive(false);
         UpdatePlayerStats();
 
-        generator = GetComponent<MapGenerator>();
-        generator.GenerateMap(Player);
-        
+        StartCoroutine(SetupLevel());
+
+        ControlParameters.StaticControlParams.LoadControlParameters();
+    }
+
+    IEnumerator SetupLevel()
+    {
+        generator = FindObjectOfType<MapGenerator>();
+        StartCoroutine(generator.GenerateMap(Player));
+
+        while (generator.generating) yield return null;
 
         Map.StaticMap.Display = true;
 
         ph = FindObjectOfType<PlayerHandler>();
 
-        //Debug.Log("honeycomb (0,0) " + Utility.HoneycombGridToWorldPostion(new Vector2(0, 0)));
-        //Debug.Log("honeycomb (0,6) " + Utility.HoneycombGridToWorldPostion(new Vector2(0, 6)));
-        //Debug.Log("honeycomb (3,0) " + Utility.HoneycombGridToWorldPostion(new Vector2(3, 0)));
-        //Debug.Log("honeycomb (3,6) " + Utility.HoneycombGridToWorldPostion(new Vector2(3, 6)));
-        //Debug.Log("honeycomb (6,6) " + Utility.HoneycombGridToWorldPostion(new Vector2(6, 6)));
-
-        displayLocation(Utility.WorldPointToHoneycombGrid(generator.Exit.transform.position).vector2, EndLoc);
+        displayLocation(Utility.Honeycomb.WorldPointToHoneycombGrid(generator.Exit.transform.position).vector2, EndLoc);
         //displayLocation(Utility.WorldToHoneycomb(PlayerSpawn.transform.position), SpawnLoc);
-
-        ControlParameters.StaticControlParams.LoadControlParameters();
     }
 
     // Update is called once per frame
@@ -80,8 +80,8 @@ public class LevelHandler : MonoBehaviour
 
         if (Player)
         {
-            displayLocation(Utility.WorldPointToHoneycombGrid(Player.position).vector2, PlayerLoc);
-            displayLocation(Map.StaticMap.GetChunkIndex( Utility.GetMapChunk(Player.position)), SpawnLoc);
+            displayLocation(Utility.Honeycomb.WorldPointToHoneycombGrid(Player.position).vector2, PlayerLoc);
+            displayLocation(Map.StaticMap.GetChunkIndex( Utility.Honeycomb.GetMapChunk(Player.position)), SpawnLoc);
             //Debug.Log(Utility.GetMapChunk(Player.position).ChunkIndex + " chunkOffset: " + Utility.GetMapChunk(Player.position).mapOffset);
         }
         else
@@ -219,7 +219,7 @@ public class LevelHandler : MonoBehaviour
             PlasmaMeterText.text = hc.ShotCount.ToString();
 
             PlasmaPowerText.text = (int)ph.GetPlasmaPower() + " " + (int)ph.GetPlasmaPowerBuffTime();
-            PlasmaChargeRateText.text = Utility.FormatFloat(ph.GetPlasmaChargeRate(),2) + " " + (int)ph.GetPlasmaChargeRateBuffTime();
+            PlasmaChargeRateText.text = Utility.Utility.FormatFloat(ph.GetPlasmaChargeRate(),2) + " " + (int)ph.GetPlasmaChargeRateBuffTime();
             PlasmaChargeCapacityText.text = ph.GetMaxShot() + " " + (int)ph.GetMaxShotBuffTime();
         }
         

@@ -118,7 +118,7 @@ public class MapChunk
             {
                 if (enemiesInChunk[i])
                 {
-                    MapChunk chunk = Utility.GetMapChunk(enemiesInChunk[i].transform.position);
+                    MapChunk chunk = Utility.Honeycomb.GetMapChunk(enemiesInChunk[i].transform.position);
                     if (chunk == this)
                     {
                         enemiesInChunk[i].gameObject.SetActive(false);

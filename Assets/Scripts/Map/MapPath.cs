@@ -47,7 +47,7 @@ public class MapPath : MapVoid
             {
                 Vector2 start = Start(i);
                 Vector2 end = End(i);
-                float distance = Utility.PointDistanceToPath(honeycomb.position, start, end);
+                float distance = Utility.Utility.PointDistanceToPath(honeycomb.position, start, end);
                 if (distance < widths[i] / 2 || distance < 0.45f)
                 {
                     if(honeycomb.LocationType <= VoidType) display = false;
@@ -91,7 +91,7 @@ public class MapPath : MapVoid
             float width = Random.Range(pathWidthMin, pathWidthMax);
             float nextX = forward.x + jog.x + linePoint.x;
             float nextY = forward.y + jog.y + linePoint.y;
-            linePoint = Utility.ClosestPointOnLine(new Vector2(nextX, nextY), start, end);
+            linePoint = Utility.Utility.ClosestPointOnLine(new Vector2(nextX, nextY), start, end);
             if (Vector2.Distance(current, end) < pathLengthMin || linePoint == end)
             {
                 nextX = end.x;

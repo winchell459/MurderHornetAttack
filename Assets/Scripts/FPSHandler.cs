@@ -74,7 +74,7 @@ public class FPSHandler : MonoBehaviour
         if (calcStartTime + 1 < Time.fixedTime)
         {
             
-            FPSText.text = Utility.FormatFloat(fpsAverage / (Time.fixedTime - calcStartTime), 1);
+            FPSText.text = Utility.Utility.FormatFloat(fpsAverage / (Time.fixedTime - calcStartTime), 1);
             startCalc();
         }
     }

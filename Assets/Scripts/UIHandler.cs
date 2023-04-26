@@ -25,4 +25,9 @@ public class UIHandler : MonoBehaviour
     {
         foreach (GameObject menuPanel in menuPanels) menuPanel.SetActive(on);
     }
+
+    public void NewLevelButton()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+    }
 }

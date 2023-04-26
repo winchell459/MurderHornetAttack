@@ -19,7 +19,7 @@ public class HornetPlasm : MonoBehaviour
             }
             else
             {
-                HoneycombPos hexPos = Utility.WorldPointToHoneycombGrid(collision.GetComponent<Honeycomb>().honeyGrid.position);
+                HoneycombPos hexPos = Utility.Honeycomb.WorldPointToHoneycombGrid(collision.GetComponent<Honeycomb>().honeyGrid.position);
                 collision.GetComponent<Honeycomb>().DamageHoneycomb(Damage);
                 if (false) //for testing HoneycombPos.GetAdjecentHoneycomb()
                 {

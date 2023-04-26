@@ -17,7 +17,7 @@ public class SpiderHole : MonoBehaviour
                 spider.transform.up = transform.position - collision.transform.position;
 
                 //set enemy in chunk for despawning when player leaves chunk
-                MapChunk chunk = Utility.GetMapChunk(spider.transform.position);
+                MapChunk chunk = Utility.Honeycomb.GetMapChunk(spider.transform.position);
                 chunk.AddEnemyToChunk(spider);
                 //spider.InsectPrefab = transform.parent.GetComponent<HoneycombCell>().honeyGrid.GetEnemyPrefab();
 

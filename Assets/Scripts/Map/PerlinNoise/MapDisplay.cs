@@ -19,7 +19,7 @@ public class MapDisplay : MonoBehaviour
         rawImage.texture = texture;
         int width = texture.width;
         int height = texture.height;
-        int maxLength = 100;
+        int maxLength = 200;
         if (width > height)
         {
             height = maxLength * height / width;

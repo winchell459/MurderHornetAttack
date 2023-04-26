@@ -320,6 +320,7 @@ public class Map : MonoBehaviour
 
     public static GameObject GetHoneycombChamberFloor()
     {
+        //Debug.Log("GetHoneycombChamberFloor");
         GameObject honeycomb;
         if(StaticMap.HoneycombFloorPool.Count > 0)
         {

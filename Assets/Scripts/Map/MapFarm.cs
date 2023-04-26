@@ -73,12 +73,12 @@ public class MapFarm : MapArea
             float randX = Random.Range(minRangePoint.worldPos.x, maxRangePoint.worldPos.x);
             float randY = Random.Range(minRangePoint.worldPos.y, maxRangePoint.worldPos.y);
             Circle newNode = new Circle(new Vector2(randX, randY),edgeLength/2);
-            if(!Utility.ShapeOverlappped(newNode, nodes))
+            if(!Utility.Utility.ShapeOverlappped(newNode, nodes))
             {
                 nodes.Add(newNode);
                 maze.Add(endPoint);
 
-                maze[maze.Count - 2] = Utility.WorldPointToHoneycombGrid(newNode.pos);
+                maze[maze.Count - 2] = Utility.Honeycomb.WorldPointToHoneycombGrid(newNode.pos);
                 
             }
             else
@@ -149,7 +149,7 @@ public class MapFarm : MapArea
         HoneycombPos point0 = edges[edges.Count - 1];
         for(int i = 1; i < edges.Count - 1; i += 1)
         {
-            if(Utility.CheckIntersecting(point.worldPos,point0.worldPos, edges[i - 1].worldPos, edges[i].worldPos))
+            if(Utility.Utility.CheckIntersecting(point.worldPos,point0.worldPos, edges[i - 1].worldPos, edges[i].worldPos))
             {
                 intersects = true;
             }

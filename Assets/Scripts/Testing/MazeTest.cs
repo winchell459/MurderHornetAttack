@@ -11,7 +11,7 @@ public class MazeTest : MonoBehaviour
         Vector2 p1_2 = new Vector2(0, 2);
         Vector2 p2_1 = new Vector2(0, 3);
         Vector2 p2_2 = new Vector2(3, 0);
-        Debug.Log(Utility.CheckIntersecting(p1_1, p1_2, p2_1, p2_2));
+        Debug.Log(Utility.Utility.CheckIntersecting(p1_1, p1_2, p2_1, p2_2));
     }
 
     // Update is called once per frame

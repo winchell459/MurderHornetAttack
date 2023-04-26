@@ -21,26 +21,38 @@ public class MapGenerator : MonoBehaviour
     public Portal Exit { get; set; }
 
 
-    public MapPerlinNoise perlinNoise;
+    public PerlinNoise perlinNoise;
     public enum GenerationTypes { randomVoids, perlinNoise}
     public GenerationTypes generationType;
 
-    public void GenerateMap(Transform Player)
-    {
-        //createVoids();
-        float start = Utility.GetTime();
-        if(generationType == GenerationTypes.randomVoids)
-            createRandomMap(Player, 10);
-        else if(generationType == GenerationTypes.perlinNoise)
-            CreatePerlinNoiseMap(Player);
-        Debug.Log("createRandomMap Time: " + (Utility.GetTime() - start) + " seconds.");
+    public bool generating = false;
 
-        start = Utility.GetTime();
+    public IEnumerator GenerateMap(Transform Player)
+    {
+        generating = true;
+        //createVoids();
+        float start = Utility.Utility.GetTime();
+        if(generationType == GenerationTypes.randomVoids)
+        {
+            createRandomMap(Player, 10);
+            
+            Debug.Log("createRandomMap Time: " + (Utility.Utility.GetTime() - start) + " seconds.");
+        }   
+        else if(generationType == GenerationTypes.perlinNoise)
+        {
+            StartCoroutine(CreatePerlinNoiseMap(Player));
+            while (perlinNoiseGenerating) yield return null;
+        }
+
+
+        
+        start = Utility.Utility.GetTime();
         Map.StaticMap.DisplayChunks();
-        Debug.Log("DisplayChunks Time: " + (Utility.GetTime() - start) + " seconds.");
+        Debug.Log("DisplayChunks Time: " + (Utility.Utility.GetTime() - start) + " seconds.");
 
         //setup enemies in Paths
         addPathEnemies();
+        generating = false;
     }
 
     private void createVoids(Transform Player)
@@ -63,36 +75,43 @@ public class MapGenerator : MonoBehaviour
     List<MapVoid> newVoids = new List<MapVoid>();
     //List<bool> newConnected = new List<bool>();
     //List<Vector2> newLocations = new List<Vector2>();
-    private void CreatePerlinNoiseMap(Transform player)
+    bool perlinNoiseGenerating = false;
+    private IEnumerator CreatePerlinNoiseMap(Transform player)
     {
+        perlinNoiseGenerating = true;
         int mapWidth = (int)/*Mathf.Ceil*/(Map.StaticMap.MapWidth / Map.StaticMap.HorizontalSpacing);
         int mapHeight = (int)/*Mathf.Ceil*/(Map.StaticMap.MapHeight / Map.StaticMap.VerticalSpacing)/2;
         PerlineNoiseVoid perlineNoiseVoid = new PerlineNoiseVoid(perlinNoise, mapWidth, mapHeight);
-        //Map.StaticMap.AddVoid(perlineNoiseVoid);
+        while (perlineNoiseVoid.generating) yield return null;
 
-        System.Random random = new System.Random(perlinNoise.seed);
-        //Added player spawn point
-        int spawnPointX = random.Next(0, mapWidth);
-        int spawnPointY = random.Next(0, mapHeight);
-        PlayerSpawn = CreatePlayerSpawn(PortalPrefab, player.position);
-        player.position = PlayerSpawn.Chamber.locations[0];
+        if (false)
+        {
+            System.Random random = new System.Random(perlinNoise.seed);
+            //Added player spawn point
+            int spawnPointX = random.Next(0, mapWidth);
+            int spawnPointY = random.Next(0, mapHeight);
+            PlayerSpawn = CreatePlayerSpawn(PortalPrefab, player.position);
+            player.position = PlayerSpawn.Chamber.locations[0];
 
-        Exit = CreateExitTunnel(PortalPrefab, Utility.HoneycombGridToWorldPostion(new HoneycombPos(200, 200)));
-        ExitTunnel.position = Exit.Chamber.Location;
+            Exit = CreateExitTunnel(PortalPrefab, Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(200, 200)));
+            ExitTunnel.position = Exit.Chamber.Location;
 
-        //create snake Chamber
-        Vector2 snakeChamberLoc = Utility.HoneycombGridToWorldPostion(new HoneycombPos(150, 80));
-        CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc);
+            //create snake Chamber
+            Vector2 snakeChamberLoc = Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(150, 80));
+            CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc);
 
-        CreateSpiderNest(Utility.HoneycombGridToWorldPostion(new HoneycombPos(75, 105)));
-        CreateAntFarm(Utility.WorldPointToHoneycombGrid(AntSquad.position));
+            CreateSpiderNest(Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(75, 105)));
+            CreateAntFarm(Utility.Honeycomb.WorldPointToHoneycombGrid(AntSquad.position));
 
-        //createRandomMap(player,10);
+            //createRandomMap(player,10);
+        }
+
 
 
         mapVoids = newVoids;
         mapVoids.Add(perlineNoiseVoid);
         Map.StaticMap.AddVoid(mapVoids);
+        perlinNoiseGenerating = false;
     }
     
     private void createRandomMap(Transform Player, float voidCount)
@@ -107,8 +126,8 @@ public class MapGenerator : MonoBehaviour
         Player.position = PlayerSpawn.Chamber.locations[0];
 
 
-        CreateSpiderNest(Utility.HoneycombGridToWorldPostion(new HoneycombPos(75, 105)));
-        CreateAntFarm(Utility.WorldPointToHoneycombGrid(AntSquad.position));
+        CreateSpiderNest(Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(75, 105)));
+        CreateAntFarm(Utility.Honeycomb.WorldPointToHoneycombGrid(AntSquad.position));
 
 
         Map map = Map.StaticMap;
@@ -117,7 +136,7 @@ public class MapGenerator : MonoBehaviour
         Vector2 mapMax = origin + new Vector2(map.MapWidth, map.MapHeight) - new Vector2(15, 15);
 
         //create snake Chamber
-        Vector2 snakeChamberLoc = Utility.HoneycombGridToWorldPostion(new HoneycombPos(150, 80));
+        Vector2 snakeChamberLoc = Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(150, 80));
         CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc);
 
         //create random chambers
@@ -143,7 +162,7 @@ public class MapGenerator : MonoBehaviour
 
 
         //Exit = CreateExitTunnel(PortalPrefab, Player.position);
-        Exit = CreateExitTunnel(PortalPrefab, Utility.HoneycombGridToWorldPostion(new HoneycombPos(200, 200)));
+        Exit = CreateExitTunnel(PortalPrefab, Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(200, 200)));
         ExitTunnel.position = Exit.Chamber.Location;
 
 

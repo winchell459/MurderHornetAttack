@@ -7,7 +7,7 @@ public class HoneycombPos
     public int x;
     public int y;
     public Vector2 vector2 { get { return new Vector2(x, y); } }
-    public Vector2 worldPos { get { return Utility.HoneycombGridToWorldPostion(this); } }
+    public Vector2 worldPos { get { return Utility.Honeycomb.HoneycombGridToWorldPostion(this); } }
     public HoneycombPos() { }
     public HoneycombPos(int x, int y)
     {
@@ -17,6 +17,17 @@ public class HoneycombPos
     public static HoneycombPos operator +(HoneycombPos a, HoneycombPos b) => new HoneycombPos(a.x + b.x, a.y + b.y);
     public static HoneycombPos operator -(HoneycombPos a, HoneycombPos b) => new HoneycombPos(a.x - b.x, a.y - b.y);
     
+    public List<HoneycombPos> GetAdjecentHoneycomb()
+    {
+        List<HoneycombPos> neighbors = new List<HoneycombPos>();
+        neighbors.Add(GetAdjecentHoneycomb(0, 1));
+        neighbors.Add(GetAdjecentHoneycomb(1, 1));
+        neighbors.Add(GetAdjecentHoneycomb(1, -1));
+        neighbors.Add(GetAdjecentHoneycomb(0, -1));
+        neighbors.Add(GetAdjecentHoneycomb(-1, -1));
+        neighbors.Add(GetAdjecentHoneycomb(-1, 1));
+        return neighbors;
+    }
 
     public HoneycombPos GetAdjecentHoneycomb (HoneycombDir dir)
     {

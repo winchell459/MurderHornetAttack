@@ -55,7 +55,7 @@ public class ItemPickup : MonoBehaviour
         else if (PickupType == PickupTypes.Power) P.SetActive(true);
         else if (PickupType == PickupTypes.Rapid) R.SetActive(true);
         else if (PickupType == PickupTypes.Storage) S.SetActive(true);
-        ValueText.text = Utility.FormatFloat(Power, 2);
+        ValueText.text = Utility.Utility.FormatFloat(Power, 2);
     }
 
     private void hideLetters()
