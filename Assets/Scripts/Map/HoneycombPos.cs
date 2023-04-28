@@ -16,7 +16,39 @@ public class HoneycombPos
     }
     public static HoneycombPos operator +(HoneycombPos a, HoneycombPos b) => new HoneycombPos(a.x + b.x, a.y + b.y);
     public static HoneycombPos operator -(HoneycombPos a, HoneycombPos b) => new HoneycombPos(a.x - b.x, a.y - b.y);
-    
+    public static bool operator ==(HoneycombPos a, HoneycombPos b) { return a.x == b.x && a.y == b.y; }
+    public static bool operator !=(HoneycombPos a, HoneycombPos b) { return a.x != b.x || a.y != b.y; }
+    public override bool Equals(object obj)
+    {
+        HoneycombPos other = obj as HoneycombPos;
+        return other.x == x && other.y == y;
+    }
+    public List<HoneycombPos> GetAdjecentHoneycomb(int radius)
+    {
+        if (radius == 0) return new List<HoneycombPos>();
+        List<HoneycombPos> neighbors = GetAdjecentHoneycomb();
+        neighbors.Insert(0, this);
+        radius -= 1;
+        int current = 1;
+        
+        while(radius > 0)
+        {
+            int end = neighbors.Count - 1;
+            while (current <= end)
+            {
+                foreach(HoneycombPos pos in neighbors[current].GetAdjecentHoneycomb())
+                {
+                    if (!neighbors.Contains(pos)) neighbors.Add(pos);
+                }
+                current += 1;
+            }
+            radius-=1;
+        }
+
+        neighbors.RemoveAt(0);
+        return neighbors;
+    }
+
     public List<HoneycombPos> GetAdjecentHoneycomb()
     {
         List<HoneycombPos> neighbors = new List<HoneycombPos>();
@@ -28,6 +60,8 @@ public class HoneycombPos
         neighbors.Add(GetAdjecentHoneycomb(-1, 1));
         return neighbors;
     }
+
+    
 
     public HoneycombPos GetAdjecentHoneycomb (HoneycombDir dir)
     {

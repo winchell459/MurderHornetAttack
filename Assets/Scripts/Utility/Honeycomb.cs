@@ -145,6 +145,27 @@ namespace Utility
         {
             return Vector2.Distance(HoneycombGridToWorldPostion(hexOne), HoneycombGridToWorldPostion(hexTwo));
         }
+
+        public static int GetHoneycombRadius(int size)
+        {
+            int ringSize = 0;
+            int totalSize = 0;
+            int radius = 0;
+            while(size >= totalSize)
+            {
+                radius += 1;
+                ringSize += 6;
+                if (size != totalSize)
+                {
+                    totalSize += ringSize;
+                }
+                else break;
+                
+            }
+            
+            //Debug.Log(totalSize);
+            return radius - 1;
+        }
     }
 }
 

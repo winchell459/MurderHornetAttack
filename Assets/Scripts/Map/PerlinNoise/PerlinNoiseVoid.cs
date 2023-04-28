@@ -185,6 +185,7 @@ public class PerlineNoiseVoid : MapVoid
             float[,] chamberHexDepthMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
             float[,] chamberHexMinDepthMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
             float[,] sourceHexMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
+            float[,] maxSourceHexMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
             for (int y = hexDepths.GetLength(1) - 1; y >= 0; y--)
             {
                 for (int x = 0; x < hexDepths.GetLength(0); x++)
@@ -216,6 +217,8 @@ public class PerlineNoiseVoid : MapVoid
                             chamberHexMinDepthMap[x, y] = chambers[chamberIDMap[x, y] - 1].GetChamberMinDepth(x, y);
                             if (chambers[chamberIDMap[x, y] - 1].GetSource(x, y)) sourceHexMap[x, y] = chambers[chamberIDMap[x, y] - 1].GetChamberMinDepth(x, y);
                             else sourceHexMap[x, y] = 0;
+                            if (chambers[chamberIDMap[x, y] - 1].GetMaxSource(x, y)) maxSourceHexMap[x, y] = chambers[chamberIDMap[x, y] - 1].GetChamberMinDepth(x, y);
+                            else maxSourceHexMap[x, y] = 0;
                         }
                         
                     }
@@ -225,6 +228,7 @@ public class PerlineNoiseVoid : MapVoid
                         chamberHexDepthMap[x, y] = pathHexDepthMap[x, y];
                         chamberHexMinDepthMap[x, y] = pathHexDepthMap[x, y];
                         sourceHexMap[x,y] = pathHexDepthMap[x, y];
+                        maxSourceHexMap[x, y] = pathHexDepthMap[x, y];
                     }
                 }
                 
@@ -234,6 +238,7 @@ public class PerlineNoiseVoid : MapVoid
             //MiniMap.singleton.AddHeatMap(chamberHexDepthMap);
             MiniMap.singleton.AddHeatMap(chamberHexMinDepthMap);
             MiniMap.singleton.AddHeatMap(sourceHexMap);
+            MiniMap.singleton.AddHeatMap(maxSourceHexMap);
         }
 
         Debug.Log($"FindChamber display hexDepth Path took {Utility.Utility.GetTime() - startTime} seconds.");

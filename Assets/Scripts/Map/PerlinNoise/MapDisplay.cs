@@ -11,6 +11,7 @@ public class MapDisplay : MonoBehaviour
     public Texture texture;
     public UnityEngine.UI.RawImage rawImage;
 
+    int maxLength = 200;
     public void DrawTexture(Texture2D texture)
     {
         textureRender.sharedMaterial.mainTexture = texture;
@@ -19,7 +20,7 @@ public class MapDisplay : MonoBehaviour
         rawImage.texture = texture;
         int width = texture.width;
         int height = texture.height;
-        int maxLength = 200;
+        
         if (width > height)
         {
             height = maxLength * height / width;
@@ -31,6 +32,11 @@ public class MapDisplay : MonoBehaviour
             height = maxLength;
         }
         rawImage.GetComponent<RectTransform>().sizeDelta = new Vector2(width, height);
+    }
+    public void DrawTexture(Texture2D texture, int maxLength)
+    {
+        this.maxLength = maxLength;
+        DrawTexture(texture);
     }
 
     //public void DrawMesh(MeshData meshData, Texture2D texture)

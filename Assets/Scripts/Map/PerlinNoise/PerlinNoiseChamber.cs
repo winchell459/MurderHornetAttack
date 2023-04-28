@@ -24,12 +24,7 @@ public class PerlinNoiseChamber /*: MapChamber*/
     {
         foreach (HexDepth hexDepth in nodes)
         {
-            //hexDepth.GetDepth0();
-            //hexDepth.GetDepth1();
-            //hexDepth.GetDepth2();
-            //hexDepth.GetDepth3();
-            //hexDepth.GetDepth4();
-            //hexDepth.GetDepth5();
+            
             int depth = hexDepth.maxDepth;
             if (depth > maxDepth) maxDepth = depth;
             depth = hexDepth.minDepth;
@@ -41,7 +36,11 @@ public class PerlinNoiseChamber /*: MapChamber*/
             hexDepth.GetSource3();
             hexDepth.GetSource4();
             hexDepth.GetSource5();
+
+            
         }
+        FindSourceHexDepthRadius();
+
     }
     public float GetChamberDepth(int x, int y)
     {
@@ -55,12 +54,31 @@ public class PerlinNoiseChamber /*: MapChamber*/
     {
         return hexDepths[x, y].source;
     }
+    public bool GetMaxSource(int x, int y)
+    {
+        return hexDepths[x, y].maxSource;
+    }
+
+    public void FindSourceHexDepthRadius()
+    {
+        int count = 1;
+        foreach(HexDepth node in nodes)
+        {
+            if (node.source)
+            {
+                //Debug.Log($"{node.pos} {count} of {nodes.Count} has maxRadius {node.FindMaxRadius()}");
+                node.FindMaxRadius();
+            }
+            count++;
+        }
+    }
 }
 
 public class HexDepth
 {
     PerlinNoiseChamber myChamber;
     public HoneycombPos pos;
+    public int maxRadius = 0;
 
 
     private int d0, d1, d2, d3, d4, d5; //depth values from directions 1,1 to -1,1
@@ -79,6 +97,18 @@ public class HexDepth
     public HexDepth hex0 = null, hex1 = null, hex2 = null, hex3 = null, hex4 = null, hex5 = null;
     private bool source0 = false, source1 = false, source2 = false, source3 = false, source4 = false, source5 = false;
     public bool source { get { return !source0 && !source1 && !source2 && !source3 && !source4 && !source5; } }
+
+    public bool maxSource { get { return IsMaxSource(); } }
+
+    private bool IsMaxSource()
+    {
+        if (!source) return false;
+        foreach(HexDepth hex in hexInRadius)
+        {
+            if (hex.maxRadius > maxRadius) return false;
+        }
+        return true;
+    }
     
     public HexDepth(PerlinNoiseChamber myChamber, HoneycombPos pos)
     {
@@ -121,7 +151,7 @@ public class HexDepth
     {
         if (hex0 == null)
         {
-            HoneycombPos neighborPos = pos.GetAdjecentHoneycomb(1, 1);
+            HoneycombPos neighborPos = pos.GetAdjecentHoneycomb(0, 1);
             hex0 = myChamber.GetNeighbor(neighborPos.x, neighborPos.y);
             if (hex0 == null)
             {
@@ -142,7 +172,7 @@ public class HexDepth
     {
         if (hex1 == null)
         {
-            HoneycombPos neighborPos = pos.GetAdjecentHoneycomb(1, 0);
+            HoneycombPos neighborPos = pos.GetAdjecentHoneycomb(1, 1);
             hex1 = myChamber.GetNeighbor(neighborPos.x, neighborPos.y);
             if (hex1 == null)
             {
@@ -183,7 +213,7 @@ public class HexDepth
     {
         if (hex3 == null)
         {
-            HoneycombPos neighborPos = pos.GetAdjecentHoneycomb(-1, -1);
+            HoneycombPos neighborPos = pos.GetAdjecentHoneycomb(0, -1);
             hex3 = myChamber.GetNeighbor(neighborPos.x, neighborPos.y);
             if (hex3 == null)
             {
@@ -203,7 +233,7 @@ public class HexDepth
     {
         if (hex4 == null)
         {
-            HoneycombPos neighborPos = pos.GetAdjecentHoneycomb(-1, 0);
+            HoneycombPos neighborPos = pos.GetAdjecentHoneycomb(-1, -1);
             hex4 = myChamber.GetNeighbor(neighborPos.x, neighborPos.y);
             if (hex4 == null)
             {
@@ -269,5 +299,28 @@ public class HexDepth
     {
         if (hex5 != null && hex5.minDepth > minDepth) source5 = true;
         return source5;
+    }
+
+    List<HexDepth> hexInRadius = new List<HexDepth>();
+    public int FindMaxRadius()
+    {
+        maxRadius = minDepth;
+        List<HoneycombPos> neighbors = pos.GetAdjecentHoneycomb(maxRadius);
+        if(neighbors.Count == 0)
+        {
+            maxRadius = 0;
+            return maxRadius;
+        }
+        int count = 0;
+        HexDepth neighbor = myChamber.GetNeighbor(neighbors[count].x, neighbors[count].y);
+        while (count < neighbors.Count && neighbor != null){
+            hexInRadius.Add(neighbor);
+            neighbor = myChamber.GetNeighbor(neighbors[count].x, neighbors[count].y);
+            count += 1;
+        }
+        count -= 1;
+        maxRadius = Utility.Honeycomb.GetHoneycombRadius(count);
+        //Debug.Log($"{pos} has maxRadius {maxRadius}");
+        return maxRadius;
     }
 }

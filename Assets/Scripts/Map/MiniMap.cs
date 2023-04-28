@@ -8,6 +8,10 @@ public class MiniMap : MonoBehaviour
     private List<float[,]> heatMaps = new List<float[,]>();
     int displayingHeatMap = -1;
     int toDisplayHeatMap = -1;
+
+    public int minimizedSize = 200;
+    public int maximizedSize = 1000;
+    private static int currentSize = 200;
     // Start is called before the first frame update
     void Awake()
     {
@@ -21,8 +25,12 @@ public class MiniMap : MonoBehaviour
         if(toDisplayHeatMap != displayingHeatMap)
         {
             displayingHeatMap = toDisplayHeatMap;
-            GetComponent<MapDisplay>().DrawTexture(TextureGenerator.TextureFromHeightMap(heatMaps[displayingHeatMap]));
+            DisplayMap();
         }
+    }
+    private void DisplayMap()
+    {
+        GetComponent<MapDisplay>().DrawTexture(TextureGenerator.TextureFromHeightMap(heatMaps[displayingHeatMap]), currentSize);
     }
 
     public void AddHeatMap(float[,] heatMap)
@@ -40,5 +48,12 @@ public class MiniMap : MonoBehaviour
     {
         toDisplayHeatMap -= 1;
         if (toDisplayHeatMap < 0) toDisplayHeatMap = heatMaps.Count - 1;
+    }
+
+    public void ToggleSize()
+    {
+        if (currentSize == maximizedSize) currentSize = minimizedSize;
+        else currentSize = maximizedSize;
+        DisplayMap();
     }
 }
