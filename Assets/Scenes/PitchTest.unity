@@ -17676,8 +17676,8 @@ MonoBehaviour:
     type: 3}
   HoneycombChamberFloorPrefab: {fileID: 1451932472498554745, guid: ef5566033753aa14da70c0b7fa6079f6,
     type: 3}
-  MapWidth: 200
-  MapHeight: 160
+  MapWidth: 300
+  MapHeight: 240
   MapOrigin: {x: -70, y: -130}
   VerticalSpacing: 0.27
   HorizontalSpacing: 0.45

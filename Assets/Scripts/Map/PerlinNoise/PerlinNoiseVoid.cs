@@ -135,7 +135,7 @@ public class PerlineNoiseVoid : MapVoid
                                         in_frontier[neighbor.x, neighbor.y] = true;
                                     }
                                 }
-                                else if (map[neighbor.x, neighbor.y] > 0)
+                                else if (!visited[neighbor.x, neighbor.y] && map[neighbor.x, neighbor.y] > 0)
                                 {
                                     visited[neighbor.x, neighbor.y] = true;
                                     to_visit_count--;
@@ -167,12 +167,15 @@ public class PerlineNoiseVoid : MapVoid
         Debug.Log($"FindChamber depthmap {Utility.Utility.GetTime() - startTime} seconds.");
         startTime = Utility.Utility.GetTime();
 
+        int maxRadius = 0;
         foreach(PerlinNoiseChamber chamber in chambers)
         {
-            chamber.SetDepths();
+            chamber.FindChamberAreas();
+            maxRadius = Mathf.Max(maxRadius, chamber.GetMaxAreaRadius());
         }
+        PerlinNoiseChamber.maxRadius = maxRadius;
 
-        Debug.Log($"FindChamber setDepths took {Utility.Utility.GetTime() - startTime} seconds.");
+        Debug.Log($"FindChamber FindChamberAreas took {Utility.Utility.GetTime() - startTime} seconds.");
         startTime = Utility.Utility.GetTime();
 
         
@@ -186,6 +189,8 @@ public class PerlineNoiseVoid : MapVoid
             float[,] chamberHexMinDepthMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
             float[,] sourceHexMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
             float[,] maxSourceHexMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
+            float[,] chamberAreaMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
+            float[,] chamberRadiusAreaMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
             for (int y = hexDepths.GetLength(1) - 1; y >= 0; y--)
             {
                 for (int x = 0; x < hexDepths.GetLength(0); x++)
@@ -219,6 +224,8 @@ public class PerlineNoiseVoid : MapVoid
                             else sourceHexMap[x, y] = 0;
                             if (chambers[chamberIDMap[x, y] - 1].GetMaxSource(x, y)) maxSourceHexMap[x, y] = chambers[chamberIDMap[x, y] - 1].GetChamberMinDepth(x, y);
                             else maxSourceHexMap[x, y] = 0;
+                            chamberAreaMap[x, y] = chambers[chamberIDMap[x, y] - 1].GetChamberHeatVal(x, y);
+                            chamberRadiusAreaMap[x, y] = chambers[chamberIDMap[x, y] - 1].GetChamberAreaRadiusVal(x, y);
                         }
                         
                     }
@@ -229,6 +236,8 @@ public class PerlineNoiseVoid : MapVoid
                         chamberHexMinDepthMap[x, y] = pathHexDepthMap[x, y];
                         sourceHexMap[x,y] = pathHexDepthMap[x, y];
                         maxSourceHexMap[x, y] = pathHexDepthMap[x, y];
+                        chamberAreaMap[x,y] = pathHexDepthMap[x, y];
+                        chamberRadiusAreaMap[x, y] = pathHexDepthMap[x, y];
                     }
                 }
                 
@@ -239,6 +248,8 @@ public class PerlineNoiseVoid : MapVoid
             MiniMap.singleton.AddHeatMap(chamberHexMinDepthMap);
             MiniMap.singleton.AddHeatMap(sourceHexMap);
             MiniMap.singleton.AddHeatMap(maxSourceHexMap);
+            MiniMap.singleton.AddHeatMap(chamberAreaMap);
+            MiniMap.singleton.AddHeatMap(chamberRadiusAreaMap);
         }
 
         Debug.Log($"FindChamber display hexDepth Path took {Utility.Utility.GetTime() - startTime} seconds.");
