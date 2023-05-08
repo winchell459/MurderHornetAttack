@@ -51,5 +51,9 @@ public class HoneycombCell : Honeycomb
         }
     }
 
+    public void SetCapColor(Color color)
+    {
+        Cap.GetComponent<SpriteRenderer>().color = color;
+    }
     
 }

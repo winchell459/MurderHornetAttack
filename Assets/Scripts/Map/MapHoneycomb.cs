@@ -10,6 +10,8 @@ public class MapHoneycomb
     public GameObject honeycomb;
     private GameObject EnemyPrefab;
 
+    public Color color = new Color(74/256, 156 / 256, 101 / 256);
+
     //private List<Transform> honeycombChildren = new List<Transform>();
     private bool capped = true;
     private int depth = int.MaxValue; //roughly the number of honeycombs away from a void
@@ -61,6 +63,7 @@ public class MapHoneycomb
             if (isFloor)
             {
                 if(Map.StaticMap.DisplayFloor)honeycomb = Map.GetHoneycombChamberFloor();
+                honeycomb.GetComponent<HoneycombCell>().SetCapColor(color);
             }
             else if((depth < 5 || depth < 7 &&  !isLargeLoc ) || ignoreLarge && !beeuilding)
             {

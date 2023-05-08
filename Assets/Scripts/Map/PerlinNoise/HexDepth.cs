@@ -17,7 +17,7 @@ public class HexDepth
     }
 
     private int d0, d1, d2, d3, d4, d5; //depth values from directions 1,1 to -1,1
-    public int maxDepth { get { return GetDepth0() + GetDepth1() + GetDepth2() + GetDepth3() + GetDepth4() + GetDepth5(); } }
+    public int depthSum { get { return GetDepth0() + GetDepth1() + GetDepth2() + GetDepth3() + GetDepth4() + GetDepth5(); } }
     //public int minDepth { get { return Mathf.Min(Mathf.Min(GetDepth0() + GetDepth1(), GetDepth2() + GetDepth3()),  GetDepth4() + GetDepth5()); } }
     public int minDepth
     {

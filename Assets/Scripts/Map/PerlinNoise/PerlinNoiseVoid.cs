@@ -28,9 +28,6 @@ public class PerlineNoiseVoid : MapVoid
         FindChambers(depthMap);
         VoidType = HoneycombTypes.Variety.Path;
 
-        
-
-
     }
 
 
@@ -49,18 +46,44 @@ public class PerlineNoiseVoid : MapVoid
         else
         {
             honeycomb.isFloor = true;
-            if (hexDepths[honeycombPos.x, honeycombPos.y] != null && (hexDepths[honeycombPos.x, honeycombPos.y].delta0 <= pathWidth || hexDepths[honeycombPos.x, honeycombPos.y].delta1 <= pathWidth || hexDepths[honeycombPos.x, honeycombPos.y].delta2 <= pathWidth))
-            {
-                
-                return floorIsPath;
-            }else if(hexDepths[honeycombPos.x, honeycombPos.y] == null)
-            {
-                Debug.LogWarning($"hexDepths[{honeycombPos.x}, {honeycombPos.y}] is null");
-            }
             
-            return !floorIsPath;
+            float grayScale = chambers[chamberIDMap[honeycombPos.x, honeycombPos.y] - 1].GetChamberAreaMergedIndexHeatVal(honeycombPos.x, honeycombPos.y);
+            honeycomb.color = new Color(grayScale,grayScale,grayScale);
+            return false;
+            //if (hexDepths[honeycombPos.x, honeycombPos.y] != null && (hexDepths[honeycombPos.x, honeycombPos.y].delta0 <= pathWidth || hexDepths[honeycombPos.x, honeycombPos.y].delta1 <= pathWidth || hexDepths[honeycombPos.x, honeycombPos.y].delta2 <= pathWidth))
+            //{
+                
+            //    return floorIsPath;
+            //}else if(hexDepths[honeycombPos.x, honeycombPos.y] == null)
+            //{
+            //    Debug.LogWarning($"hexDepths[{honeycombPos.x}, {honeycombPos.y}] is null");
+            //}
+            
+            //return !floorIsPath;
         }
 
+    }
+
+    PerlinNoiseChamber maxChamber = null;
+    public HoneycombPos GetAreaPos(int minRadius)
+    {
+        if(maxChamber == null)
+        {
+            maxChamber = chambers[0];
+            for(int i = 1; i < chambers.Count; i += 1)
+            {
+                if (maxChamber.nodeCount < chambers[i].nodeCount) maxChamber = chambers[i];
+            }
+        }
+
+        List<PerlinNoiseArea> chamberAreas = new List<PerlinNoiseArea> (maxChamber.GetChamberAreas());
+        while(chamberAreas.Count > 0)
+        {
+            int index = Random.Range(0, chamberAreas.Count);
+            if (chamberAreas[index].maxRadius >= minRadius && chamberAreas[index].maxRadius <= minRadius + 4) return chamberAreas[index].pos;
+            chamberAreas.RemoveAt(index);
+        }
+        return new HoneycombPos(-1, -1);
     }
 
     int[,] map;
@@ -148,6 +171,7 @@ public class PerlineNoiseVoid : MapVoid
                     noiseChamber.SetNodes(ref hexDepths,nodes);
                     chamberID++;
                     Debug.Log($"ChamberID: {chamberID - 1} size: {chamberSize}");
+
                 }
                 else if(!visited[x, y])
                 {
@@ -184,13 +208,15 @@ public class PerlineNoiseVoid : MapVoid
         if (displayHexDepthMap)
         {
             float[,] pathHexDepthMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
-            float[,] pathHexMinDeltaMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
-            float[,] chamberHexDepthMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
+            //float[,] pathHexMinDeltaMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
+            //float[,] chamberHexDepthMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
             float[,] chamberHexMinDepthMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
             float[,] sourceHexMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
             float[,] maxSourceHexMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
             float[,] chamberAreaMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
+            float[,] chamberPathRadiusMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
             float[,] chamberRadiusAreaMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
+            float[,] chamberAreaIndexMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
             for (int y = hexDepths.GetLength(1) - 1; y >= 0; y--)
             {
                 for (int x = 0; x < hexDepths.GetLength(0); x++)
@@ -212,44 +238,50 @@ public class PerlineNoiseVoid : MapVoid
 
                     if(depthMap[x,y] == 0)
                     {
-                        if (hexDepths[x, y].GetMinPathDelta(pathWidth)) pathHexMinDeltaMap[x, y] = 0f;
-                        else pathHexMinDeltaMap[x, y] = 1f;
+                        //if (hexDepths[x, y].GetMinPathDelta(pathWidth)) pathHexMinDeltaMap[x, y] = 0f;
+                        //else pathHexMinDeltaMap[x, y] = 1f;
 
                         if (chamberIDMap[x, y] == 0) Debug.LogWarning($"chamberIDMap error: ({x},{y}) visited: {visited[x,y]} in_frontier: {in_frontier[x,y]}");
                         else
                         {
-                            chamberHexDepthMap[x, y] = chambers[chamberIDMap[x, y] - 1].GetChamberDepth(x, y);
+                            //chamberHexDepthMap[x, y] = chambers[chamberIDMap[x, y] - 1].GetChamberDepth(x, y);
                             chamberHexMinDepthMap[x, y] = chambers[chamberIDMap[x, y] - 1].GetChamberMinDepth(x, y);
                             if (chambers[chamberIDMap[x, y] - 1].GetSource(x, y)) sourceHexMap[x, y] = chambers[chamberIDMap[x, y] - 1].GetChamberMinDepth(x, y);
                             else sourceHexMap[x, y] = 0;
                             if (chambers[chamberIDMap[x, y] - 1].GetMaxSource(x, y)) maxSourceHexMap[x, y] = chambers[chamberIDMap[x, y] - 1].GetChamberMinDepth(x, y);
                             else maxSourceHexMap[x, y] = 0;
-                            chamberAreaMap[x, y] = chambers[chamberIDMap[x, y] - 1].GetChamberHeatVal(x, y);
-                            chamberRadiusAreaMap[x, y] = chambers[chamberIDMap[x, y] - 1].GetChamberAreaRadiusVal(x, y);
+                            chamberAreaMap[x, y] = chambers[chamberIDMap[x, y] - 1].GetChamberIndexHeatVal(x, y);
+                            chamberPathRadiusMap[x, y] = chambers[chamberIDMap[x, y] - 1].GetChamberPathRadiusHeatVal(x, y);
+                            chamberRadiusAreaMap[x, y] = chambers[chamberIDMap[x, y] - 1].GetChamberAreaRadiusHeatVal(x, y);
+                            chamberAreaIndexMap[x, y] = chambers[chamberIDMap[x, y] - 1].GetChamberAreaMergedIndexHeatVal(x, y);
                         }
                         
                     }
                     else
                     {
-                        pathHexMinDeltaMap[x,y] = pathHexDepthMap[x, y];
-                        chamberHexDepthMap[x, y] = pathHexDepthMap[x, y];
+                        //pathHexMinDeltaMap[x,y] = pathHexDepthMap[x, y];
+                        //chamberHexDepthMap[x, y] = pathHexDepthMap[x, y];
                         chamberHexMinDepthMap[x, y] = pathHexDepthMap[x, y];
                         sourceHexMap[x,y] = pathHexDepthMap[x, y];
                         maxSourceHexMap[x, y] = pathHexDepthMap[x, y];
                         chamberAreaMap[x,y] = pathHexDepthMap[x, y];
+                        chamberPathRadiusMap[x, y] = pathHexDepthMap[x, y];
                         chamberRadiusAreaMap[x, y] = pathHexDepthMap[x, y];
+                        chamberAreaIndexMap[x, y] = pathHexDepthMap[x, y];
                     }
                 }
                 
             }
             MiniMap.singleton.AddHeatMap(pathHexDepthMap);
-            MiniMap.singleton.AddHeatMap(pathHexMinDeltaMap);
+            //MiniMap.singleton.AddHeatMap(pathHexMinDeltaMap);
             //MiniMap.singleton.AddHeatMap(chamberHexDepthMap);
             MiniMap.singleton.AddHeatMap(chamberHexMinDepthMap);
             MiniMap.singleton.AddHeatMap(sourceHexMap);
             MiniMap.singleton.AddHeatMap(maxSourceHexMap);
             MiniMap.singleton.AddHeatMap(chamberAreaMap);
+            MiniMap.singleton.AddHeatMap(chamberPathRadiusMap);
             MiniMap.singleton.AddHeatMap(chamberRadiusAreaMap);
+            MiniMap.singleton.AddHeatMap(chamberAreaIndexMap);
         }
 
         Debug.Log($"FindChamber display hexDepth Path took {Utility.Utility.GetTime() - startTime} seconds.");

@@ -84,25 +84,28 @@ public class MapGenerator : MonoBehaviour
         PerlineNoiseVoid perlineNoiseVoid = new PerlineNoiseVoid(perlinNoise, mapWidth, mapHeight);
         while (perlineNoiseVoid.generating) yield return null;
 
-        if (false)
+        if (true)
         {
             System.Random random = new System.Random(perlinNoise.seed);
             //Added player spawn point
-            int spawnPointX = random.Next(0, mapWidth);
-            int spawnPointY = random.Next(0, mapHeight);
-            PlayerSpawn = CreatePlayerSpawn(PortalPrefab, player.position);
+            HoneycombPos playerHexSpawn = perlineNoiseVoid.GetAreaPos(3);
+            PlayerSpawn = CreatePlayerSpawn(PortalPrefab, Utility.Honeycomb.HoneycombGridToWorldPostion(playerHexSpawn));
             player.position = PlayerSpawn.Chamber.locations[0];
 
-            Exit = CreateExitTunnel(PortalPrefab, Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(200, 200)));
+            HoneycombPos exitHexPos = perlineNoiseVoid.GetAreaPos(8);
+            Exit = CreateExitTunnel(PortalPrefab, Utility.Honeycomb.HoneycombGridToWorldPostion(exitHexPos));
             ExitTunnel.position = Exit.Chamber.Location;
 
             //create snake Chamber
-            Vector2 snakeChamberLoc = Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(150, 80));
+            HoneycombPos pillapillarHexPos = perlineNoiseVoid.GetAreaPos(10);
+            Vector2 snakeChamberLoc = Utility.Honeycomb.HoneycombGridToWorldPostion(pillapillarHexPos);
             CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc);
 
-            CreateSpiderNest(Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(75, 105)));
+            HoneycombPos SpiderNestHexPos = perlineNoiseVoid.GetAreaPos(10);
+            CreateSpiderNest(Utility.Honeycomb.HoneycombGridToWorldPostion(SpiderNestHexPos));
             CreateAntFarm(Utility.Honeycomb.WorldPointToHoneycombGrid(AntSquad.position));
 
+            Debug.Log($"pillapillarHexPos: {pillapillarHexPos} | spiderNestHexPos: {SpiderNestHexPos}");
             //createRandomMap(player,10);
         }
 

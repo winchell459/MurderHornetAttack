@@ -49,6 +49,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -71,7 +72,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 213352591
-  m_SortingLayer: 2
+  m_SortingLayer: -1
   m_SortingOrder: 100
   m_Sprite: {fileID: 7768066593250263288, guid: 995b81cd5f988284f90cec5b261d5df1,
     type: 3}
@@ -137,6 +138,7 @@ MonoBehaviour:
   CollisionDamage: 10
   Health: 5
   MaxHealth: 5
+  CollisionForce: {x: 0, y: 0}
   InsectPrefab: {fileID: 0}
   Head: {fileID: 0}
   Tail: {fileID: 0}
@@ -148,7 +150,7 @@ MonoBehaviour:
   SnakeLinkPrefab: {fileID: 2010293437201622713}
   SpawnRate: 3
   SnakeSpacing: 1
-  AttackRadius: 5
+  AttackRadius: 12
   PathType: 0
   MyPath:
   - Distance: 9
