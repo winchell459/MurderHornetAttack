@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class HoneycombPos 
 {
+    public static HoneycombPos nullHex { get { return GetNullHex(); } }
+
+    public static HoneycombPos _nullHex;
+    public bool isNull { get { return _isNull; } }
+    private bool _isNull = false;
     public int x;
     public int y;
     public Vector2 vector2 { get { return new Vector2(x, y); } }
@@ -13,6 +18,10 @@ public class HoneycombPos
     {
         this.x = x;
         this.y = y;
+    }
+    public HoneycombPos(bool isNull)
+    {
+        _isNull = isNull;
     }
     public static HoneycombPos operator +(HoneycombPos a, HoneycombPos b) => new HoneycombPos(a.x + b.x, a.y + b.y);
     public static HoneycombPos operator -(HoneycombPos a, HoneycombPos b) => new HoneycombPos(a.x - b.x, a.y - b.y);
@@ -92,5 +101,11 @@ public class HoneycombPos
         return "[" + x + ", " + y + "]";
     }
 
-
+    private static bool nullHexSet = false;
+    public static HoneycombPos GetNullHex()
+    {
+        if (!nullHexSet) _nullHex = new HoneycombPos(true);
+        nullHexSet = true;
+        return _nullHex;
+    }
 }

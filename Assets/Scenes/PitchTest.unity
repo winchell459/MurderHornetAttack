@@ -15718,7 +15718,7 @@ MonoBehaviour:
     type: 3}
   AntSquad: {fileID: 1696449734}
   perlinNoise: {fileID: 1681636334}
-  generationType: 1
+  generationType: 2
   generating: 0
 --- !u!4 &1660297123
 Transform:
@@ -17971,6 +17971,9 @@ MonoBehaviour:
   - {fileID: 998032035}
   - {fileID: 70041852}
   - {fileID: 2044058839}
+  - {fileID: 1548257926}
+  - {fileID: 103051054}
+  - {fileID: 1093351599}
 --- !u!4 &1884620411
 Transform:
   m_ObjectHideFlags: 0

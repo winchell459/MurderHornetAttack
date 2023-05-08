@@ -145,12 +145,12 @@ MonoBehaviour:
   Target: {x: 0, y: 0}
   Path: []
   TargetThreshold: 0.01
-  Velocity: 2
+  Velocity: 5
   headIndex: 0
   SnakeLinkPrefab: {fileID: 2010293437201622713}
   SpawnRate: 3
   SnakeSpacing: 1
-  AttackRadius: 12
+  AttackRadius: 15
   PathType: 0
   MyPath:
   - Distance: 9

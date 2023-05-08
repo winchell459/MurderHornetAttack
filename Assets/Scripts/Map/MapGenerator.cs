@@ -22,7 +22,7 @@ public class MapGenerator : MonoBehaviour
 
 
     public PerlinNoise perlinNoise;
-    public enum GenerationTypes { randomVoids, perlinNoise}
+    public enum GenerationTypes { randomVoids, perlinNoise, pillapillarPit}
     public GenerationTypes generationType;
 
     public bool generating = false;
@@ -42,6 +42,9 @@ public class MapGenerator : MonoBehaviour
         {
             StartCoroutine(CreatePerlinNoiseMap(Player));
             while (perlinNoiseGenerating) yield return null;
+        }else if(generationType == GenerationTypes.pillapillarPit)
+        {
+            createPillapillarPit(Player, 1);
         }
 
 
@@ -116,7 +119,42 @@ public class MapGenerator : MonoBehaviour
         Map.StaticMap.AddVoid(mapVoids);
         perlinNoiseGenerating = false;
     }
-    
+
+    private void createPillapillarPit(Transform Player, float voidCount)
+    {
+
+        newVoids.Clear();
+
+        PlayerSpawn = CreatePlayerSpawn(PortalPrefab, Player.position);
+        Player.position = PlayerSpawn.Chamber.locations[0];
+
+        Map map = Map.StaticMap;
+
+
+        //create snake Chamber
+        Vector2 snakeChamberLoc = Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(150, 80));
+        CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc);
+
+
+        //Exit = CreateExitTunnel(PortalPrefab, Player.position);
+        Exit = CreateExitTunnel(PortalPrefab, Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(200, 200)));
+        ExitTunnel.position = Exit.Chamber.Location;
+
+
+
+        //connect chambers
+        connectChambers(newVoids);
+
+        map.AddVoid(newVoids);
+
+        mapVoids = newVoids;
+        //Debug.Log("void wall count: " + newVoids[newVoids.Count - 1].GetVoidWalls().Count);
+
+
+
+
+    }
+
     private void createRandomMap(Transform Player, float voidCount)
     {
 
