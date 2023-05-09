@@ -6,6 +6,8 @@ public class PlayerHandler : MonoBehaviour
 {
     public static int BeesMurderedCount;
     public static int HornetMurderedCount;
+
+    public int eggCount = 0, flowerCount = 0, royalJellyCount = 0;
     public int MaxHealth = 50;
     public int MaxShot = 5;
     private int maxShotBuff;
@@ -96,6 +98,20 @@ public class PlayerHandler : MonoBehaviour
     {
         ResetBeesMurderedCount();
         ResetHornetMurderedCount();
+    }
+
+    public void AddEggs(int count)
+    {
+        eggCount += count;
+    }
+
+    public void AddFlowers(int count)
+    {
+        flowerCount += count;
+    }
+    public void AddRoyalJelly(int count)
+    {
+        royalJellyCount += count;
     }
 
     private void Update()

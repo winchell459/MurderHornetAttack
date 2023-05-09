@@ -46,5 +46,6 @@ MonoBehaviour:
   inChamber: 0
   CirclePrefab: {fileID: 7322068740001338593, guid: 5e0fbc5517fc73f48b18baed86174330,
     type: 3}
-  EnemyPrefab: {fileID: 2010293437201622713, guid: 0b283abda00c04e44b2914c947b99923,
+  EnemyPrefab: {fileID: 6066867041102385077, guid: f6cce71796d6bdc418067461c18a6bb1,
     type: 3}
+  triggerType: 2

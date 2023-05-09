@@ -13,6 +13,7 @@ public class LevelHandler : MonoBehaviour
 
     public Text PlayerLoc, SpawnLoc, EndLoc;
     public Text BeesMurderedText, HornetMurderedText;
+    public Text eggCountText, flowerCountText, royalJellyCountText;
     public Text HealthMeterText;
     public RawImage HealthMeterBar;
 
@@ -58,7 +59,7 @@ public class LevelHandler : MonoBehaviour
         while (generator.generating) yield return null;
 
         Map.StaticMap.Display = true;
-
+        Cam.SetCameraTarget(Player);
         ph = FindObjectOfType<PlayerHandler>();
 
         displayLocation(Utility.Honeycomb.WorldPointToHoneycombGrid(generator.Exit.transform.position).vector2, EndLoc);
@@ -116,7 +117,7 @@ public class LevelHandler : MonoBehaviour
     public void EnemyDeath(GameObject enemy)
     {
         int dropCheck = 8;
-        if (enemy.GetComponent<SnakeController>()) dropCheck = 2;
+        if (enemy.GetComponent<PillapillarController>()) dropCheck = 2;
         if (enemy.GetComponent<SpiderEnemy>()) dropCheck = 0;
         if(Random.Range(0,10) > dropCheck)
         {
@@ -221,6 +222,10 @@ public class LevelHandler : MonoBehaviour
             PlasmaPowerText.text = (int)ph.GetPlasmaPower() + " " + (int)ph.GetPlasmaPowerBuffTime();
             PlasmaChargeRateText.text = Utility.Utility.FormatFloat(ph.GetPlasmaChargeRate(),2) + " " + (int)ph.GetPlasmaChargeRateBuffTime();
             PlasmaChargeCapacityText.text = ph.GetMaxShot() + " " + (int)ph.GetMaxShotBuffTime();
+
+            eggCountText.text = ph.eggCount.ToString();
+            flowerCountText.text = ph.flowerCount.ToString();
+            royalJellyCountText.text = ph.royalJellyCount.ToString();
         }
         
     }
@@ -229,6 +234,15 @@ public class LevelHandler : MonoBehaviour
     {
         PlayerHandler.BeesMurderedCount += BeesDied;
         PlayerHandler.HornetMurderedCount += HornetDied;
+        UpdatePlayerStats();
+    }
+
+    public void CollectionsUpdated(int eggCount, int flowerCount, int royalJellyCount)
+    {
+        PlayerHandler ph = FindObjectOfType<PlayerHandler>();
+        ph.AddEggs(eggCount);
+        ph.AddFlowers(flowerCount);
+        ph.AddRoyalJelly(royalJellyCount);
         UpdatePlayerStats();
     }
 

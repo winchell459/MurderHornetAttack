@@ -75,6 +75,8 @@ public class SpiderEnemy : Insect
     public float AttackAngle = 3f;
     public float TargetAngle = 25f;
 
+    public float VulnerableAngle = 0.5f; // 1 is direct hit behind, 0 is side hit, negative value is forward
+
     private void UpdateAngle()
     {
         Vector2 targetDir = playerLocation - transform.position;
@@ -197,5 +199,12 @@ public class SpiderEnemy : Insect
             FindObjectOfType<LevelHandler>().EnemyDeath(gameObject);
             Destroy(gameObject);
         }
+    }
+
+    public override void TakeDamage(float Damage, Vector2 KickBackVelocity)
+    {
+        Debug.Log($"spider attacked angle: {Vector2.Dot(transform.up, KickBackVelocity.normalized)}");
+        if (Vector2.Dot(transform.up, KickBackVelocity.normalized) > VulnerableAngle) Damage *= 5;
+        TakeDamage(Damage);
     }
 }

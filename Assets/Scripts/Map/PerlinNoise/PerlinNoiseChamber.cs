@@ -110,12 +110,12 @@ public class PerlinNoiseChamber /*: MapChamber*/
         float startTime = Utility.Utility.GetTime();
         
         SetDepths();
-        //Debug.Log($"FindChamberAreas SetDepths() {Utility.Utility.GetTime() - startTime} seconds.");
+        Debug.Log($"FindChamberAreas SetDepths() {Utility.Utility.GetTime() - startTime} seconds.");
 
         FindSourceHexDepthRadius();
 
-        //Debug.Log($"FindChamberAreas FindSourceHexDepthRadius() {Utility.Utility.GetTime() - startTime} seconds.");
-        //startTime = Utility.Utility.GetTime();
+        Debug.Log($"FindChamberAreas FindSourceHexDepthRadius() {Utility.Utility.GetTime() - startTime} seconds.");
+        startTime = Utility.Utility.GetTime();
 
         chamberAreaID = new int[hexDepths.GetLength(0), hexDepths.GetLength(1)];
         chamberAreaIDs = new List<int>[hexDepths.GetLength(0), hexDepths.GetLength(1)];
@@ -228,8 +228,8 @@ public class PerlinNoiseChamber /*: MapChamber*/
             }
         }
 
-        //Debug.Log($"FindChamberAreas finised {Utility.Utility.GetTime() - startTime} seconds.");
-        //startTime = Utility.Utility.GetTime();
+        Debug.Log($"FindChamberAreas finised {Utility.Utility.GetTime() - startTime} seconds.");
+        startTime = Utility.Utility.GetTime();
     }
     public static int[] randomHexSet= {0,1,2,3,4,5};
     public static System.Random random = new System.Random(0);

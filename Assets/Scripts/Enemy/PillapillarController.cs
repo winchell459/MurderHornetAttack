@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SnakeController : Insect
+public class PillapillarController : Insect
 {
-    public SnakeController Head, Tail;
+    public PillapillarController Head, Tail;
+    public PillapillarEgg egg;
     public Vector2 Target;
     public List<Vector2> Path = new List<Vector2>();
     public float TargetThreshold = 0.01f;
@@ -117,7 +118,11 @@ public class SnakeController : Insect
         if (Tail) Tail.spawnTail();
         else
         {
-            SnakeController tail = Instantiate(FindObjectOfType<MapGenerator>().SnakePrefab, transform.position - (-transform.right.normalized)*Time.deltaTime, Quaternion.identity).GetComponent<SnakeController>();
+            PillapillarController tail = Instantiate(FindObjectOfType<MapGenerator>().SnakePrefab, transform.position - (-transform.right.normalized)*Time.deltaTime, Quaternion.identity).GetComponent<PillapillarController>();
+
+            egg.PillapillarBornt(tail);
+            
+
             Tail = tail;
             tail.Head = this;
            
@@ -263,7 +268,7 @@ public class SnakeController : Insect
     private List<HoneycombPos> GetPillapillarsPos()
     {
         List<HoneycombPos> pillapillarPos = new List<HoneycombPos>();
-        foreach (SnakeController pillapillar in FindObjectsOfType<SnakeController>())
+        foreach (PillapillarController pillapillar in FindObjectsOfType<PillapillarController>())
         {
             pillapillarPos.Add(Utility.Honeycomb.WorldPointToHoneycombGrid(pillapillar.transform.position));
         }
@@ -413,17 +418,20 @@ public class SnakeController : Insect
         
         while (Tail)
         {
-            SnakeController tail = Tail.Tail;
+            PillapillarController tail = Tail.Tail;
+            egg.PillapillarSuicide(Tail);
             Destroy(Tail.gameObject);
             Tail = tail;
         }
         while (Head)
         {
-            SnakeController head = Head.Head;
+            PillapillarController head = Head.Head;
+            egg.PillapillarSuicide(Head);
             Destroy(Head.gameObject);
             Head = head;
         }
         Debug.Log("Destroy Snake");
+        egg.PillapillarSuicide(this);
         Destroy(gameObject);
     }
 
@@ -439,14 +447,18 @@ public class SnakeController : Insect
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.GetComponent<SnakeController>())
+        if (collision.GetComponent<PillapillarController>())
         {
-            SnakeController link = collision.GetComponent<SnakeController>();
+            PillapillarController link = collision.GetComponent<PillapillarController>();
 
             if(link != Head && link != Tail && Utility.Honeycomb.WorldPointToHoneycombGrid(collision.transform.position) == Utility.Honeycomb.WorldPointToHoneycombGrid(transform.position))
             {
                 if (!link.Head) link.DestroySnake();
-                else DestroyLink();
+                else
+                {
+                    egg.PillapillarSuicide(this);
+                    DestroyLink();
+                }
             }
                 //DestroySnake();
         }
@@ -459,6 +471,7 @@ public class SnakeController : Insect
         if (Health <= 0)
         {
             FindObjectOfType<LevelHandler>().EnemyDeath(gameObject);
+            egg.PillapillarKilled(this);
             DestroyLink();
         }
     }

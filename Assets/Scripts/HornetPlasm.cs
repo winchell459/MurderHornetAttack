@@ -40,7 +40,7 @@ public class HornetPlasm : MonoBehaviour
             Insect collider = collision.transform.GetComponent<Insect>();
 
             
-            collider.TakeDamage(Damage);
+            collider.TakeDamage(Damage, GetComponent<Rigidbody2D>().velocity);
             FindObjectOfType<LevelHandler>().UpdatePlayerStats(1, 0);
             Destroy(gameObject);
         }
