@@ -145,7 +145,7 @@ MonoBehaviour:
   Target: {x: 0, y: 0}
   Path: []
   TargetThreshold: 0.01
-  Velocity: 5
+  Velocity: 3
   headIndex: 0
   SnakeLinkPrefab: {fileID: 2010293437201622713}
   SpawnRate: 3

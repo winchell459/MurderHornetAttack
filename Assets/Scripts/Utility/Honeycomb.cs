@@ -82,21 +82,23 @@ namespace Utility
             }
             return path;
         }
+       
 
-        public static MapHoneycomb GetHoneycombFreePath(HoneycombPos startHex, HoneycombDir hexDir, int hexDistance)
+        public static MapHoneycomb GetHoneycombFreePath(HoneycombPos startHex, HoneycombDir hexDir, int hexDistance, List<HoneycombPos> obstructions)
         {
             List<MapHoneycomb> path = GetHoneycombPath(startHex, hexDir, hexDistance);
             MapHoneycomb newTarget = null;
             foreach (MapHoneycomb honeycomb in path)
             {
                 //Debug.Log(honeycomb.position);
-                if ((!honeycomb.display || honeycomb.isFloor) && honeycomb.LocationType == HoneycombTypes.Variety.Chamber)
+                if ((!honeycomb.display || honeycomb.isFloor) && honeycomb.LocationType == HoneycombTypes.Variety.Chamber && !obstructions.Contains(WorldPointToHoneycombGrid(honeycomb.position)))
                 {
                     newTarget = honeycomb;
 
                 }
                 else
                 {
+                    if (obstructions.Contains(WorldPointToHoneycombGrid(honeycomb.position))) Debug.Log("Collision with pillapillar avoided");
                     //Debug.Log(honeycomb.LocationType);
                     break;
                 }
