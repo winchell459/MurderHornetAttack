@@ -20,7 +20,8 @@ public class MapHoneycomb
     private bool isLargeHoneycomb;
     public bool isFloor;
 
-    
+    public float health = 10;
+    public float beeuildingHealth = 30;
     public HoneycombTypes.Variety LocationType;
 
     
@@ -75,6 +76,7 @@ public class MapHoneycomb
             }
             else if (beeuilding)
             {
+                health = beeuildingHealth;
                 honeycomb = Map.GetBeeCity();
             }
             else if (isLargeLoc)
@@ -175,7 +177,7 @@ public class MapHoneycomb
 
     public void DamageHoneycomb(int depth)
     {
-        if (display && depth < this.depth)
+        if (!beeuilding && display && depth < this.depth)
         {
             HideHoneycomb();
             SetDepth(depth);

@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6656535895378994360}
   - component: {fileID: 6656535895378994363}
-  - component: {fileID: -3707886041730238715}
   m_Layer: 0
   m_Name: BeeCity_Top
   m_TagString: Untagged
@@ -50,6 +49,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -304884675
-  m_SortingLayer: 4
+  m_SortingLayer: -4
   m_SortingOrder: 50
   m_Sprite: {fileID: -2945215489366195241, guid: 631857418fde7ff41a8b21eb3927e6f0,
     type: 3}
@@ -86,25 +86,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-3707886041730238715
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6656535895378994361}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c83ce5b567d748c48b6cbf63f285bd70, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LocationType: 0
-  TowerLayers:
-  - {fileID: 6656535895378994360}
-  - {fileID: 6656535895554712912}
-  - {fileID: 6656535896039245472}
-  - {fileID: 6656535897237007532}
-  HiveCastle: 0
 --- !u!1 &6656535895554712913
 GameObject:
   m_ObjectHideFlags: 0
@@ -151,6 +132,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -173,7 +155,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -304884675
-  m_SortingLayer: 4
+  m_SortingLayer: -4
   m_SortingOrder: 35
   m_Sprite: {fileID: 7018147405821456804, guid: 631857418fde7ff41a8b21eb3927e6f0,
     type: 3}
@@ -233,6 +215,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -255,7 +238,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -304884675
-  m_SortingLayer: 4
+  m_SortingLayer: -4
   m_SortingOrder: 40
   m_Sprite: {fileID: -2945215489366195241, guid: 631857418fde7ff41a8b21eb3927e6f0,
     type: 3}
@@ -344,7 +327,7 @@ PrefabInstance:
     - target: {fileID: 6245906290856175831, guid: 879f3cdd40c60f04db345861fcce6a34,
         type: 3}
       propertyPath: m_SortingLayer
-      value: 4
+      value: -4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 879f3cdd40c60f04db345861fcce6a34, type: 3}

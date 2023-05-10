@@ -11401,6 +11401,8 @@ MonoBehaviour:
   Cam: {fileID: 516643014}
   EnemyDropPrefab: {fileID: 7903702654899577405, guid: 8052195b8c5247c4193a991b99f19a5f,
     type: 3}
+  towerDropPrefab: {fileID: 1174156814334646262, guid: 2c2238df2713196459b3d66d8a7a2d57,
+    type: 3}
 --- !u!4 &1047031842
 Transform:
   m_ObjectHideFlags: 0
@@ -14845,6 +14847,9 @@ MonoBehaviour:
   - {fileID: 2717590612479421383}
   - {fileID: 820326662}
   HiveCastle: 0
+  enemyPrefab: {fileID: 0}
+  spawnDistance: 10
+  spawnRate: 5
 --- !u!212 &1441611710
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -14948,6 +14953,9 @@ MonoBehaviour:
   - {fileID: 2717590612479421383}
   - {fileID: 1012538939}
   HiveCastle: 0
+  enemyPrefab: {fileID: 0}
+  spawnDistance: 10
+  spawnRate: 5
 --- !u!212 &1460721889
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -15881,6 +15889,9 @@ MonoBehaviour:
   - {fileID: 2717590612479421383}
   - {fileID: 1437569656}
   HiveCastle: 0
+  enemyPrefab: {fileID: 0}
+  spawnDistance: 10
+  spawnRate: 5
 --- !u!212 &1597358263
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -21329,6 +21340,9 @@ MonoBehaviour:
   LocationType: 0
   TowerLayers: []
   HiveCastle: 1
+  enemyPrefab: {fileID: 0}
+  spawnDistance: 10
+  spawnRate: 5
 --- !u!212 &2717590611018990024
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -21841,6 +21855,9 @@ MonoBehaviour:
   - {fileID: 2717590612479421383}
   - {fileID: 2717590611018990027}
   HiveCastle: 0
+  enemyPrefab: {fileID: 0}
+  spawnDistance: 10
+  spawnRate: 5
 --- !u!1001 &5648150784126273079
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22004,6 +22021,80 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8052195b8c5247c4193a991b99f19a5f, type: 3}
+--- !u!1001 &7472597924021197255
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1174156814334646262, guid: 2c2238df2713196459b3d66d8a7a2d57,
+        type: 3}
+      propertyPath: m_Name
+      value: Royal Jelly
+      objectReference: {fileID: 0}
+    - target: {fileID: 1174156814334646262, guid: 2c2238df2713196459b3d66d8a7a2d57,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2254479699443130694, guid: 2c2238df2713196459b3d66d8a7a2d57,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 6.142644
+      objectReference: {fileID: 0}
+    - target: {fileID: 2254479699443130694, guid: 2c2238df2713196459b3d66d8a7a2d57,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 65.19573
+      objectReference: {fileID: 0}
+    - target: {fileID: 2254479699443130694, guid: 2c2238df2713196459b3d66d8a7a2d57,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2254479699443130694, guid: 2c2238df2713196459b3d66d8a7a2d57,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2254479699443130694, guid: 2c2238df2713196459b3d66d8a7a2d57,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2254479699443130694, guid: 2c2238df2713196459b3d66d8a7a2d57,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2254479699443130694, guid: 2c2238df2713196459b3d66d8a7a2d57,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2254479699443130694, guid: 2c2238df2713196459b3d66d8a7a2d57,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 46
+      objectReference: {fileID: 0}
+    - target: {fileID: 2254479699443130694, guid: 2c2238df2713196459b3d66d8a7a2d57,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2254479699443130694, guid: 2c2238df2713196459b3d66d8a7a2d57,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2254479699443130694, guid: 2c2238df2713196459b3d66d8a7a2d57,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2c2238df2713196459b3d66d8a7a2d57, type: 3}
 --- !u!1001 &8205679416040183298
 PrefabInstance:
   m_ObjectHideFlags: 0

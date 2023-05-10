@@ -7,14 +7,37 @@ public class HoneycombTower : Honeycomb
     public Transform[] TowerLayers;
     private Transform[] layers;
     public bool HiveCastle = false;
+    public GameObject enemyPrefab;
+    public float spawnDistance = 10;
+    public float spawnRate = 5; //spawn enemy every spawnRate seconds
+    private float lastSpawn;
 
     private void Start()
     {
+        lastSpawn = Time.time;
         if (HiveCastle) SetupBeeTower();
+
+    }
+
+    private void Update()
+    {
+        if(FindObjectOfType<HornetController>() && Vector2.Distance(FindObjectOfType<HornetController>().transform.position, transform.position) <= spawnDistance && lastSpawn + spawnRate < Time.time)
+        {
+            Debug.Log("HoneycombTower Attacks");
+            Instantiate(/*honeyGrid.GetEnemyPrefab()*/enemyPrefab, transform.position, Quaternion.identity);
+            lastSpawn = Time.time;
+        }
     }
     public override void DamageHoneycomb(float damage)
     {
-        throw new System.NotImplementedException();
+        if (honeyGrid.health <= 0) return;
+        honeyGrid.health -= damage;
+        if(honeyGrid.health <= 0)
+        {
+            FindObjectOfType<LevelHandler>().BeeuildingDestroyed(transform.position);
+            honeyGrid.HideHoneycomb();
+            honeyGrid.SetDepth(0);
+        }
     }
 
     public override void DestroyHoneycomb()

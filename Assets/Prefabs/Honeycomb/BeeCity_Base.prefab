@@ -46,6 +46,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -68,7 +69,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -304884675
-  m_SortingLayer: 4
+  m_SortingLayer: -4
   m_SortingOrder: 40
   m_Sprite: {fileID: -2945215489366195241, guid: 631857418fde7ff41a8b21eb3927e6f0,
     type: 3}
@@ -129,6 +130,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -151,7 +153,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -304884675
-  m_SortingLayer: 4
+  m_SortingLayer: -4
   m_SortingOrder: 50
   m_Sprite: {fileID: -2945215489366195241, guid: 631857418fde7ff41a8b21eb3927e6f0,
     type: 3}
@@ -172,7 +174,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2717590611057914025}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c83ce5b567d748c48b6cbf63f285bd70, type: 3}
   m_Name: 
@@ -184,6 +186,9 @@ MonoBehaviour:
   - {fileID: 2717590610398073520}
   - {fileID: 2717590611892517052}
   HiveCastle: 0
+  enemyPrefab: {fileID: 0}
+  spawnDistance: 10
+  spawnRate: 5
 --- !u!1 &2717590611419230529
 GameObject:
   m_ObjectHideFlags: 0
@@ -196,9 +201,10 @@ GameObject:
   - component: {fileID: 2717590611419230531}
   - component: {fileID: 1431635032215170423}
   - component: {fileID: 1379858776272445030}
+  - component: {fileID: -6153061077878492074}
   m_Layer: 0
   m_Name: BeeCity_Base
-  m_TagString: Untagged
+  m_TagString: Honeycomb
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -235,6 +241,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -257,7 +264,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -304884675
-  m_SortingLayer: 4
+  m_SortingLayer: -4
   m_SortingOrder: 35
   m_Sprite: {fileID: 7018147405821456804, guid: 631857418fde7ff41a8b21eb3927e6f0,
     type: 3}
@@ -290,6 +297,10 @@ MonoBehaviour:
   - {fileID: 2717590611892517052}
   - {fileID: 2717590611057914024}
   HiveCastle: 0
+  enemyPrefab: {fileID: 1301808763863226240, guid: a84a7fa051b764d6f9e5e2e8748f3f76,
+    type: 3}
+  spawnDistance: 10
+  spawnRate: 5
 --- !u!58 &1379858776272445030
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -301,6 +312,22 @@ CircleCollider2D:
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.6
+--- !u!58 &-6153061077878492074
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2717590611419230529}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -352,6 +379,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -374,7 +402,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -304884675
-  m_SortingLayer: 4
+  m_SortingLayer: -4
   m_SortingOrder: 45
   m_Sprite: {fileID: 7018147405821456804, guid: 631857418fde7ff41a8b21eb3927e6f0,
     type: 3}

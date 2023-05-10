@@ -114,6 +114,12 @@ public class LevelHandler : MonoBehaviour
         UpdatePlayerStats();
     }
 
+    public GameObject towerDropPrefab;
+    public void BeeuildingDestroyed(Vector2 towerPos)
+    {
+        Instantiate(towerDropPrefab, towerPos, Quaternion.identity);
+    }
+
     public void EnemyDeath(GameObject enemy)
     {
         int dropCheck = 8;
