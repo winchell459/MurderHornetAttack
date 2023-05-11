@@ -12,6 +12,8 @@ public class HoneycombTower : Honeycomb
     public float spawnRate = 5; //spawn enemy every spawnRate seconds
     private float lastSpawn;
 
+    private HornetController player;
+
     private void Start()
     {
         lastSpawn = Time.time;
@@ -21,7 +23,8 @@ public class HoneycombTower : Honeycomb
 
     private void Update()
     {
-        if(FindObjectOfType<HornetController>() && Vector2.Distance(FindObjectOfType<HornetController>().transform.position, transform.position) <= spawnDistance && lastSpawn + spawnRate < Time.time)
+        if (!player) player = FindObjectOfType<HornetController>();
+        if (lastSpawn + spawnRate < Time.time && player && Vector2.Distance(player.transform.position, transform.position) <= spawnDistance)
         {
             Debug.Log("HoneycombTower Attacks");
             Instantiate(/*honeyGrid.GetEnemyPrefab()*/enemyPrefab, transform.position, Quaternion.identity);
