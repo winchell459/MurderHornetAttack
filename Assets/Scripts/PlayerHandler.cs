@@ -114,15 +114,27 @@ public class PlayerHandler : MonoBehaviour
     }
     private void CompareBuffs(ref float newBuff, ref float newBuffTime, float currentBuff, float currentBuffRemaining)
     {
-        if ((newBuff > 1 && currentBuff < newBuff) || (newBuff < 1 && newBuff < currentBuff))
+        if (newBuff > 1 && currentBuff < newBuff) //replace currentBuff
         {
             float buffTotal = currentBuff * currentBuffRemaining;
             newBuffTime += buffTotal / newBuff;
-        }
-        else
+        }else if (newBuff < 1 && newBuff < currentBuff)//replace currentBuff
         {
-            float buffTotal = newBuff * newBuffTime;
-            newBuffTime = currentBuffRemaining + buffTotal / newBuff;
+            float buffTotal = currentBuffRemaining / currentBuff;
+            newBuffTime += buffTotal * newBuff;
+        }
+        else //add to currentBuffTime
+        {
+            if(newBuff < 1)
+            {
+                float buffTotal = newBuffTime / newBuff;
+                newBuffTime = currentBuffRemaining + buffTotal * currentBuff;
+            }
+            else
+            {
+                float buffTotal = newBuff * newBuffTime;
+                newBuffTime = currentBuffRemaining + buffTotal / currentBuff;
+            }
             newBuff = currentBuff;
         }
     }
