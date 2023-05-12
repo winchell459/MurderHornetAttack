@@ -7,22 +7,31 @@ public class PlayerHandler : MonoBehaviour
     public static int BeesMurderedCount;
     public static int HornetMurderedCount;
 
-    public int eggCount = 0, flowerCount = 0, royalJellyCount = 0;
-    public int MaxHealth = 50;
-    public int MaxShot = 5;
+    public static int eggCount = 0, flowerCount = 0, royalJellyCount = 0;
+
+    public int _maxHealth = 50;
+    public int MaxHealth { get { return _maxHealth + eggCount * 5; } }
+
+    // ------- Capacity ---------
+    public int _maxShot = 5;
+    public int MaxShot { get { return _maxShot + eggCount * 2; } }
     private int maxShotBuff;
     private float maxShotBuffTime;
     private float maxShotBuffStart;
 
     private HornetController player;
 
+    // ------- Charge Rate --------
+    public float _plasmaChargeRate = 1;
+    public float PlasmaChargeRate { get { return _plasmaChargeRate - 0.3f * flowerCount; } }
     private float lastPlasmaCharge = 0;
-    public float PlasmaChargeRate = 1;
     private float plasmaChargeRateBuff;
     private float plasmaChargeRateBuffTime;
     private float plasmaChargeRateBuffStart;
 
-    private float plasmaDamage = 1;
+    // ------- Power -----------
+    public float _plasmaDamage = 1;
+    private float plasmaDamage { get { return _plasmaDamage + 0.5f * royalJellyCount; } }
     private float plasmaDamageBuff;
     private float plasmaDamageBuffTime;
     private float plasmaDamageBuffStart;
@@ -47,7 +56,7 @@ public class PlayerHandler : MonoBehaviour
     }
     public int GetMaxShot()
     {
-        if (maxShotBuffStart + maxShotBuffTime > Time.fixedTime) return maxShotBuff;
+        if (maxShotBuffStart + maxShotBuffTime > Time.fixedTime) return maxShotBuff + MaxShot;
         else return MaxShot;
     }
     public bool SetMaxShotBuff(float maxShotBuff, float maxShotBuffTime)
@@ -70,7 +79,7 @@ public class PlayerHandler : MonoBehaviour
     }
     public float GetPlasmaChargeRate()
     {
-        if (plasmaChargeRateBuffStart + plasmaChargeRateBuffTime > Time.fixedTime) return plasmaChargeRateBuff;
+        if (plasmaChargeRateBuffStart + plasmaChargeRateBuffTime > Time.fixedTime) return plasmaChargeRateBuff * PlasmaChargeRate;
         else return PlasmaChargeRate;
     }
     public bool SetPlasmaChargeRateBuff(float chargeRate, float chargeRateTime)
@@ -94,7 +103,7 @@ public class PlayerHandler : MonoBehaviour
 
     public float GetPlasmaPower()
     {
-        if (plasmaDamageBuffStart + plasmaDamageBuffTime > Time.fixedTime) return plasmaDamageBuff;
+        if (plasmaDamageBuffStart + plasmaDamageBuffTime > Time.fixedTime) return plasmaDamageBuff + plasmaDamage;
         else return plasmaDamage;
     }
     public bool SetPlasmaPowerBuff(float DamageBuff, float DamageBuffTime)
@@ -144,18 +153,21 @@ public class PlayerHandler : MonoBehaviour
         return Mathf.Clamp(remainder, 0, remainder);
     }
 
-    public void ResetBeesMurderedCount()
+    public static void ResetBeesMurderedCount()
     {
         BeesMurderedCount = 0;
     }
-    public void ResetHornetMurderedCount()
+    public static void ResetHornetMurderedCount()
     {
         HornetMurderedCount = 0;
     }
-    public void ResetStats()
+    public static void ResetStats()
     {
         ResetBeesMurderedCount();
         ResetHornetMurderedCount();
+        eggCount = 0;
+        flowerCount = 0;
+        royalJellyCount = 0;
     }
 
     public void AddEggs(int count)

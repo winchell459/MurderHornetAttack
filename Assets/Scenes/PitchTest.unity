@@ -3183,7 +3183,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 40.7, y: 0}
-  m_SizeDelta: {x: 48.9, y: 30}
+  m_SizeDelta: {x: 82.11, y: 30}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &332348055
 MonoBehaviour:
@@ -5264,12 +5264,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52f8961c593c34eff84ebb297c6c631d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eggCount: 0
-  flowerCount: 0
-  royalJellyCount: 0
-  MaxHealth: 50
-  MaxShot: 5
-  PlasmaChargeRate: 1
+  _maxHealth: 50
+  _maxShot: 5
+  _plasmaChargeRate: 1
+  _plasmaDamage: 1
 --- !u!4 &457389717
 Transform:
   m_ObjectHideFlags: 0

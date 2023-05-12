@@ -232,9 +232,9 @@ public class LevelHandler : MonoBehaviour
             PlasmaChargeRateText.text = Utility.Utility.FormatFloat(ph.GetPlasmaChargeRate(),2) + " " + (int)ph.GetPlasmaChargeRateBuffTime();
             PlasmaChargeCapacityText.text = ph.GetMaxShot() + " " + (int)ph.GetMaxShotBuffTime();
 
-            eggCountText.text = ph.eggCount.ToString();
-            flowerCountText.text = ph.flowerCount.ToString();
-            royalJellyCountText.text = ph.royalJellyCount.ToString();
+            eggCountText.text = PlayerHandler.eggCount.ToString();
+            flowerCountText.text = PlayerHandler.flowerCount.ToString();
+            royalJellyCountText.text = PlayerHandler.royalJellyCount.ToString();
         }
         
     }
