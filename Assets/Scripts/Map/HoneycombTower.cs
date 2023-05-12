@@ -13,6 +13,7 @@ public class HoneycombTower : Honeycomb
     private float lastSpawn;
 
     private HornetController player;
+    private LevelHandler lh;
 
     private void Start()
     {
@@ -24,11 +25,16 @@ public class HoneycombTower : Honeycomb
     private void Update()
     {
         if (!player) player = FindObjectOfType<HornetController>();
+        if (!lh) lh = FindObjectOfType<LevelHandler>();
         if (lastSpawn + spawnRate < Time.time && player && Vector2.Distance(player.transform.position, transform.position) <= spawnDistance)
         {
-            Debug.Log("HoneycombTower Attacks");
-            Instantiate(/*honeyGrid.GetEnemyPrefab()*/enemyPrefab, transform.position, Quaternion.identity);
-            lastSpawn = Time.time;
+            if (lh.HoneycombTowerSpawnEnemy(honeyGrid))
+            {
+                Debug.Log("HoneycombTower Attacks");
+                Instantiate(/*honeyGrid.GetEnemyPrefab()*/enemyPrefab, transform.position, Quaternion.identity);
+                lastSpawn = Time.time;
+            }
+            
         }
     }
     public override void DamageHoneycomb(float damage)

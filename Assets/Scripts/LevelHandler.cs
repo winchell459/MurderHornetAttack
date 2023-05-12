@@ -84,6 +84,9 @@ public class LevelHandler : MonoBehaviour
             displayLocation(Utility.Honeycomb.WorldPointToHoneycombGrid(Player.position).vector2, PlayerLoc);
             displayLocation(Map.StaticMap.GetChunkIndex( Utility.Honeycomb.GetMapChunk(Player.position)), SpawnLoc);
             //Debug.Log(Utility.GetMapChunk(Player.position).ChunkIndex + " chunkOffset: " + Utility.GetMapChunk(Player.position).mapOffset);
+
+            //display player location on minimap
+            MiniMap.singleton.SetPlayerMarker(Utility.Honeycomb.WorldPointToHoneycombGrid(Player.position));
         }
         else
         {
@@ -284,5 +287,7 @@ public class LevelHandler : MonoBehaviour
         JoystickSensitivityInput.text = sensitivity.ToString();
     }
 
-    
+    public bool HoneycombTowerSpawnEnemy(MapHoneycomb tower) {
+        return true;
+    }
 }

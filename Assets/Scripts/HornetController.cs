@@ -34,25 +34,26 @@ public class HornetController : Insect
         //rb.velocity = new Vector2(0, ForwardSpeed);
 #if UNITY_IOS
         MobileControls = true;
+#else
+        SetMousePosition();
 #endif
     }
+    //Vector2 mouseScreenPosition;
+    float mousePosition;
+    private void SetMousePosition() { mousePosition = /*Camera.main.ScreenToWorldPoint(*/Input.GetAxis("Mouse X")/*)*/; }
 
+    private void OnDestroy()
+    {
+        if (Controls == ControlTypes.MouseControl) Cursor.lockState = CursorLockMode.None;
+    }
     // Update is called once per frame
     void FixedUpdate()
     {
         if(Controls == ControlTypes.MouseControl)
         {
-            //float mouseWorldXPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
-            //Vector2 mousePosition = new Vector2(mouseWorldXPos, transform.position.y);
-
-            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            //transform.position = Vector3.MoveTowards(transform.position, mousePosition, SideSpeed * Time.deltaTime);
-            Vector2 deltaMove = mousePosition - (Vector2)transform.position;
-            rb.AddForce(deltaMove * ForwardSpeed);
-            transform.up = Vector2.MoveTowards(transform.up, deltaMove, SideSpeed * Time.deltaTime);
-            //if (transform.position.x < mouseWorldXPos) HornetSprite.localScale = new Vector3(-1, 1, 1);
-            //else if(transform.position.x > mouseWorldXPos) HornetSprite.localScale = new Vector3(1, 1, 1);
-        }else if(Controls == ControlTypes.DirectKeyboard && !MobileControls)
+            //MouseMovementControl();
+        }
+        else if(Controls == ControlTypes.DirectKeyboard && !MobileControls)
         {
             float v = Input.GetAxis("Vertical");
             float h = Input.GetAxis("Horizontal");
@@ -101,14 +102,51 @@ public class HornetController : Insect
 
     }
 
+    private void MouseMovementControl()
+    {
+        bool rotation = true;
+        float sensitivity = 1.1f;
+        //float mouseWorldXPos = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
+        //Vector2 mousePosition = new Vector2(mouseWorldXPos, transform.position.y);
+
+        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+
+        //transform.position = Vector3.MoveTowards(transform.position, mousePosition, SideSpeed * Time.deltaTime);
+        Vector2 deltaMove = mousePosition - (Vector2)transform.position;
+        //Debug.Log($"deltaMove = mousePosition - (Vector2)transform.position : {mousePosition - (Vector2)transform.position}");
+        if (rotation)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            float deltaX = Input.GetAxis("Mouse X");
+            Debug.Log($"Mouse X: {Input.GetAxis("Mouse X")}");
+
+            float rotate = /*Mathf.Sign(deltaX) * deltaX **/ deltaX * sensitivity ;
+            Debug.Log($"rotate: {rotate}");
+            MotionControl(Input.GetAxis("Vertical"), rotate);
+        }
+        else
+        {
+            rb.AddForce(deltaMove * ForwardSpeed);
+            transform.up = Vector2.MoveTowards(transform.up, deltaMove, SideSpeed * Time.deltaTime);
+        }
+
+
+        SetMousePosition();
+    }
+
     private void Update()
     {
+        //Debug.Log($"Mouse X: {Input.GetAxis("Mouse X")}");
         if (Controls == ControlTypes.MouseControl)
         {
+            MouseMovementControl();
             if (Input.GetMouseButtonDown(0))
             {
-                GameObject plasm = Instantiate(HornetPlasmPrefab, transform.position, Quaternion.identity);
-                plasm.GetComponent<Rigidbody2D>().velocity = 40 * (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position).normalized;
+                //GameObject plasm = Instantiate(HornetPlasmPrefab, transform.position, Quaternion.identity);
+                //plasm.GetComponent<Rigidbody2D>().velocity = 40 * (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position).normalized;
+
+                FirePlasma();
             }
         }
         else if (Controls == ControlTypes.DirectKeyboard)

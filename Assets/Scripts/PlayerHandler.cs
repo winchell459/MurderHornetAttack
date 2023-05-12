@@ -27,10 +27,19 @@ public class PlayerHandler : MonoBehaviour
     private float plasmaDamageBuffTime;
     private float plasmaDamageBuffStart;
 
-    public void AddHealth(float Health)
+    public bool AddHealth(float Health)
     {
-        if (player) player.AddedHealth(Health);
+        if (player)
+        {
+            if(player.Health < MaxHealth)
+            {
+                player.AddedHealth(Health);
+                return true;
+            }
+            
+        }
         else Debug.Log("Player missing for AddHealth()...");
+        return false;
     }
     public int GetMaxHealth()
     {
@@ -41,11 +50,18 @@ public class PlayerHandler : MonoBehaviour
         if (maxShotBuffStart + maxShotBuffTime > Time.fixedTime) return maxShotBuff;
         else return MaxShot;
     }
-    public void SetMaxShotBuff(int maxShotBuff, float maxShotBuffTime)
+    public bool SetMaxShotBuff(float maxShotBuff, float maxShotBuffTime)
     {
-        this.maxShotBuff = maxShotBuff;
+        float remainingBuffTime = Mathf.Max(0, this.maxShotBuffTime + maxShotBuffStart - Time.time);
+        if (remainingBuffTime > 0)
+        {
+            CompareBuffs(ref maxShotBuff, ref maxShotBuffTime, this.maxShotBuff, remainingBuffTime);
+
+        }
+        this.maxShotBuff = (int)maxShotBuff;
         this.maxShotBuffTime = maxShotBuffTime;
         maxShotBuffStart = Time.fixedTime;
+        return true;
     }
     public float GetMaxShotBuffTime()
     {
@@ -57,11 +73,18 @@ public class PlayerHandler : MonoBehaviour
         if (plasmaChargeRateBuffStart + plasmaChargeRateBuffTime > Time.fixedTime) return plasmaChargeRateBuff;
         else return PlasmaChargeRate;
     }
-    public void SetPlasmaChargeRateBuff(float chargeRate, float chargeRateTime)
+    public bool SetPlasmaChargeRateBuff(float chargeRate, float chargeRateTime)
     {
+        float remainingBuffTime = Mathf.Max(0, plasmaChargeRateBuffTime + plasmaChargeRateBuffStart - Time.time);
+        if (remainingBuffTime > 0)
+        {
+            CompareBuffs(ref chargeRate, ref chargeRateTime, plasmaChargeRateBuff, remainingBuffTime);
+
+        }
         plasmaChargeRateBuff = chargeRate;
         plasmaChargeRateBuffTime = chargeRateTime;
         plasmaChargeRateBuffStart = Time.fixedTime;
+        return true;
     }
     public float GetPlasmaChargeRateBuffTime()
     {
@@ -74,11 +97,34 @@ public class PlayerHandler : MonoBehaviour
         if (plasmaDamageBuffStart + plasmaDamageBuffTime > Time.fixedTime) return plasmaDamageBuff;
         else return plasmaDamage;
     }
-    public void SetPlasmaPowerBuff(float DamageBuff, float DamageBuffTime)
+    public bool SetPlasmaPowerBuff(float DamageBuff, float DamageBuffTime)
     {
+        float remainingBuffTime = Mathf.Max(0, plasmaDamageBuffTime + plasmaDamageBuffStart - Time.time);
+        if(remainingBuffTime > 0)
+        {
+            CompareBuffs(ref DamageBuff, ref DamageBuffTime, plasmaDamageBuff, remainingBuffTime);
+            
+        }
+        
         plasmaDamageBuff = DamageBuff;
         plasmaDamageBuffTime = DamageBuffTime;
         plasmaDamageBuffStart = Time.fixedTime;
+
+        return true;
+    }
+    private void CompareBuffs(ref float newBuff, ref float newBuffTime, float currentBuff, float currentBuffRemaining)
+    {
+        if ((newBuff > 1 && currentBuff < newBuff) || (newBuff < 1 && newBuff < currentBuff))
+        {
+            float buffTotal = currentBuff * currentBuffRemaining;
+            newBuffTime += buffTotal / newBuff;
+        }
+        else
+        {
+            float buffTotal = newBuff * newBuffTime;
+            newBuffTime = currentBuffRemaining + buffTotal / newBuff;
+            newBuff = currentBuff;
+        }
     }
     public float GetPlasmaPowerBuffTime()
     {

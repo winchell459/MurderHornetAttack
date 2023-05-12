@@ -12,6 +12,7 @@ public class MiniMap : MonoBehaviour
     public int minimizedSize = 200;
     public int maximizedSize = 1000;
     private static int currentSize = 200;
+    public MapDisplay mapDisplay;
     // Start is called before the first frame update
     void Awake()
     {
@@ -30,7 +31,7 @@ public class MiniMap : MonoBehaviour
     }
     private void DisplayMap()
     {
-        GetComponent<MapDisplay>().DrawTexture(TextureGenerator.TextureFromHeightMap(heatMaps[displayingHeatMap]), currentSize);
+        mapDisplay.DrawTexture(TextureGenerator.TextureFromHeightMap(heatMaps[displayingHeatMap]), currentSize);
     }
 
     public void AddHeatMap(float[,] heatMap)
@@ -55,5 +56,15 @@ public class MiniMap : MonoBehaviour
         if (currentSize == maximizedSize) currentSize = minimizedSize;
         else currentSize = maximizedSize;
         DisplayMap();
+    }
+
+    public Transform playerMarker;
+    public void SetPlayerMarker(HoneycombPos playerPos)
+    {
+        float step = currentSize / (float)Mathf.Max(heatMaps[displayingHeatMap].GetLength(0), heatMaps[displayingHeatMap].GetLength(1));
+        Vector2 markerPos = new Vector2((playerPos.x - heatMaps[displayingHeatMap].GetLength(0)) * step, (playerPos.y - heatMaps[displayingHeatMap].GetLength(1)) * step);
+        playerMarker.localPosition = /*(Vector2)transform.position +*/ markerPos;
+
+        //Debug.Log($"playerPos: {playerPos}  step: {step}  markerPos: {markerPos}  playerMarker.position: {playerMarker.position}");
     }
 }

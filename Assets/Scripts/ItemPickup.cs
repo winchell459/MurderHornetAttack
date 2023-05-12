@@ -29,22 +29,23 @@ public class ItemPickup : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            bool destroy = false;
             if(PickupType == PickupTypes.Health)
             {
-                FindObjectOfType<PlayerHandler>().AddHealth(Power);
+                destroy = FindObjectOfType<PlayerHandler>().AddHealth(Power);
             }else if(PickupType == PickupTypes.Power)
             {
-                FindObjectOfType<PlayerHandler>().SetPlasmaPowerBuff(Power, Duration);
+                destroy = FindObjectOfType<PlayerHandler>().SetPlasmaPowerBuff(Power, Duration);
             }
             else if (PickupType == PickupTypes.Rapid)
             {
-                FindObjectOfType<PlayerHandler>().SetPlasmaChargeRateBuff(Power, Duration);
+                destroy = FindObjectOfType<PlayerHandler>().SetPlasmaChargeRateBuff(Power, Duration);
             }
             else if (PickupType == PickupTypes.Storage)
             {
-                FindObjectOfType<PlayerHandler>().SetMaxShotBuff((int)Power, Duration);
+                destroy = FindObjectOfType<PlayerHandler>().SetMaxShotBuff((int)Power, Duration);
             }
-            Destroy(gameObject);
+            if(destroy) Destroy(gameObject);
         }
     }
 
