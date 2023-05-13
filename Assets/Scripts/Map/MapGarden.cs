@@ -25,4 +25,6 @@ public class MapGarden : MapArea
 
         return garden;
     }
+
+    
 }

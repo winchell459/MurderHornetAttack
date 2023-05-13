@@ -99,17 +99,28 @@ public class MapGenerator : MonoBehaviour
             Exit = CreateExitTunnel(PortalPrefab, Utility.Honeycomb.HoneycombGridToWorldPostion(exitHexPos));
             ExitTunnel.position = Exit.Chamber.Location;
 
-            //create snake Chamber
-            HoneycombPos pillapillarHexPos = perlineNoiseVoid.GetAreaPos(10);
-            Vector2 snakeChamberLoc = Utility.Honeycomb.HoneycombGridToWorldPostion(pillapillarHexPos);
-            CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc);
+            bool areasFilled = false;
+            int count = 0;
+            while (!areasFilled && count < 20)
+            {
+                count++;
+                //create snake Chamber
+                HoneycombPos pillapillarHexPos = perlineNoiseVoid.GetAreaPos(10);
+                Vector2 snakeChamberLoc = Utility.Honeycomb.HoneycombGridToWorldPostion(pillapillarHexPos);
+                if (pillapillarHexPos == new HoneycombPos(-1, -1)) break;
+                CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc);
 
-            HoneycombPos SpiderNestHexPos = perlineNoiseVoid.GetAreaPos(10);
-            CreateSpiderNest(Utility.Honeycomb.HoneycombGridToWorldPostion(SpiderNestHexPos));
+                HoneycombPos SpiderNestHexPos = perlineNoiseVoid.GetAreaPos(10);
+                if (SpiderNestHexPos == new HoneycombPos(-1, -1)) break;
+                CreateSpiderNest(Utility.Honeycomb.HoneycombGridToWorldPostion(SpiderNestHexPos));
+                
+                
+
+                Debug.Log($"pillapillarHexPos: {pillapillarHexPos} | spiderNestHexPos: {SpiderNestHexPos}");
+                //createRandomMap(player,10);
+            }
+
             CreateAntFarm(Utility.Honeycomb.WorldPointToHoneycombGrid(AntSquad.position));
-
-            Debug.Log($"pillapillarHexPos: {pillapillarHexPos} | spiderNestHexPos: {SpiderNestHexPos}");
-            //createRandomMap(player,10);
         }
 
 
@@ -274,7 +285,11 @@ public class MapGenerator : MonoBehaviour
         //newVoids.Add(snakeChamber);
         MapGarden garden = MapGarden.CreateRandomGarden(position, 15, ChamberTriggerPrefab);
         newVoids.Add(garden);
-        SnakePit.position = position;
+        Transform newPit = Instantiate(SnakePit);
+        newPit.position = position;
+        newPit.gameObject.SetActive(true);
+        SnakePit.gameObject.SetActive(false);
+        //SnakePit.position = position;
     }
 
     public void CreateSpiderNest(Vector2 position)

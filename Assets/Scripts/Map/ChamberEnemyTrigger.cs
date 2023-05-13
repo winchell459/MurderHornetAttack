@@ -21,10 +21,16 @@ public class ChamberEnemyTrigger : ChamberTrigger
         if (!triggered && (triggerType == TriggerType.spawnOnTrigger || (triggerType == TriggerType.triggerOnce && spawnCount < 1) || (triggerType == TriggerType.soloSpawn && TriggeredEnemy == null)))
         {
             spawnCount++;
-            TriggeredEnemy = Instantiate(EnemyPrefab, Chamber.locations[0], Quaternion.identity);
+            TriggeredEnemy = Instantiate(EnemyPrefab, GetSpawnLocation(), Quaternion.identity);
             
         }
         triggered = true;
+    }
+
+    protected virtual Vector2 GetSpawnLocation()
+    {
+        if (Chamber != null && Chamber.locations.Count > 0) return Chamber.locations[0];
+        else return transform.position;
     }
 
     //private void Update()
