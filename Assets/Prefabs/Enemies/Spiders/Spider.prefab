@@ -49,6 +49,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -96,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d851d12a69934b2382c26b28a6d9d2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CollisionDamage: 0
+  CollisionDamage: 10
   Health: 15
   MaxHealth: 15
   CollisionForce: {x: 0, y: 0}
@@ -118,6 +119,7 @@ MonoBehaviour:
   AngleToPlayer: 0
   AttackAngle: 3
   TargetAngle: 30
+  VulnerableAngle: 0.25
   fireAngle: 1.5
   IsWaiting: 0
 --- !u!50 &4325080624073552627

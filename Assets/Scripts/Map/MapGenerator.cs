@@ -108,7 +108,7 @@ public class MapGenerator : MonoBehaviour
                 HoneycombPos pillapillarHexPos = perlineNoiseVoid.GetAreaPos(10, true);
                 Vector2 snakeChamberLoc = Utility.Honeycomb.HoneycombGridToWorldPostion(pillapillarHexPos);
                 if (pillapillarHexPos == new HoneycombPos(-1, -1)) break;
-                CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc);
+                CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc, false);
 
                 HoneycombPos SpiderNestHexPos = perlineNoiseVoid.GetAreaPos(10, true);
                 if (SpiderNestHexPos == new HoneycombPos(-1, -1)) break;
@@ -144,7 +144,7 @@ public class MapGenerator : MonoBehaviour
 
         //create snake Chamber
         Vector2 snakeChamberLoc = Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(150, 80));
-        CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc);
+        CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc, true);
 
 
         //Exit = CreateExitTunnel(PortalPrefab, Player.position);
@@ -189,7 +189,7 @@ public class MapGenerator : MonoBehaviour
 
         //create snake Chamber
         Vector2 snakeChamberLoc = Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(150, 80));
-        CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc);
+        CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc, true);
 
         //create random chambers
         //for (int i = 0; i < voidCount; i += 1)
@@ -275,7 +275,7 @@ public class MapGenerator : MonoBehaviour
         return (Portal)ChamberTrigger.SetupChamberTrigger(PortalPrefab, endChamber);
     }
 
-    public void CreateCaterpillarGarden(GameObject ChamberTriggerPrefab, Vector2 position)
+    public void CreateCaterpillarGarden(GameObject ChamberTriggerPrefab, Vector2 position, bool random)
     {
 
         //MapChamber snakeChamber = MapChamber.RandomChamber(position, 15);
@@ -283,8 +283,12 @@ public class MapGenerator : MonoBehaviour
         ////addChamberTrigger(snakeChamberTrigger, snakeChamber);
         //ChamberTrigger.SetupChamberTrigger(ChamberTriggerPrefab, snakeChamber);
         //newVoids.Add(snakeChamber);
-        MapGarden garden = MapGarden.CreateRandomGarden(position, 15, ChamberTriggerPrefab);
-        newVoids.Add(garden);
+        if (random)
+        {
+            MapGarden garden = MapGarden.CreateRandomGarden(position, 15, ChamberTriggerPrefab);
+            newVoids.Add(garden);
+        }
+        
         Transform newPit = Instantiate(SnakePit);
         newPit.position = position;
         newPit.gameObject.SetActive(true);

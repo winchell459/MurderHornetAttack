@@ -18,6 +18,8 @@ public class PerlinNoiseArea
         else return _parentArea.GetParentArea();
     }
 
+    public HoneycombTypes.Variety areaType = HoneycombTypes.Variety.Path;
+
     public PerlinNoiseChamber myChamber;
     public int depth = 0;
 

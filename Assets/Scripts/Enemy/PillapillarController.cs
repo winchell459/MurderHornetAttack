@@ -461,6 +461,17 @@ public class PillapillarController : Insect
                 }
             }
                 //DestroySnake();
+        }else if (collision.GetComponent<EnemyPhysics>())//bee collision
+        {
+            if(Head == null)
+            {
+                spawnTail();
+            }
+            else
+            {
+                TakeDamage(1);
+            }
+            Destroy(collision.gameObject);
         }
     }
 

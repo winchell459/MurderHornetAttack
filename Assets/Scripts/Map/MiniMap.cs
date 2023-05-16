@@ -13,6 +13,8 @@ public class MiniMap : MonoBehaviour
     public int maximizedSize = 1000;
     private static int currentSize = 200;
     public MapDisplay mapDisplay;
+
+    public bool displayMap;
     // Start is called before the first frame update
     void Awake()
     {
@@ -23,7 +25,11 @@ public class MiniMap : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(toDisplayHeatMap != displayingHeatMap)
+        if (displayMap)
+        {
+
+        }
+        else if(toDisplayHeatMap != displayingHeatMap)
         {
             displayingHeatMap = toDisplayHeatMap;
             DisplayMap();
