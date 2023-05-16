@@ -91,11 +91,11 @@ public class MapGenerator : MonoBehaviour
         {
             System.Random random = new System.Random(perlinNoise.seed);
             //Added player spawn point
-            HoneycombPos playerHexSpawn = perlineNoiseVoid.GetAreaPos(3);
+            HoneycombPos playerHexSpawn = perlineNoiseVoid.GetAreaPos(3, true);
             PlayerSpawn = CreatePlayerSpawn(PortalPrefab, Utility.Honeycomb.HoneycombGridToWorldPostion(playerHexSpawn));
             player.position = PlayerSpawn.Chamber.locations[0];
 
-            HoneycombPos exitHexPos = perlineNoiseVoid.GetAreaPos(8);
+            HoneycombPos exitHexPos = perlineNoiseVoid.GetAreaPos(8, false);
             Exit = CreateExitTunnel(PortalPrefab, Utility.Honeycomb.HoneycombGridToWorldPostion(exitHexPos));
             ExitTunnel.position = Exit.Chamber.Location;
 
@@ -105,12 +105,12 @@ public class MapGenerator : MonoBehaviour
             {
                 count++;
                 //create snake Chamber
-                HoneycombPos pillapillarHexPos = perlineNoiseVoid.GetAreaPos(10);
+                HoneycombPos pillapillarHexPos = perlineNoiseVoid.GetAreaPos(10, true);
                 Vector2 snakeChamberLoc = Utility.Honeycomb.HoneycombGridToWorldPostion(pillapillarHexPos);
                 if (pillapillarHexPos == new HoneycombPos(-1, -1)) break;
                 CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc);
 
-                HoneycombPos SpiderNestHexPos = perlineNoiseVoid.GetAreaPos(10);
+                HoneycombPos SpiderNestHexPos = perlineNoiseVoid.GetAreaPos(10, true);
                 if (SpiderNestHexPos == new HoneycombPos(-1, -1)) break;
                 CreateSpiderNest(Utility.Honeycomb.HoneycombGridToWorldPostion(SpiderNestHexPos));
                 

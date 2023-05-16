@@ -16862,7 +16862,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e859137e7ae9faa44a1202ca5e4e760c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seed: 66870
+  seed: 306977
   scale: 24
   octaves: 4
   persistance: 0.5
@@ -16903,7 +16903,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   threshold: 0.5
-  randomSeed: 0
+  randomSeed: 1
   falloffType: 1
 --- !u!4 &1681636335
 Transform:

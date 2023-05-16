@@ -16,7 +16,7 @@ public class HexDepth
         return other.pos.x == this.pos.x && other.pos.y == this.pos.y;
     }
 
-    private int d0, d1, d2, d3, d4, d5; //depth values from directions 1,1 to -1,1
+    private int d0, d1, d2, d3, d4, d5; //depth values clockwise from directions 0,1 to -1,1
     public int depthSum { get { return GetDepth0() + GetDepth1() + GetDepth2() + GetDepth3() + GetDepth4() + GetDepth5(); } }
     //public int minDepth { get { return Mathf.Min(Mathf.Min(GetDepth0() + GetDepth1(), GetDepth2() + GetDepth3()),  GetDepth4() + GetDepth5()); } }
     public int minDepth
@@ -247,9 +247,10 @@ public class HexDepth
         foreach (HexDepth hex in hexInRadius) hexPos.Add(hex.pos);
         return hexPos;
     }
+    int radiusMax = 15;
     public int FindMaxRadius()
     {
-        maxRadius = minDepth;
+        maxRadius = Mathf.Min(minDepth, radiusMax);
         List<HoneycombPos> neighbors = pos.GetAdjecentHoneycomb(maxRadius);
         if (neighbors.Count == 0)
         {

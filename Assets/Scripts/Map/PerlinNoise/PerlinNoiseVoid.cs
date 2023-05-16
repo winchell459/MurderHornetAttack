@@ -49,16 +49,17 @@ public class PerlineNoiseVoid : MapVoid
             
             float grayScale = chambers[chamberIDMap[honeycombPos.x, honeycombPos.y] - 1].GetChamberAreaMergedIndexHeatVal(honeycombPos.x, honeycombPos.y);
             honeycomb.color = new Color(grayScale,grayScale,grayScale);
-            return false;
+            return true;
             //if (hexDepths[honeycombPos.x, honeycombPos.y] != null && (hexDepths[honeycombPos.x, honeycombPos.y].delta0 <= pathWidth || hexDepths[honeycombPos.x, honeycombPos.y].delta1 <= pathWidth || hexDepths[honeycombPos.x, honeycombPos.y].delta2 <= pathWidth))
             //{
-                
+
             //    return floorIsPath;
-            //}else if(hexDepths[honeycombPos.x, honeycombPos.y] == null)
+            //}
+            //else if (hexDepths[honeycombPos.x, honeycombPos.y] == null)
             //{
             //    Debug.LogWarning($"hexDepths[{honeycombPos.x}, {honeycombPos.y}] is null");
             //}
-            
+
             //return !floorIsPath;
         }
 
@@ -66,7 +67,7 @@ public class PerlineNoiseVoid : MapVoid
 
     PerlinNoiseChamber maxChamber = null;
     List<PerlinNoiseArea> usedAreas = new List<PerlinNoiseArea>();
-    public HoneycombPos GetAreaPos(int minRadius)
+    public HoneycombPos GetAreaPos(int minRadius, bool useMax)
     {
         if(maxChamber == null)
         {
@@ -77,16 +78,43 @@ public class PerlineNoiseVoid : MapVoid
             }
         }
 
-        List<PerlinNoiseArea> chamberAreas = new List<PerlinNoiseArea> (maxChamber.GetChamberAreas());
-        while(chamberAreas.Count > 0)
+        if (useMax || chambers.Count == 1)
+        {
+            return FindAreaMinRadius(minRadius, maxChamber);
+        }
+        else
+        {
+            
+            HoneycombPos otherPos = new HoneycombPos(-1,-1);
+            for(int i = 0; i < chambers.Count; i++)
+            {
+                if(chambers[i] != maxChamber)
+                {
+                    otherPos = FindAreaMinRadius(minRadius, chambers[i]);
+                    if (otherPos != new HoneycombPos(-1, -1)) return otherPos;
+                }
+            }
+            
+            return FindAreaMinRadius(minRadius,maxChamber);
+        }
+        
+        
+    }
+
+
+    private HoneycombPos FindAreaMinRadius(int minRadius, PerlinNoiseChamber chamber)
+    {
+        List<PerlinNoiseArea> chamberAreas = new List<PerlinNoiseArea>(chamber.GetChamberAreas());
+        while (chamberAreas.Count > 0)
         {
             int index = Random.Range(0, chamberAreas.Count);
-            PerlinNoiseArea parent = maxChamber.GetChamberArea(chamberAreas[index].pos).parentArea;
+            PerlinNoiseArea parent = chamber.GetChamberArea(chamberAreas[index].pos).parentArea;
             if (!usedAreas.Contains(parent) && chamberAreas[index].maxRadius >= minRadius && chamberAreas[index].maxRadius <= minRadius + 4)
             {
                 usedAreas.Add(parent);
                 return chamberAreas[index].pos;
             }
+            //else if (!usedAreas.Contains(parent)) Debug.Log($"{chamberAreas[index].maxRadius} >= {minRadius} && {chamberAreas[index].maxRadius} <= {minRadius + 4}");
             chamberAreas.RemoveAt(index);
         }
         return new HoneycombPos(-1, -1);
