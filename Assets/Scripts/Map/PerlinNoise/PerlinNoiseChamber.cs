@@ -201,14 +201,19 @@ public class PerlinNoiseChamber /*: MapChamber*/
             }
         }
 
+        // set mergedAreas in parent areas
         string mergedAreaString = "";
         foreach(List<int> areaList in mergedAreas)
         {
             if(areaList != null)
             {
+                PerlinNoiseArea parent = chamberAreas[areaList[0] - 1];
+                parent.mergedAreas = new List<PerlinNoiseArea>();
+                parent.mergedAreas.Add(parent);
                 mergedAreaString += $"({areaList[0]} {chamberAreas[areaList[0]-1].maxRadius}) : ";
                 for(int i = 1; i < areaList.Count; i += 1)
                 {
+                    parent.mergedAreas.Add(chamberAreas[areaList[i] - 1]);
                     mergedAreaString += $"({areaList[i]} {chamberAreas[areaList[i]-1].maxRadius}), ";
                 }
                 mergedAreaString += "\n";

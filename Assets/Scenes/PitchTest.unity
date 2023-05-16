@@ -18515,6 +18515,17 @@ MonoBehaviour:
   colorVarieties:
   - variety: 2
     color: {r: 0.754717, g: 0.4244777, b: 0.08899963, a: 1}
+  colorAreas:
+  - area: 1
+    floorColor: {r: 0.39282396, g: 0.39607844, b: 0, a: 1}
+    edgeColor: {r: 0, g: 0, b: 0, a: 0}
+    embeddedColor: {r: 0, g: 0, b: 0, a: 0}
+    largeColor: {r: 0, g: 0, b: 0, a: 0}
+  - area: 2
+    floorColor: {r: 0.754717, g: 0.5797813, b: 0.0035599943, a: 1}
+    edgeColor: {r: 0, g: 0, b: 0, a: 0}
+    embeddedColor: {r: 0, g: 0, b: 0, a: 0}
+    largeColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!4 &1799806878
 Transform:
   m_ObjectHideFlags: 0

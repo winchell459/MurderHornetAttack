@@ -17,6 +17,14 @@ public class SpiderEnemy : Insect
 
     public float AttackCoolDown = 2f;
 
+    private void OnEnable()
+    {
+        if (IsWaiting)
+        {
+            Debug.LogWarning("Spider was stuck waiting.");
+            IsWaiting = false;
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {

@@ -17,8 +17,13 @@ public class PerlinNoiseArea
         if (_parentArea == null || _parentArea == this) return this;
         else return _parentArea.GetParentArea();
     }
+    public List<PerlinNoiseArea> mergedAreas;
+    public List<PerlinNoiseArea> GetMergedAreas()
+    {
+        return parentArea.mergedAreas;
+    }
 
-    public HoneycombTypes.Variety areaType = HoneycombTypes.Variety.Path;
+    public HoneycombTypes.Areas areaType = HoneycombTypes.Areas.Connection;
 
     public PerlinNoiseChamber myChamber;
     public int depth = 0;

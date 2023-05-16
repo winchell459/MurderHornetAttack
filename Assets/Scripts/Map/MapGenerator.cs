@@ -105,15 +105,23 @@ public class MapGenerator : MonoBehaviour
             {
                 count++;
                 //create snake Chamber
-                HoneycombPos pillapillarHexPos = perlineNoiseVoid.GetAreaPos(10, true);
-                Vector2 snakeChamberLoc = Utility.Honeycomb.HoneycombGridToWorldPostion(pillapillarHexPos);
-                if (pillapillarHexPos == new HoneycombPos(-1, -1)) break;
-                CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc, false);
-
-                HoneycombPos SpiderNestHexPos = perlineNoiseVoid.GetAreaPos(10, true);
-                if (SpiderNestHexPos == new HoneycombPos(-1, -1)) break;
-                CreateSpiderNest(Utility.Honeycomb.HoneycombGridToWorldPostion(SpiderNestHexPos));
+                int pillapillarPitSize = 10;
+                HoneycombPos pillapillarHexPos = perlineNoiseVoid.GetAreaPos(pillapillarPitSize, true); 
                 
+                if (pillapillarHexPos == new HoneycombPos(-1, -1)) break;
+                pillapillarHexPos = perlineNoiseVoid.GetPerlinNoiseArea(pillapillarHexPos).parentArea.pos;
+                Vector2 snakeChamberLoc = Utility.Honeycomb.HoneycombGridToWorldPostion(pillapillarHexPos);
+                //CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc, false);
+                FillArea(perlineNoiseVoid.GetPerlinNoiseArea(pillapillarHexPos), pillapillarPitSize, SnakePit.gameObject);
+                perlineNoiseVoid.SetAreaType(pillapillarHexPos, HoneycombTypes.Areas.Garden);
+
+
+                int spiderHoleSize = 5;
+                HoneycombPos SpiderNestHexPos = perlineNoiseVoid.GetAreaPos(spiderHoleSize, true);
+                if (SpiderNestHexPos == new HoneycombPos(-1, -1)) break;
+                //CreateSpiderNest(Utility.Honeycomb.HoneycombGridToWorldPostion(SpiderNestHexPos));
+                FillArea(perlineNoiseVoid.GetPerlinNoiseArea(SpiderNestHexPos).parentArea, spiderHoleSize, SpiderHole);
+                perlineNoiseVoid.SetAreaType(SpiderNestHexPos, HoneycombTypes.Areas.Nest);
                 
 
                 Debug.Log($"pillapillarHexPos: {pillapillarHexPos} | spiderNestHexPos: {SpiderNestHexPos}");
@@ -294,6 +302,28 @@ public class MapGenerator : MonoBehaviour
         newPit.gameObject.SetActive(true);
         SnakePit.gameObject.SetActive(false);
         //SnakePit.position = position;
+    }
+
+    void FillArea(PerlinNoiseArea area, float unitSize, GameObject unitPrefab)
+    {
+        List<PerlinNoiseArea> nonIntersecting = new List<PerlinNoiseArea>();
+        nonIntersecting.Add(area);
+        for(int i = 1; i < area.mergedAreas.Count; i++)
+        {
+            bool valid = true;
+            PerlinNoiseArea validCheck = area.mergedAreas[i];
+            foreach(PerlinNoiseArea validArea in nonIntersecting)
+            {
+                if (validArea.maxRadius < unitSize || Utility.Honeycomb.DistanceBetweenHoneycomb(validArea.pos, validCheck.pos) < unitSize * 2) valid = false;
+            }
+            if (valid) nonIntersecting.Add(validCheck);
+        }
+        foreach(PerlinNoiseArea valid in nonIntersecting)
+        {
+            GameObject newUnit = Instantiate(unitPrefab);
+            newUnit.transform.position = Utility.Honeycomb.HoneycombGridToWorldPostion(valid.pos);
+            newUnit.SetActive(true);
+        }
     }
 
     public void CreateSpiderNest(Vector2 position)

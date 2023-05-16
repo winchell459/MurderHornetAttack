@@ -56,10 +56,10 @@ public class PerlineNoiseVoid : MapVoid
             else
             {
                 PerlinNoiseArea area = chambers[chamberIDMap[honeycombPos.x, honeycombPos.y] - 1].GetChamberArea(honeycombPos.x, honeycombPos.y);
-                if (area != null && area.parentArea.areaType == HoneycombTypes.Variety.Chamber)
+                if (area != null && (area.parentArea.areaType == HoneycombTypes.Areas.Garden || area.parentArea.areaType == HoneycombTypes.Areas.Nest))
                 {
                     honeycomb.LocationType = HoneycombTypes.Variety.Chamber;
-                    honeycomb.color = ColorPalette.singleton.GetVarietyColor(HoneycombTypes.Variety.Chamber);
+                    honeycomb.color = ColorPalette.singleton.GetAreaColor(area.parentArea.areaType, 0);
                     return true;
                 }
                 else return false;
@@ -119,7 +119,19 @@ public class PerlineNoiseVoid : MapVoid
         
         
     }
-
+    public void SetAreaType(HoneycombPos pos, HoneycombTypes.Areas areaType)
+    {
+        PerlinNoiseArea area = GetPerlinNoiseArea(pos);
+        if(area != null)
+        {
+            area.parentArea.areaType = areaType;
+        }
+    }
+    public PerlinNoiseArea GetPerlinNoiseArea(HoneycombPos pos)
+    {
+        PerlinNoiseArea area = chambers[chamberIDMap[pos.x, pos.y] - 1].GetChamberArea(pos);
+        return area;
+    }
 
     private HoneycombPos FindAreaMinRadius(int minRadius, PerlinNoiseChamber chamber)
     {
@@ -128,10 +140,10 @@ public class PerlineNoiseVoid : MapVoid
         {
             int index = Random.Range(0, chamberAreas.Count);
             PerlinNoiseArea parent = chamber.GetChamberArea(chamberAreas[index].pos).parentArea;
-            if (!usedAreas.Contains(parent) && chamberAreas[index].maxRadius >= minRadius && chamberAreas[index].maxRadius <= minRadius + 4)
+            if (!usedAreas.Contains(parent) && chamberAreas[index].parentArea.maxRadius >= minRadius && chamberAreas[index].parentArea.maxRadius <= minRadius + 4)
             {
                 usedAreas.Add(parent);
-                parent.areaType = HoneycombTypes.Variety.Chamber;
+                //parent.areaType = HoneycombTypes.Variety.Chamber;
                 return chamberAreas[index].pos;
             }
             //else if (!usedAreas.Contains(parent)) Debug.Log($"{chamberAreas[index].maxRadius} >= {minRadius} && {chamberAreas[index].maxRadius} <= {minRadius + 4}");
