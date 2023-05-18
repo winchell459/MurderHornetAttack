@@ -5,6 +5,7 @@ using UnityEngine;
 //-----------------------------------------------------MapHoneycomb------------------------------------------------------------------
 public class MapHoneycomb
 {
+    public bool visited;
     public bool display;
     public Vector2 position;
     public GameObject honeycomb;
@@ -23,6 +24,7 @@ public class MapHoneycomb
     public float health = 10;
     public float beeuildingHealth = 30;
     public HoneycombTypes.Variety LocationType;
+    public HoneycombTypes.Areas AreaType = HoneycombTypes.Areas.Connection;
 
     
     public MapHoneycomb(bool display, Vector2 position, bool capped, bool isLargeLoc)
@@ -58,6 +60,7 @@ public class MapHoneycomb
     bool ignoreLarge = false; //---------------------------------------------------------------ignoreLarge---------------------------------------------------------------
     public void DisplayHoneycomb()
     {
+        visited = true;
         if (display)
         {
             

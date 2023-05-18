@@ -55,7 +55,8 @@ public class Map : MonoBehaviour
         }
     }
 
-    int currentChunk = 0;
+    int _currentChunk = 0;
+    public int currentChunk { get { return _currentChunk; } }
     public bool UseCoroutine = false; //----------------------------------------------------------------Use Coroutine-----------------------------------------------------------------------
     public bool DisplayFloor = false;
     private void Update()
@@ -82,9 +83,9 @@ public class Map : MonoBehaviour
                 else displayChunks.Add(false);//displayChunks[i] = false;
             }
 
-            if(currentChunk != tempChunk)
+            if(_currentChunk != tempChunk)
             {
-                currentChunk = tempChunk;
+                _currentChunk = tempChunk;
                 //loop through chunks and set to display if chunk is with 
                 int chunkRows = (int)Mathf.Ceil((MapHeight / VerticalSpacing) / (ChunkHeight));
                 int chunkCols = (int)Mathf.Ceil((MapWidth / HorizontalSpacing) / (ChunkWidth));
@@ -159,6 +160,41 @@ public class Map : MonoBehaviour
         }
         yield return null;
     }
+
+    int mapWidth { get { return (int)(Map.StaticMap.MapWidth / Map.StaticMap.HorizontalSpacing); } }
+    int mapHeight{ get { return (int)(Map.StaticMap.MapHeight / Map.StaticMap.VerticalSpacing) / 2; } }
+    public int[,] GetDepthMap()
+    {
+
+        int[,] depthMap = new int[mapWidth, mapHeight];
+        //Debug.Log($"width: {mapWidth} height: {mapHeight}");
+        for (int x = 0; x < depthMap.GetLength(0); x += 1)
+        {
+            for(int y = 0; y < depthMap.GetLength(1); y += 1)
+            {
+                //Debug.Log($"x,y: {x},{y} width: {mapWidth} height: {mapHeight}");
+                MapHoneycomb honeycomb = GetHoneycomb(x, y);
+                depthMap[x, y] = honeycomb.display && !honeycomb.isFloor ? honeycomb.GetDepth(): 0;
+            }
+        }
+        return depthMap;
+    }
+    public MapHoneycomb[,] GetMapHoneycombMap()
+    {
+        MapHoneycomb[,] honeycombMap = new MapHoneycomb[mapWidth, mapHeight];
+        //Debug.Log($"width: {mapWidth} height: {mapHeight}");
+        for (int x = 0; x < honeycombMap.GetLength(0); x += 1)
+        {
+            for (int y = 0; y < honeycombMap.GetLength(1); y += 1)
+            {
+                //Debug.Log($"x,y: {x},{y} width: {mapWidth} height: {mapHeight}");
+                MapHoneycomb honeycomb = GetHoneycomb(x, y);
+                honeycombMap[x, y] = honeycomb;
+            }
+        }
+        return honeycombMap;
+    }
+    
 
     public MapChunk GetChunk(int col, int row)
     {

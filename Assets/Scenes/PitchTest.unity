@@ -614,7 +614,9 @@ MonoBehaviour:
   minimizedSize: 200
   maximizedSize: 800
   mapDisplay: {fileID: 1733253559}
-  displayMap: 0
+  map: {fileID: 1840310405}
+  emptyColor: {r: 0, g: 0, b: 0, a: 1}
+  zoom: 2
   playerMarker: {fileID: 1041403994}
 --- !u!1 &59861835
 GameObject:
@@ -5203,7 +5205,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxHealth: 50
   _maxShot: 5
-  _plasmaChargeRate: 1
+  _plasmaChargeRate: 0.5
   _plasmaDamage: 1
 --- !u!4 &457389717
 Transform:
@@ -18526,6 +18528,11 @@ MonoBehaviour:
     edgeColor: {r: 0, g: 0, b: 0, a: 0}
     embeddedColor: {r: 0, g: 0, b: 0, a: 0}
     largeColor: {r: 0, g: 0, b: 0, a: 0}
+  - area: 0
+    floorColor: {r: 1, g: 0.7058824, b: 0.003921569, a: 1}
+    edgeColor: {r: 0.9056604, g: 0.2691349, b: 0.71760607, a: 1}
+    embeddedColor: {r: 0.8490566, g: 0.83110017, b: 0.7809719, a: 1}
+    largeColor: {r: 0.6273585, g: 1, b: 0.98118997, a: 1}
 --- !u!4 &1799806878
 Transform:
   m_ObjectHideFlags: 0

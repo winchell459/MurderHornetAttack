@@ -59,6 +59,7 @@ public class PerlineNoiseVoid : MapVoid
                 if (area != null && (area.parentArea.areaType == HoneycombTypes.Areas.Garden || area.parentArea.areaType == HoneycombTypes.Areas.Nest))
                 {
                     honeycomb.LocationType = HoneycombTypes.Variety.Chamber;
+                    honeycomb.AreaType = area.parentArea.areaType;
                     honeycomb.color = ColorPalette.singleton.GetAreaColor(area.parentArea.areaType, 0);
                     return true;
                 }
