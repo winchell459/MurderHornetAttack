@@ -8,6 +8,7 @@ public class PlayerHandler : MonoBehaviour
     public static int HornetMurderedCount;
 
     public static int eggCount = 0, flowerCount = 0, royalJellyCount = 0;
+    public int flowersFound = 0;
 
     public int _maxHealth = 50;
     public int MaxHealth { get { return _maxHealth + eggCount * 5; } }
@@ -23,7 +24,7 @@ public class PlayerHandler : MonoBehaviour
 
     // ------- Charge Rate --------
     public float _plasmaChargeRate = 1;
-    public float PlasmaChargeRate { get { return _plasmaChargeRate - 0.3f * flowerCount; } }
+    public float PlasmaChargeRate { get { return _plasmaChargeRate * ((6 - (float)flowerCount)/6); } }
     private float lastPlasmaCharge = 0;
     private float plasmaChargeRateBuff;
     private float plasmaChargeRateBuffTime;
@@ -35,6 +36,13 @@ public class PlayerHandler : MonoBehaviour
     private float plasmaDamageBuff;
     private float plasmaDamageBuffTime;
     private float plasmaDamageBuffStart;
+
+    public enum ControlTypes
+    {
+        MouseControl,
+        DirectKeyboard
+    }
+    public ControlTypes Controls;
 
     public bool AddHealth(float Health)
     {

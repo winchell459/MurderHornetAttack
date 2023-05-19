@@ -26,6 +26,8 @@ public class MiniMap : MonoBehaviour
 
     public Color emptyColor = Color.black;
 
+    public bool debuggingMaps;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -54,7 +56,7 @@ public class MiniMap : MonoBehaviour
                 DisplayMiniMap();
             }
         }
-        else if (toDisplayHeatMap != displayingHeatMap)
+        else if (debuggingMaps && toDisplayHeatMap != displayingHeatMap)
         {
             
             displayingHeatMap = toDisplayHeatMap;
@@ -163,23 +165,30 @@ public class MiniMap : MonoBehaviour
         toDisplayHeatMap = heatMaps.Count - 1;
     }
 
+    int zoomSteps = 3;
     public void NextHeatMap()
     {
-        toDisplayHeatMap = (toDisplayHeatMap + 1) % (heatMaps.Count + 3);
+        toDisplayHeatMap = (toDisplayHeatMap + 1) % (heatMaps.Count + zoomSteps);
         CheckZoom(); 
     }
 
     public void BackHeatMap()
     {
         toDisplayHeatMap -= 1;
-        if (toDisplayHeatMap < 0) toDisplayHeatMap = heatMaps.Count + 2;
+        if (toDisplayHeatMap < 0) toDisplayHeatMap = heatMaps.Count + zoomSteps - 1;
         CheckZoom();
     }
     private void CheckZoom()
     {
-        if (toDisplayHeatMap == heatMaps.Count) zoom = 1;
-        else if (toDisplayHeatMap == heatMaps.Count + 1) zoom = 2;
-        else if (toDisplayHeatMap == heatMaps.Count + 2) zoom = 3;
+        if(toDisplayHeatMap >= heatMaps.Count)
+        {
+            if (toDisplayHeatMap == heatMaps.Count) zoom = 1;
+            else if (toDisplayHeatMap == heatMaps.Count + 1) zoom = 2;
+            else if (toDisplayHeatMap == heatMaps.Count + 2) zoom = 3;
+            currentChunkID = -1;
+        }
+        
+        
     }
 
     public void ToggleSize()
@@ -191,7 +200,7 @@ public class MiniMap : MonoBehaviour
     }
 
     public Transform playerMarker;
-    public void SetPlayerMarker(HoneycombPos playerPos)
+    public void SetPlayerMarker(HoneycombPos playerPos, Vector2 direction)
     {
         this.playerPos = playerPos;
 
@@ -209,7 +218,8 @@ public class MiniMap : MonoBehaviour
             Vector2 markerPos = new Vector2((playerPos.x - width) * step, (playerPos.y - height) * step);
             playerMarker.localPosition = markerPos;
         }
-        
+
+        playerMarker.transform.up = direction;
 
         //Debug.Log($"playerPos: {playerPos}  step: {step}  markerPos: {markerPos}  playerMarker.position: {playerMarker.position}");
     }

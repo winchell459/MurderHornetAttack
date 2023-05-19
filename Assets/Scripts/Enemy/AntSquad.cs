@@ -115,4 +115,9 @@ public class AntSquad : MonoBehaviour
         }
     }
 
+    public bool Alive()
+    {
+        foreach (GameObject ant in Squad) if (ant) return true;
+        return false;
+    }
 }

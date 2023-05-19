@@ -13,15 +13,10 @@ public class HornetController : Insect
     public GameObject HornetPlasmPrefab;
 
     public int ShotCount;
-    
-    
-    public enum ControlTypes
-    {
-        MouseControl,
-        DirectKeyboard
-    }
-    public ControlTypes Controls;
 
+
+
+    ControlParameters cp;
     private PlayerHandler ph;
 
     public bool MobileControls;
@@ -31,6 +26,8 @@ public class HornetController : Insect
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        ph = FindObjectOfType<PlayerHandler>();
+        cp = FindObjectOfType<ControlParameters>();
         //rb.velocity = new Vector2(0, ForwardSpeed);
 #if UNITY_EDITOR
         MobileControls = false;
@@ -46,25 +43,67 @@ public class HornetController : Insect
 
     private void OnDestroy()
     {
-        if (Controls == ControlTypes.MouseControl) Cursor.lockState = CursorLockMode.None;
+        if (ph.Controls == PlayerHandler.ControlTypes.MouseControl) Cursor.lockState = CursorLockMode.None;
     }
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(Controls == ControlTypes.MouseControl)
+        if(ph.Controls == PlayerHandler.ControlTypes.MouseControl)
         {
-            //MouseMovementControl();
+            MouseMovementControl();
         }
-        else if(Controls == ControlTypes.DirectKeyboard && !MobileControls)
+        else if(ph.Controls == PlayerHandler.ControlTypes.DirectKeyboard && !MobileControls)
         {
             float v = Input.GetAxis("Vertical");
             float h = Input.GetAxis("Horizontal");
-            
-            MotionControl(v, h);
+
+            if (cp.InverseReverse && v < 0) MotionControl(v * cp.FlySensitivity, -h * cp.TurnSensitivity);
+            else MotionControl(v * cp.FlySensitivity, h * cp.TurnSensitivity);
+            //MotionControl(v, h);
         }
 
+    }
 
+    private void Update()
+    {
 
+        //Debug.Log($"Mouse X: {Input.GetAxis("Mouse X")}");
+        if (ph.Controls == PlayerHandler.ControlTypes.MouseControl)
+        {
+            if (LevelHandler.singleton.paused)
+            {
+                Cursor.lockState = CursorLockMode.None;
+            }
+            else
+            {
+                //MouseMovementControl();
+                if (Input.GetMouseButtonDown(0))
+                {
+                    FirePlasma();
+                }
+            }
+
+        }
+        else if (ph.Controls == PlayerHandler.ControlTypes.DirectKeyboard)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                FirePlasma();
+            }
+
+        }
+
+        if (!MobileControls)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                ExitButtonPressed = true;
+            }
+            else
+            {
+                ExitButtonPressed = false;
+            }
+        }
     }
     private Vector2 CollisionVelocity = Vector2.zero;
 
@@ -121,11 +160,14 @@ public class HornetController : Insect
         {
             Cursor.lockState = CursorLockMode.Locked;
             float deltaX = Input.GetAxis("Mouse X");
-            Debug.Log($"Mouse X: {Input.GetAxis("Mouse X")}");
+            //Debug.Log($"Mouse X: {Input.GetAxis("Mouse X")}");
 
             float rotate = /*Mathf.Sign(deltaX) * deltaX **/ deltaX * sensitivity ;
-            Debug.Log($"rotate: {rotate}");
-            MotionControl(Input.GetAxis("Vertical"), rotate);
+            //Debug.Log($"rotate: {rotate}");
+            //MotionControl(Input.GetAxis("Vertical"), rotate);
+            float v = Input.GetAxis("Vertical");
+            if (cp.InverseReverse && v < 0) MotionControl(v * cp.FlySensitivity, -rotate * cp.TurnSensitivity);
+            else MotionControl(v * cp.FlySensitivity, rotate * cp.TurnSensitivity);
         }
         else
         {
@@ -137,44 +179,7 @@ public class HornetController : Insect
         SetMousePosition();
     }
 
-    private void Update()
-    {
-        //Debug.Log($"Mouse X: {Input.GetAxis("Mouse X")}");
-        if (Controls == ControlTypes.MouseControl)
-        {
-            MouseMovementControl();
-            if (Input.GetMouseButtonDown(0))
-            {
-                //GameObject plasm = Instantiate(HornetPlasmPrefab, transform.position, Quaternion.identity);
-                //plasm.GetComponent<Rigidbody2D>().velocity = 40 * (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position).normalized;
-
-                FirePlasma();
-            }
-        }
-        else if (Controls == ControlTypes.DirectKeyboard)
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                //GameObject plasm = Instantiate(HornetPlasmPrefab, transform.position, Quaternion.identity);
-                //plasm.GetComponent<Rigidbody2D>().velocity = 10 * transform.up;
-                FirePlasma();
-            }
-
-            if (!MobileControls)
-            {
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    ExitButtonPressed = true;
-                }
-                else
-                {
-                    ExitButtonPressed = false;
-                }
-            }
-            
-        }
-        
-    }
+    
 
 
     public bool TakeHoneycombDamage = true;

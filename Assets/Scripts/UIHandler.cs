@@ -5,10 +5,12 @@ using UnityEngine;
 public class UIHandler : MonoBehaviour
 {
     [SerializeField] private GameObject[] menuPanels;
+    [SerializeField] private GameObject[] flowerPetals;
     // Start is called before the first frame update
     void Start()
     {
         DisplayMenu(false);
+        HideFlowerPetals();
     }
 
     // Update is called once per frame
@@ -29,5 +31,18 @@ public class UIHandler : MonoBehaviour
     public void NewLevelButton()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void FlowerPickup(int flowerID)
+    {
+        flowerPetals[flowerID].SetActive(true);
+    }
+
+    public void HideFlowerPetals()
+    {
+        foreach(GameObject petal in flowerPetals)
+        {
+            petal.SetActive(false);
+        }
     }
 }

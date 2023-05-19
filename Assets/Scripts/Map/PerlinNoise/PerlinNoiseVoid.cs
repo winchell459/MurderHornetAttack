@@ -83,6 +83,14 @@ public class PerlineNoiseVoid : MapVoid
 
     PerlinNoiseChamber maxChamber = null;
     List<PerlinNoiseArea> usedAreas = new List<PerlinNoiseArea>();
+    List<PerlinNoiseChamber> usedChambers = new List<PerlinNoiseChamber>();
+    public List<PerlinNoiseChamber> GetUnusedChambers()
+    {
+        List<PerlinNoiseChamber> unusedChambers = new List<PerlinNoiseChamber>();
+        foreach (PerlinNoiseChamber chamber in chambers) if (!usedChambers.Contains(chamber)) unusedChambers.Add(chamber);
+        return unusedChambers;
+    }
+    public HoneycombPos GetAreaPos(int minRadius, PerlinNoiseChamber chamber) { return FindAreaMinRadius(minRadius, chamber); }
     public HoneycombPos GetAreaPos(int minRadius, bool useMax)
     {
         if(maxChamber == null)
@@ -145,6 +153,7 @@ public class PerlineNoiseVoid : MapVoid
             {
                 usedAreas.Add(parent);
                 //parent.areaType = HoneycombTypes.Variety.Chamber;
+                usedChambers.Add(chamber);
                 return chamberAreas[index].pos;
             }
             //else if (!usedAreas.Contains(parent)) Debug.Log($"{chamberAreas[index].maxRadius} >= {minRadius} && {chamberAreas[index].maxRadius} <= {minRadius + 4}");

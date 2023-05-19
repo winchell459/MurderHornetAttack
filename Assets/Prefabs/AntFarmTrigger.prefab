@@ -46,7 +46,7 @@ MonoBehaviour:
   inChamber: 0
   CirclePrefab: {fileID: 7322068740001338593, guid: 67bc3306175899343bda98e2b6d0a3a8,
     type: 3}
-  antSquad: {fileID: 4713034296474697244, guid: a36d3aeabb0924681ace5b5e3930ac30,
+  antSquadPrefab: {fileID: 4713034296474697244, guid: a36d3aeabb0924681ace5b5e3930ac30,
     type: 3}
   PreviousNode: {fileID: 0}
   Triggered: 0

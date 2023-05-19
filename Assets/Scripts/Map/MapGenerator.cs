@@ -13,6 +13,8 @@ public class MapGenerator : MonoBehaviour
     public ChamberAntFarmTrigger ChamberAntFarmTriggerPrefab;
 
     public Transform ExitTunnel;
+    public GameObject[] flowerPetals;
+    private List<GameObject> placedFlowerPetals = new List<GameObject>();
     public Transform SnakePit;
     public GameObject SpiderHole;
     public Transform AntSquad;
@@ -128,6 +130,20 @@ public class MapGenerator : MonoBehaviour
                 //createRandomMap(player,10);
             }
 
+            // ---------------------- Place Flower Petals -----------------------------
+            List<PerlinNoiseChamber> unusedChambers = perlineNoiseVoid.GetUnusedChambers();
+            while(UnplacedFlowerPetals() && unusedChambers.Count > 0)
+            {
+                PerlinNoiseChamber chamber = unusedChambers[0];
+                unusedChambers.RemoveAt(0);
+                HoneycombPos petalHex = perlineNoiseVoid.GetAreaPos(2, chamber);
+                if(petalHex != new HoneycombPos(-1, -1))
+                {
+                    GetFlowerPetalDrop().transform.position = Utility.Honeycomb.HoneycombGridToWorldPostion(petalHex);
+                    
+                }
+            }
+
             CreateAntFarm(Utility.Honeycomb.WorldPointToHoneycombGrid(AntSquad.position));
         }
 
@@ -137,6 +153,17 @@ public class MapGenerator : MonoBehaviour
         mapVoids.Add(perlineNoiseVoid);
         Map.StaticMap.AddVoid(mapVoids);
         perlinNoiseGenerating = false;
+    }
+    public bool UnplacedFlowerPetals() { return flowerPetals.Length > placedFlowerPetals.Count; }
+    public GameObject GetFlowerPetalDrop()
+    {
+        if (UnplacedFlowerPetals())
+        {
+            GameObject flowerPetal = flowerPetals[placedFlowerPetals.Count];
+            placedFlowerPetals.Add(flowerPetals[placedFlowerPetals.Count]);
+            return flowerPetal;
+        }
+        else return null;
     }
 
     private void createPillapillarPit(Transform Player, float voidCount)

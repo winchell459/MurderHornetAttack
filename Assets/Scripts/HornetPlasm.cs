@@ -53,6 +53,7 @@ public class HornetPlasm : MonoBehaviour
         GameObject plasm = Instantiate(HornetPlasmPrefab, location, Quaternion.identity);
         plasm.GetComponent<Rigidbody2D>().velocity = velocity;
         plasm.GetComponent<HornetPlasm>().Damage = power;
+        Destroy(plasm, 15);
     }
 
 

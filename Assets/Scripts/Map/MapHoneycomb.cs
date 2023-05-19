@@ -5,6 +5,7 @@ using UnityEngine;
 //-----------------------------------------------------MapHoneycomb------------------------------------------------------------------
 public class MapHoneycomb
 {
+    public bool visible;
     public bool visited;
     public bool display;
     public Vector2 position;
@@ -90,6 +91,7 @@ public class MapHoneycomb
 
             if (honeycomb)
             {
+                visible = true;
                 honeycomb.transform.position = position;
                 honeycomb.GetComponent<Honeycomb>().honeyGrid = this;
                 honeycomb.SetActive(true);
@@ -126,6 +128,7 @@ public class MapHoneycomb
 
     public void HideHoneycomb()
     {
+        //visible = false;
         if (display && honeycomb)
         {
             if (EnemyPrefab) setupEnemyTrigger(false);
@@ -185,8 +188,9 @@ public class MapHoneycomb
             HideHoneycomb();
             SetDepth(depth);
             
-            DisplayHoneycomb();
-            if ((depth <= Map.StaticMap.TunnelDestructionDepth || (isLargeLoc || beeuilding)) && honeycomb) honeycomb.GetComponent<Honeycomb>().DamageAdjecentHoneycomb(depth + 1); 
+            if(visible) DisplayHoneycomb();
+            if ((depth <= Map.StaticMap.TunnelDestructionDepth || (isLargeLoc || beeuilding)) && honeycomb)
+                honeycomb.GetComponent<Honeycomb>().DamageAdjecentHoneycomb(depth + 1); 
         }
         
     }

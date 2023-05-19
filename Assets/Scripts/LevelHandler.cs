@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class LevelHandler : MonoBehaviour
 {
+    public static LevelHandler singleton;
     public GameObject MurderPanel;
     public GameObject ExitPanel;
     public Transform Player;
@@ -37,11 +38,14 @@ public class LevelHandler : MonoBehaviour
     private bool levelEnding = false;
 
     MapGenerator generator;
-    
+
+    private bool _paused = false;
+    public bool paused { get { return _paused; } }
 
     // Start is called before the first frame update
     void Start()
     {
+        singleton = this;
         MurderPanel.SetActive(false);
         ExitPanel.SetActive(false);
         UpdatePlayerStats();
@@ -69,10 +73,14 @@ public class LevelHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PauseToggle();
+        }
         //infiniteLevel();
         if (generator.Exit && generator.Exit.inChamber) {
             ExitPanel.SetActive(true);
-            if (Player.GetComponent<HornetController>().ExitButtonPressed && !levelEnding) LevelEndSequence();
+            if (Player.GetComponent<HornetController>().ExitButtonPressed && !levelEnding && ph.flowersFound >= 5) LevelEndSequence();
         }
         else
         {
@@ -86,7 +94,7 @@ public class LevelHandler : MonoBehaviour
             //Debug.Log(Utility.GetMapChunk(Player.position).ChunkIndex + " chunkOffset: " + Utility.GetMapChunk(Player.position).mapOffset);
 
             //display player location on minimap
-            MiniMap.singleton.SetPlayerMarker(Utility.Honeycomb.WorldPointToHoneycombGrid(Player.position));
+            MiniMap.singleton.SetPlayerMarker(Utility.Honeycomb.WorldPointToHoneycombGrid(Player.position), Player.up);
         }
         else
         {
@@ -96,6 +104,19 @@ public class LevelHandler : MonoBehaviour
         UpdatePlayerStats();
         //FPSText.text = Utility.FormatFloat(1 / Time.deltaTime, 1);
         //if(Player)Debug.Log("Player Chunk: " + Utility.GetMapChunk(Player.transform.position).mapOffset);
+    }
+    public void PauseToggle()
+    {
+        if (_paused)
+        {
+            Time.timeScale = 1;
+        }
+        else
+        {
+            Time.timeScale = 0;
+        }
+
+        _paused = !_paused;
     }
 
     private void displayLocation(Vector2 loc, Text text)
@@ -130,31 +151,39 @@ public class LevelHandler : MonoBehaviour
         if (enemy.GetComponent<SpiderEnemy>()) dropCheck = 0;
         if(Random.Range(0,10) > dropCheck)
         {
-            int dropItem = Random.Range(0, 10); //0-2 Health 3 Power 4-6 Storage 7-9 Rapid
+            int dropItem = dropCheck == 0 && generator.UnplacedFlowerPetals()? Random.Range(0, 11) : Random.Range(0, 10); //0-2 Health 3 Power 4-6 Storage 7-9 Rapid 10 Flower
             float power;
             float duration = Random.Range(6 , 12) * 5;
             if(dropItem < 7)
             {
                 power = Random.Range(10, 30);
             }
-            else
+            else 
             {
                 power = Random.Range(0.05f, 0.45f) * 2;
             }
 
-            ItemPickup drop = Instantiate(EnemyDropPrefab, enemy.transform.position, Quaternion.identity).GetComponent<ItemPickup>();
-
-            if (dropItem < 3)
+            if(dropItem == 10)
             {
-                drop.PickupType = ItemPickup.PickupTypes.Health;
-                
+                generator.GetFlowerPetalDrop().transform.position = enemy.transform.position;
             }
-            else if (dropItem < 4) drop.PickupType = ItemPickup.PickupTypes.Power;
-            else if (dropItem < 7) drop.PickupType = ItemPickup.PickupTypes.Storage;
-            else if (dropItem < 10) drop.PickupType = ItemPickup.PickupTypes.Rapid;
-            drop.Power = power;
-            drop.Duration = duration;
-            drop.SetupLetters();
+            else
+            {
+                ItemPickup drop = Instantiate(EnemyDropPrefab, enemy.transform.position, Quaternion.identity).GetComponent<ItemPickup>();
+
+                if (dropItem < 3)
+                {
+                    drop.PickupType = ItemPickup.PickupTypes.Health;
+
+                }
+                else if (dropItem < 4) drop.PickupType = ItemPickup.PickupTypes.Power;
+                else if (dropItem < 7) drop.PickupType = ItemPickup.PickupTypes.Storage;
+                else if (dropItem < 10) drop.PickupType = ItemPickup.PickupTypes.Rapid;
+                drop.Power = power;
+                drop.Duration = duration;
+                drop.SetupLetters();
+            }
+            
 
         }
     }
@@ -165,6 +194,7 @@ public class LevelHandler : MonoBehaviour
     {
         levelEnding = true;
         levelEndStart = Time.fixedTime;
+        FindObjectOfType<PrincessController>().inLove = true;
         generator.ExitTunnel.GetComponent<Animator>().SetTrigger("Activate");
         Map.StaticMap.Display = false;
         StartCoroutine("LevelEndCoroutine");
@@ -288,6 +318,7 @@ public class LevelHandler : MonoBehaviour
     }
 
     public bool HoneycombTowerSpawnEnemy(MapHoneycomb tower) {
-        return true;
+        
+        return PlayerHandler.eggCount > 4;
     }
 }

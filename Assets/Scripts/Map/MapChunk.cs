@@ -92,6 +92,7 @@ public class MapChunk
             foreach (MapHoneycomb honeycomb in honeycombs)
             {
                 honeycomb.DisplayHoneycomb();
+                honeycomb.visible = true;
             }
 
             foreach (Insect insect in enemiesInChunk)
@@ -112,6 +113,7 @@ public class MapChunk
             foreach (MapHoneycomb honeycomb in honeycombs)
             {
                 honeycomb.HideHoneycomb();
+                honeycomb.visible = false;
             }
 
             for (int i = enemiesInChunk.Count - 1; i >= 0; i -= 1)
