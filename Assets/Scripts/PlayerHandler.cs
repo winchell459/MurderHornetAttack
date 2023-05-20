@@ -217,7 +217,7 @@ public class PlayerHandler : MonoBehaviour
         {
             //if (FindObjectOfType<HornetController>())
             //Debug.Log("Looking for Player");
-            player = FindObjectOfType<HornetController>();
+            player = LevelHandler.singleton.Player? LevelHandler.singleton.Player.GetComponent<HornetController>() : null;
         }
     }
 }

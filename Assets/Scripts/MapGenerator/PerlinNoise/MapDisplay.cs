@@ -11,6 +11,9 @@ public class MapDisplay : MonoBehaviour
     public Texture texture;
     public UnityEngine.UI.RawImage rawImage;
 
+    [HideInInspector]public int width;
+    [HideInInspector] public int height;
+
     int maxLength = 200;
     public void DrawTexture(Texture2D texture)
     {
@@ -18,8 +21,8 @@ public class MapDisplay : MonoBehaviour
         textureRender.transform.localScale = new Vector3(texture.width, texture.height, 1);
 
         rawImage.texture = texture;
-        int width = texture.width;
-        int height = texture.height;
+        width = texture.width;
+        height = texture.height;
         
         if (width > height)
         {

@@ -18,6 +18,7 @@ public class MapGenerator : MonoBehaviour
     public Transform SnakePit;
     public GameObject SpiderHole;
     public Transform AntSquad;
+    public bool createAntFarm = false;
 
     public Portal PlayerSpawn { get; set; }
     public Portal Exit { get; set; }
@@ -43,7 +44,8 @@ public class MapGenerator : MonoBehaviour
         else if(generationType == GenerationTypes.perlinNoise)
         {
             StartCoroutine(CreatePerlinNoiseMap(Player));
-            while (perlinNoiseGenerating) yield return null;
+            do { yield return null; }
+            while (perlinNoiseGenerating);
         }else if(generationType == GenerationTypes.pillapillarPit)
         {
             createPillapillarPit(Player, 1);
@@ -78,15 +80,24 @@ public class MapGenerator : MonoBehaviour
         Map.StaticMap.AddVoid(MapChamber.RandomChamber(new Vector2(-20, 20), 10));
     }
     List<MapVoid> newVoids = new List<MapVoid>();
-    //List<bool> newConnected = new List<bool>();
-    //List<Vector2> newLocations = new List<Vector2>();
+
     bool perlinNoiseGenerating = false;
+
+    public static PerlineNoiseVoid pregenerated;
+    public static void PregeneratePerlineNoiseVoid(PerlinNoise perlinNoise, MapParameters mapParameters)
+    {
+        int mapWidth = (int)(mapParameters.MapWidth / mapParameters.HorizontalSpacing);
+        int mapHeight = (int)(mapParameters.MapHeight / mapParameters.VerticalSpacing) / 2;
+        pregenerated = new PerlineNoiseVoid(perlinNoise, mapWidth, mapHeight);
+        //return pregenerated;
+    }
     private IEnumerator CreatePerlinNoiseMap(Transform player)
     {
         perlinNoiseGenerating = true;
-        int mapWidth = (int)/*Mathf.Ceil*/(Map.StaticMap.MapWidth / Map.StaticMap.HorizontalSpacing);
-        int mapHeight = (int)/*Mathf.Ceil*/(Map.StaticMap.MapHeight / Map.StaticMap.VerticalSpacing)/2;
-        PerlineNoiseVoid perlineNoiseVoid = new PerlineNoiseVoid(perlinNoise, mapWidth, mapHeight);
+        int mapWidth = (int)(Map.StaticMap.MapWidth / Map.StaticMap.HorizontalSpacing);
+        int mapHeight = (int)(Map.StaticMap.MapHeight / Map.StaticMap.VerticalSpacing)/2;
+        PerlineNoiseVoid perlineNoiseVoid = pregenerated != null? pregenerated : new PerlineNoiseVoid(perlinNoise, mapWidth, mapHeight);
+        pregenerated = null;
         while (perlineNoiseVoid.generating) yield return null;
 
         if (true)
@@ -140,11 +151,11 @@ public class MapGenerator : MonoBehaviour
                 if(petalHex != new HoneycombPos(-1, -1))
                 {
                     GetFlowerPetalDrop().transform.position = Utility.Honeycomb.HoneycombGridToWorldPostion(petalHex);
-                    
+                    MiniMap.singleton.SetFlower(petalHex, true);
                 }
             }
 
-            CreateAntFarm(Utility.Honeycomb.WorldPointToHoneycombGrid(AntSquad.position));
+            if(createAntFarm)CreateAntFarm(Utility.Honeycomb.WorldPointToHoneycombGrid(AntSquad.position));
         }
 
 

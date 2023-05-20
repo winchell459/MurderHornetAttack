@@ -14,6 +14,11 @@ public class MapFarm : MapArea
         AreaType = HoneycombTypes.Areas.Farm;
     }
 
+    //public static MapFarm CreateFlowerMaze(PerlineNoiseVoid noiseVoid, PerlinNoiseChamber startChamber, List<HoneycombPos> flowerPetals, PerlinNoiseChamber endChamber, GameObject AntSquadTriggerPrefab)
+    //{
+
+    //}
+
     public static MapFarm CreateRandomMaze(HoneycombPos startPoint, HoneycombPos endPoint, float edgeWidth, int nodeCount, GameObject AntSquadTriggerPrefab)
     {
         MapFarm farm = new MapFarm(startPoint.vector2);

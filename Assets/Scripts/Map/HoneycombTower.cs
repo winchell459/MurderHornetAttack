@@ -24,8 +24,9 @@ public class HoneycombTower : Honeycomb
 
     private void Update()
     {
-        if (!player) player = FindObjectOfType<HornetController>();
-        if (!lh) lh = FindObjectOfType<LevelHandler>();
+        
+        if (!lh) lh = LevelHandler.singleton;
+        if (!player) player = LevelHandler.singleton.Player ? LevelHandler.singleton.Player.gameObject.GetComponent<HornetController>() : null;
         if (lastSpawn + spawnRate < Time.time && player && Vector2.Distance(player.transform.position, transform.position) <= spawnDistance)
         {
             if (lh.HoneycombTowerSpawnEnemy(honeyGrid))

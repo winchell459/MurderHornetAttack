@@ -281,7 +281,7 @@ public class PerlineNoiseVoid : MapVoid
         
 
         //--------------------------------------- display hex depth map as texture -------------------------------
-        if (displayHexDepthMap)
+        if (MiniMap.singleton && displayHexDepthMap)
         {
             float[,] pathHexDepthMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
             //float[,] pathHexMinDeltaMap = new float[hexDepths.GetLength(0), hexDepths.GetLength(1)];
@@ -348,6 +348,7 @@ public class PerlineNoiseVoid : MapVoid
                 }
                 
             }
+            
             MiniMap.singleton.AddHeatMap(pathHexDepthMap);
             //MiniMap.singleton.AddHeatMap(pathHexMinDeltaMap);
             //MiniMap.singleton.AddHeatMap(chamberHexDepthMap);

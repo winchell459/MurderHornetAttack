@@ -21,7 +21,7 @@ public class PrincessController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!player) player = FindObjectOfType<HornetController>();
+        if (!player && LevelHandler.singleton.Player) player = LevelHandler.singleton.Player.GetComponent<HornetController>();
 
         if(player && Vector2.Distance(player.transform.position, exit.position) < playerActiveRadius)
         {

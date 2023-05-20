@@ -198,7 +198,7 @@ public class PillapillarController : Insect
         headIndex += 1;
         if (!Head)
         {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            GameObject player = LevelHandler.singleton.Player? LevelHandler.singleton.Player.gameObject : null;//GameObject.FindGameObjectWithTag("Player");
             if (player)
             {
                 HoneycombPos playerHex = Utility.Honeycomb.WorldPointToHoneycombGrid(player.transform.position);

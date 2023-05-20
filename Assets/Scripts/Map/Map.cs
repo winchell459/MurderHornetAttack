@@ -11,15 +11,24 @@ public class Map : MonoBehaviour
     public GameObject BeeCityPrefab;
     public GameObject HoneycombChamberFloorPrefab;
     public static Map StaticMap;
-    public float MapWidth = 10;
-    public float MapHeight = 10;
+
+    public MapParameters parameters;
+    public float VerticalSpacing { get { return parameters.VerticalSpacing; } }
+    public float HorizontalSpacing { get { return parameters.HorizontalSpacing; } }
+
+    public float MapWidth { get { return parameters.MapWidth; } }
+    public float MapHeight { get { return parameters.MapHeight; } }
+    //private int honeycombHeight = -20;
+    public int ChunkHeight { get { return parameters.ChunkHeight; } }
+    public int ChunkWidth { get { return parameters.ChunkWidth; } }
+    //public int ChunkRadius = 3; //number of chunks from the player to render
 
     public Vector2 MapOrigin; // bottom left corner of map
-    public float VerticalSpacing = 0.27f;
-    public float HorizontalSpacing = 0.45f;
+    
     public List<GameObject> HoneycombPool = new List<GameObject>();
     public List<GameObject> HoneycombLargePool = new List<GameObject>();
     private List<MapChunk> honeycombChunks = new List<MapChunk>();
+    
     private List<bool> displayChunks = new List<bool>();
     private List<GameObject> beeCityPool = new List<GameObject>();
     private List<GameObject> HoneycombFloorPool = new List<GameObject>();
@@ -28,10 +37,7 @@ public class Map : MonoBehaviour
     public Transform[] HoneycombLayers;
     public List<float> LayerScales = new List<float>();
 
-    //private int honeycombHeight = -20;
-    public int ChunkHeight = 40;
-    public int ChunkWidth = 14;
-    public int ChunkRadius = 3; //number of chunks from the player to render
+
 
     private MapPath path;
     private List<MapVoid> voids = new List<MapVoid>();
@@ -55,7 +61,7 @@ public class Map : MonoBehaviour
         }
     }
 
-    int _currentChunk = 0;
+    private int _currentChunk = 0;
     public int currentChunk { get { return _currentChunk; } }
     public bool UseCoroutine = false; //----------------------------------------------------------------Use Coroutine-----------------------------------------------------------------------
     public bool DisplayFloor = false;
@@ -94,9 +100,9 @@ public class Map : MonoBehaviour
                     int colCenter = index % chunkCols;
                     int rowCenter = index / chunkCols;
                     //Debug.Log(col + " " + row);
-                    for (int j = 0; j < ChunkRadius; j += 1)
+                    for (int j = 0; j < parameters.ChunkRadius; j += 1)
                     {
-                        for (int i = 0; i <= ChunkRadius - j; i += 1)
+                        for (int i = 0; i <= parameters.ChunkRadius - j; i += 1)
                         {
                             int col = colCenter + i;
                             int row = rowCenter + j;
@@ -161,8 +167,8 @@ public class Map : MonoBehaviour
         yield return null;
     }
 
-    int mapWidth { get { return (int)(Map.StaticMap.MapWidth / Map.StaticMap.HorizontalSpacing); } }
-    int mapHeight{ get { return (int)(Map.StaticMap.MapHeight / Map.StaticMap.VerticalSpacing) / 2; } }
+    int mapWidth { get { return (int)(StaticMap.MapWidth / StaticMap.HorizontalSpacing); } }
+    int mapHeight{ get { return (int)(StaticMap.MapHeight / StaticMap.VerticalSpacing) / 2; } }
     public int[,] GetDepthMap()
     {
 
@@ -240,8 +246,8 @@ public class Map : MonoBehaviour
             {
 
                 Vector2 origin = MapOrigin + new Vector2(i * ChunkWidth, j * ChunkHeight);
-                int width = (int)Mathf.Ceil((MapWidth - ChunkWidth * i*HorizontalSpacing) / HorizontalSpacing);
-                int height = (int)Mathf.Ceil((MapHeight - ChunkHeight * j*VerticalSpacing) / VerticalSpacing);
+                int width = (int)Mathf.Ceil((MapWidth - ChunkWidth * i* HorizontalSpacing) / HorizontalSpacing);
+                int height = (int)Mathf.Ceil((MapHeight - ChunkHeight * j* VerticalSpacing) / VerticalSpacing);
                 if (width > ChunkWidth) width = ChunkWidth;
                 if (height > ChunkHeight) height = ChunkHeight;
                 //Debug.Log(width + " " + height);

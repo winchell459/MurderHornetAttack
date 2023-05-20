@@ -3,26 +3,29 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+
 public class PerlinNoise : MonoBehaviour
 {
-    public enum NormalizeMode { Local, Global };
-    public int seed;
-    public float scale;
-    public int octaves;
-    [Range(0, 1)]
-    public float persistance;
-    public float lacunarity;
-    public Vector2 offset;
-    public NormalizeMode normalizeMode;
+    public PerlinNoiseScriptableObject parametersScriptable;
+    private PerlinNoiseParameters parameters { get { return parametersScriptable.parameters; } }
+    //public enum NormalizeMode { Local, Global };
+    public int seed { get { return parameters.seed; } }
+    //public float scale;
+    //public int octaves;
+    //[Range(0, 1)]
+    //public float persistance;
+    //public float lacunarity;
+    //public Vector2 offset;
+    //public NormalizeMode normalizeMode;
 
-    public AnimationCurve depthCurve;
-    public float threshold = 0.5f;
+    //public AnimationCurve depthCurve;
+    public float threshold { get { return parameters.threshold; } }
 
-    public bool randomSeed = false;
+    //public bool randomSeed = false;
 
-    public enum FalloffTypes { none, honecomb}
-    public FalloffTypes falloffType;
-    
+    //public enum FalloffTypes { none, honecomb}
+    //public FalloffTypes falloffType;
+
     public int[,] GenerateDepthMap(int mapWidth, int mapHeight)
     {
         float[,] noiseMap = GenerateNoiseMap(mapWidth, mapHeight);
@@ -32,9 +35,9 @@ public class PerlinNoise : MonoBehaviour
         {
             for(int y = 0; y <mapHeight; y++)
             {
-                if(noiseMap[x,y] > threshold)
+                if(noiseMap[x,y] > parameters.threshold)
                 {
-                    depthMap[x,y] = (int)depthCurve.Evaluate(noiseMap[x, y]);
+                    depthMap[x,y] = (int)parameters.depthCurve.Evaluate(noiseMap[x, y]);
                     
                 }
                 else
@@ -71,19 +74,23 @@ public class PerlinNoise : MonoBehaviour
 
             }
         }
-        MiniMap.singleton.AddHeatMap(antiChamberDepthMap);
-        MiniMap.singleton.AddHeatMap(chamberDepthMap);
+        if (MiniMap.singleton)
+        {
+            MiniMap.singleton.AddHeatMap(antiChamberDepthMap);
+            MiniMap.singleton.AddHeatMap(chamberDepthMap);
+        }
+        
 
         return depthMap;
     }
 
     public float[,] GenerateNoiseMap(int mapWidth, int mapHeight)
     {
-        seed = randomSeed ? Random.Range(0,1<<20) : seed;
+        parameters.seed = parameters.randomSeed ? Random.Range(0,1<<20) : parameters.seed;
         
-        float[,] noiseMap = GenerateNoiseMap(mapWidth, mapHeight, seed, scale, octaves, persistance, lacunarity, offset, normalizeMode);
+        float[,] noiseMap = GenerateNoiseMap(mapWidth, mapHeight, parameters.seed, parameters.scale, parameters.octaves, parameters.persistance, parameters.lacunarity, parameters.offset, parameters.normalizeMode);
         float[,] displayMap = new float[noiseMap.GetLength(0), noiseMap.GetLength(1)];
-        if (falloffType == FalloffTypes.honecomb)
+        if (parameters.falloffType == PerlinNoiseParameters.FalloffTypes.honecomb)
         {
             float[,] falloff = FalloffGenerator.GenerateFalloffMap(mapWidth, mapHeight);
             for (int i = 0; i < mapWidth; i++)
@@ -100,7 +107,7 @@ public class PerlinNoise : MonoBehaviour
         return noiseMap;
     }
 
-    public static float[,] GenerateNoiseMap(int mapWidth, int mapHeight, int seed, float scale, int octaves, float persistance, float lacunarity, Vector2 offset, NormalizeMode normalizeMode)
+    public static float[,] GenerateNoiseMap(int mapWidth, int mapHeight, int seed, float scale, int octaves, float persistance, float lacunarity, Vector2 offset, PerlinNoiseParameters.NormalizeMode normalizeMode)
     {
         float[,] noiseMap = new float[mapWidth, mapHeight];
 
@@ -160,7 +167,7 @@ public class PerlinNoise : MonoBehaviour
         {
             for (int x = 0; x < mapWidth; x += 1)
             {
-                if (normalizeMode == NormalizeMode.Local)
+                if (normalizeMode == PerlinNoiseParameters.NormalizeMode.Local)
                 {
                     noiseMap[x, y] = Mathf.InverseLerp(minLocalNoiseHeight, maxLocalNoiseHeight, noiseMap[x, y]);
                 }

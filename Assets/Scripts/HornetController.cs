@@ -224,7 +224,7 @@ public class HornetController : Insect
     public override void TakeDamage(float Damage)
     {
         Health -= Damage;
-        FindObjectOfType<LevelHandler>().UpdatePlayerStats();
+        LevelHandler.singleton.UpdatePlayerStats();
         if (Health <= 0)
         {
             hornetMurdered();

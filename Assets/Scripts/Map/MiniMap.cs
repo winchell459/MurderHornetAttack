@@ -6,6 +6,7 @@ using UnityEngine;
 public class MiniMap : MonoBehaviour
 {
     public static MiniMap singleton;
+    public Transform miniMap;
     private List<float[,]> heatMaps = new List<float[,]>();
     int displayingHeatMap = -1;
     int toDisplayHeatMap = -1;
@@ -22,9 +23,21 @@ public class MiniMap : MonoBehaviour
     public Map map;
     private int currentChunkID = -1;
 
-    HoneycombPos playerPos;
+    
 
     public Color emptyColor = Color.black;
+
+    HoneycombPos playerPos;
+    HoneycombPos princessPos;
+    List<HoneycombPos> flowerPos = new List<HoneycombPos>();
+
+    public Transform playerMarker;
+    public Transform princessMarker;
+    public Transform flowerMarkerPrefab;
+    private List<Transform> flowerMarkers = new List<Transform>();
+
+    bool displayPrincess = false;
+    List<bool> displayFlowers = new List<bool>();
 
     public bool debuggingMaps;
 
@@ -152,6 +165,7 @@ public class MiniMap : MonoBehaviour
         if (texture == null) texture = TextureGenerator.TextureFromColorMap(colorMap, honeycombMap.GetLength(0), honeycombMap.GetLength(1));
         else texture = TextureGenerator.TextureFromColorMap(texture, colorMap, honeycombMap.GetLength(0), honeycombMap.GetLength(1));
         mapDisplay.DrawTexture(texture, currentSize);
+        HandleDisplayPOI();
         
 }
     private void DisplayMap()
@@ -199,21 +213,71 @@ public class MiniMap : MonoBehaviour
         else DisplayMiniMap();
     }
 
-    public Transform playerMarker;
+    public void StartDisplayMiniMap( )
+    {
+        toDisplayHeatMap = heatMaps.Count;
+        DisplayPlayerMarker(true);
+    }
+
+    public void DisplayPlayerMarker(bool display)
+    {
+        playerMarker.gameObject.SetActive(display);
+    }
+    
+    public void DisplayPrincessMarker(bool display)
+    {
+        displayPrincess = display;
+    }
+
+    //bool displayFlowers = false;
+    public void SetFlower(HoneycombPos pos, bool display)
+    {
+        displayFlowers.Add(display);
+        flowerMarkers.Add(Instantiate(flowerMarkerPrefab, miniMap.transform));
+        flowerPos.Add(pos);
+    }
+    public void DisplayFlower(int flowerID, bool display)
+    {
+        displayFlowers[flowerID] = display;
+        flowerMarkers[flowerID].gameObject.SetActive(display);
+    }
+
+    private void HandleDisplayPOI()
+    {
+        if (displayPrincess && princessMarker)
+        {
+            Vector2 markerPos = GetClampedZoomMapPos(princessPos);
+            princessMarker.localPosition = markerPos;
+        }
+        for(int i =0; i < flowerMarkers.Count; i++)
+        {
+            
+            if (displayFlowers[i])
+            {
+                flowerMarkers[i].localPosition = GetClampedZoomMapPos(flowerPos[i]);
+            }
+        }
+    }
+    public void SetPrincessPos(HoneycombPos pos) { princessPos = pos; }
+
+
     public void SetPlayerMarker(HoneycombPos playerPos, Vector2 direction)
     {
+        if(displayingHeatMap == -1)
+        {
+            //playerMarker.gameObject.SetActive(false);
+            return;
+        }
         this.playerPos = playerPos;
 
-        int width = displayingHeatMap >= heatMaps.Count ? honeycombMap.GetLength(0) : heatMaps[displayingHeatMap].GetLength(0);
-        int height = displayingHeatMap >= heatMaps.Count ? honeycombMap.GetLength(1) : heatMaps[displayingHeatMap].GetLength(1);
         if(displayingHeatMap >= heatMaps.Count)
         {
-            float step = zoom * currentSize / (float)Mathf.Max(width, height);
-            Vector2 markerPos = new Vector2((playerPos.x - xStart - zoomWidth) * step + zoom / 2, (playerPos.y - yStart - zoomHeight) * step + zoom / 2);
-            playerMarker.localPosition = markerPos;
+            playerMarker.localPosition = GetZoomMapPos(playerPos);
         }
         else
         {
+            int width = displayingHeatMap >= heatMaps.Count ? honeycombMap.GetLength(0) : heatMaps[displayingHeatMap].GetLength(0);
+            int height = displayingHeatMap >= heatMaps.Count ? honeycombMap.GetLength(1) : heatMaps[displayingHeatMap].GetLength(1);
             float step = currentSize / (float)Mathf.Max(width, height);
             Vector2 markerPos = new Vector2((playerPos.x - width) * step, (playerPos.y - height) * step);
             playerMarker.localPosition = markerPos;
@@ -222,5 +286,19 @@ public class MiniMap : MonoBehaviour
         playerMarker.transform.up = direction;
 
         //Debug.Log($"playerPos: {playerPos}  step: {step}  markerPos: {markerPos}  playerMarker.position: {playerMarker.position}");
+    }
+    private Vector2 GetZoomMapPos(HoneycombPos hexPos)
+    {
+        float step = zoom * currentSize / (float)Mathf.Max(honeycombMap.GetLength(0), honeycombMap.GetLength(1));
+        return new Vector2((hexPos.x - xStart - zoomWidth) * step + zoom / 2, (hexPos.y - yStart - zoomHeight) * step + zoom / 2);
+    }
+
+    int edgeClamp = 5;
+    private Vector2 GetClampedZoomMapPos(HoneycombPos hexPos)
+    {
+        float step = zoom * currentSize / (float)Mathf.Max(honeycombMap.GetLength(0), honeycombMap.GetLength(1));
+        float x = Mathf.Clamp((hexPos.x - xStart - zoomWidth) * step + zoom / 2, -edgeClamp - mapDisplay.width,  + edgeClamp);
+        float y = Mathf.Clamp((hexPos.y - yStart - zoomHeight) * step + zoom / 2, -edgeClamp - mapDisplay.height,  + edgeClamp);
+        return new Vector2(x,y );
     }
 }

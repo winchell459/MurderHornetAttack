@@ -93,9 +93,9 @@ public class PitchTest : MonoBehaviour
         }
         else
         {
-            HornetController playerObj = FindObjectOfType<HornetController>();
-            if(playerObj)
-                Player = playerObj.GetComponent<Rigidbody2D>();
+            //HornetController playerObj = FindObjectOfType<HornetController>();
+            if(LevelHandler.singleton.Player)
+                Player = LevelHandler.singleton.Player.GetComponent<Rigidbody2D>();
             
             
         }

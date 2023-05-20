@@ -42,6 +42,9 @@ public class LevelHandler : MonoBehaviour
     private bool _paused = false;
     public bool paused { get { return _paused; } }
 
+    public GameObject loadingSplash;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -49,25 +52,38 @@ public class LevelHandler : MonoBehaviour
         MurderPanel.SetActive(false);
         ExitPanel.SetActive(false);
         UpdatePlayerStats();
-
+        hc = Player.GetComponent<HornetController>();
         StartCoroutine(SetupLevel());
 
         ControlParameters.StaticControlParams.LoadControlParameters();
+        
     }
 
     IEnumerator SetupLevel()
     {
         generator = FindObjectOfType<MapGenerator>();
         StartCoroutine(generator.GenerateMap(Player));
-
-        while (generator.generating) yield return null;
+        do { yield return null; }
+        while (generator.generating);
 
         Map.StaticMap.Display = true;
         Cam.SetCameraTarget(Player);
         ph = FindObjectOfType<PlayerHandler>();
-
+        
         displayLocation(Utility.Honeycomb.WorldPointToHoneycombGrid(generator.Exit.transform.position).vector2, EndLoc);
+        MiniMap.singleton.StartDisplayMiniMap();
+        MiniMap.singleton.SetPrincessPos(Utility.Honeycomb.WorldPointToHoneycombGrid(generator.Exit.transform.position));
+        MiniMap.singleton.DisplayPrincessMarker(true);
+        StartCoroutine(SetupComplete());
         //displayLocation(Utility.WorldToHoneycomb(PlayerSpawn.transform.position), SpawnLoc);
+    }
+
+    IEnumerator SetupComplete()
+    {
+        //Time.timeScale = 0;
+        yield return new WaitForSeconds(1);
+        loadingSplash.SetActive(false);
+        //Time.timeScale = 1;
     }
 
     // Update is called once per frame
@@ -89,8 +105,8 @@ public class LevelHandler : MonoBehaviour
 
         if (Player)
         {
-            displayLocation(Utility.Honeycomb.WorldPointToHoneycombGrid(Player.position).vector2, PlayerLoc);
-            displayLocation(Map.StaticMap.GetChunkIndex( Utility.Honeycomb.GetMapChunk(Player.position)), SpawnLoc);
+            //displayLocation(Utility.Honeycomb.WorldPointToHoneycombGrid(Player.position).vector2, PlayerLoc);
+            //displayLocation(Map.StaticMap.GetChunkIndex( Utility.Honeycomb.GetMapChunk(Player.position)), SpawnLoc);
             //Debug.Log(Utility.GetMapChunk(Player.position).ChunkIndex + " chunkOffset: " + Utility.GetMapChunk(Player.position).mapOffset);
 
             //display player location on minimap
@@ -130,10 +146,11 @@ public class LevelHandler : MonoBehaviour
         text.text = x + " " + y;
 
     }
-
+    HornetController hc;
     private void spawnPlayer(Portal portal)
     {
         Player = Instantiate(PlayerPrefab, generator.PlayerSpawn.Chamber.locations[0], Quaternion.identity).transform;
+        hc = Player.GetComponent<HornetController>();
         Cam.SetCameraTarget(Player);
         UpdatePlayerStats();
     }
@@ -239,14 +256,15 @@ public class LevelHandler : MonoBehaviour
         }
     }
 
+
     public void UpdatePlayerStats()
     {
         
         BeesMurderedText.text = PlayerHandler.BeesMurderedCount.ToString();
         HornetMurderedText.text = PlayerHandler.HornetMurderedCount.ToString();
 
-        PlayerHandler ph = FindObjectOfType<PlayerHandler>();
-        HornetController hc = FindObjectOfType<HornetController>();
+        //PlayerHandler ph = FindObjectOfType<PlayerHandler>();
+        //HornetController hc = FindObjectOfType<HornetController>();
 
         if(ph && hc)
         {
