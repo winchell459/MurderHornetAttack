@@ -103,14 +103,16 @@ public class MapGenerator : MonoBehaviour
         if (true)
         {
             System.Random random = new System.Random(perlinNoise.seed);
-            //Added player spawn point
-            HoneycombPos playerHexSpawn = perlineNoiseVoid.GetAreaPos(3, true);
-            PlayerSpawn = CreatePlayerSpawn(PortalPrefab, Utility.Honeycomb.HoneycombGridToWorldPostion(playerHexSpawn));
-            player.position = PlayerSpawn.Chamber.locations[0];
+            
 
             HoneycombPos exitHexPos = perlineNoiseVoid.GetAreaPos(8, false);
             Exit = CreateExitTunnel(PortalPrefab, Utility.Honeycomb.HoneycombGridToWorldPostion(exitHexPos));
             ExitTunnel.position = Exit.Chamber.Location;
+
+            //Added player spawn point
+            HoneycombPos playerHexSpawn = exitHexPos;// perlineNoiseVoid.GetAreaPos(3, true);
+            PlayerSpawn = CreatePlayerSpawn(PortalPrefab, Utility.Honeycomb.HoneycombGridToWorldPostion(playerHexSpawn));
+            player.position = PlayerSpawn.Chamber.locations[0];
 
             bool areasFilled = false;
             int count = 0;

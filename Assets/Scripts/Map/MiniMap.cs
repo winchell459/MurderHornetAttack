@@ -106,7 +106,7 @@ public class MiniMap : MonoBehaviour
 
         
 
-        Debug.Log($"width: {width} height: {height} zoomWidth:{zoomWidth} zoomHeight: {zoomHeight} xStart: {xStart} yStart: {yStart}");
+        //Debug.Log($"width: {width} height: {height} zoomWidth:{zoomWidth} zoomHeight: {zoomHeight} xStart: {xStart} yStart: {yStart}");
 
         for (int x = xStart; x < xStart + zoomWidth; x += 1)
         {
@@ -154,7 +154,9 @@ public class MiniMap : MonoBehaviour
             for(int j = y*zoom; j < (y+1)*zoom; j++)
             {
                 //Debug.Log($"x: {i} y: {j} index:{i + j * width} colorMap.Length:{colorMap.Length}");
-                colorMap[i + j * width] = color;
+                int index = i + j * width;
+                if (index >= 0 && index < colorMap.Length) colorMap[index] = color;
+                else Debug.LogWarning($"colorMap out of range error: colormap.length = {colorMap.Length} | index = {index}");
             }
         }
     }

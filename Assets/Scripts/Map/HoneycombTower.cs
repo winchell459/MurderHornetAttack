@@ -31,7 +31,7 @@ public class HoneycombTower : Honeycomb
         {
             if (lh.HoneycombTowerSpawnEnemy(honeyGrid))
             {
-                Debug.Log("HoneycombTower Attacks");
+               // Debug.Log("HoneycombTower Attacks");
                 Instantiate(/*honeyGrid.GetEnemyPrefab()*/enemyPrefab, transform.position, Quaternion.identity);
                 lastSpawn = Time.time;
             }

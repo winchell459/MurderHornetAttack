@@ -110,7 +110,7 @@ public class PillapillarController : Insect
         if (!Head && lastSpawn >= SpawnRate)
         {
             lastSpawn = 0;
-            spawnTail();
+            if(LevelHandler.singleton.PillapillerSpawnTail(this))spawnTail();
         }
     }
     private void spawnTail()

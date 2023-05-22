@@ -13,7 +13,9 @@ public class MainMenu : MonoBehaviour
 
     public MapParameters mapParameters;
     public PerlinNoise perlinNoise;
-    private bool loaded = false;
+    private bool preloadComplete = false;
+
+    public GameObject preloadingScreen;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,7 +37,13 @@ public class MainMenu : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
 
-            if(loaded) SceneManager.LoadScene(2);
+            if (preloadComplete)
+            {
+                //provides a buffer for next scene's loading - Destroy in next scene after loading complete
+                DontDestroyOnLoad(preloadingScreen);
+                TouchToPlayText.gameObject.SetActive(false);
+                SceneManager.LoadScene(2);
+            }
             else
             {
                 TouchToPlayText.text = "LOADING";
@@ -53,7 +61,7 @@ public class MainMenu : MonoBehaviour
             MapGenerator.PregeneratePerlineNoiseVoid(perlinNoise, mapParameters);
             while (MapGenerator.pregenerated.generating) yield return null;
         }
-        loaded = true;
+        preloadComplete = true;
         TouchToPlayText.text = "TOUCH TO CONTINUE";
     }
 }

@@ -877,7 +877,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 85.09998, y: 7.0200195}
+  m_AnchoredPosition: {x: 85.09998, y: 7.0195312}
   m_SizeDelta: {x: 158.2, y: 67.47998}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &70041854
@@ -1113,7 +1113,7 @@ Transform:
   m_LocalScale: {x: 1.03, y: 1.03, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 24
+  m_RootOrder: 25
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &86573975
 GameObject:
@@ -1149,7 +1149,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.2000008, y: -13.299988}
+  m_AnchoredPosition: {x: -1.2000122, y: -13.299988}
   m_SizeDelta: {x: 68, y: 584}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &86573977
@@ -2452,7 +2452,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 5.7304688, y: -6.200012}
+  m_AnchoredPosition: {x: 5.7304688, y: -6.2001953}
   m_SizeDelta: {x: 348.98, y: 35.5}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &190396210
@@ -3031,7 +3031,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &285111481
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4307,7 +4307,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 21
+  m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &378880465
 PrefabInstance:
@@ -5686,9 +5686,9 @@ MonoBehaviour:
   flowersFound: 0
   _maxHealth: 50
   _maxShot: 5
-  _plasmaChargeRate: 0.5
+  _plasmaChargeRate: 1
   _plasmaDamage: 1
-  Controls: 0
+  Controls: 1
 --- !u!4 &457389717
 Transform:
   m_ObjectHideFlags: 0
@@ -7509,7 +7509,7 @@ Transform:
   m_LocalScale: {x: 1.01, y: 1.01, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 22
+  m_RootOrder: 23
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &664301190
 PrefabInstance:
@@ -7638,7 +7638,7 @@ Transform:
   m_LocalScale: {x: 1.04, y: 1.04, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 25
+  m_RootOrder: 26
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &667251848
 GameObject:
@@ -12257,7 +12257,7 @@ MonoBehaviour:
   Cam: {fileID: 516643014}
   EnemyDropPrefab: {fileID: 7903702654899577405, guid: 8052195b8c5247c4193a991b99f19a5f,
     type: 3}
-  loadingSplash: {fileID: 285111480}
+  loadingSplash: {fileID: 1884620409}
   towerDropPrefab: {fileID: 1174156814334646262, guid: 2c2238df2713196459b3d66d8a7a2d57,
     type: 3}
 --- !u!4 &1047031842
@@ -12272,7 +12272,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 19
+  m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1052509049
 GameObject:
@@ -13314,9 +13314,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1047031841}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: RestartLevel
+      - m_Target: {fileID: 1884620410}
+        m_TargetAssemblyTypeName: UIHandler, Assembly-CSharp
+        m_MethodName: MurderedPanelConfirmButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14440,7 +14440,7 @@ RectTransform:
   - {fileID: 1981020507}
   - {fileID: 285111481}
   m_Father: {fileID: 0}
-  m_RootOrder: 29
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -14647,7 +14647,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -4.910034, y: -5.9101562}
+  m_AnchoredPosition: {x: -4.9101562, y: -5.9101562}
   m_SizeDelta: {x: 348.97998, y: 35.5}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1301560427
@@ -17399,7 +17399,7 @@ Transform:
   m_LocalScale: {x: 1.05, y: 1.05, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 26
+  m_RootOrder: 27
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1607279576
 GameObject:
@@ -17844,7 +17844,7 @@ Transform:
   m_LocalScale: {x: 1.07, y: 1.07, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 28
+  m_RootOrder: 29
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1660297121
 GameObject:
@@ -17912,7 +17912,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 20
+  m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1662032786
 GameObject:
@@ -20250,7 +20250,7 @@ Transform:
   m_LocalScale: {x: 1.02, y: 1.02, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 23
+  m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1865654247
 GameObject:
@@ -20359,7 +20359,7 @@ Transform:
   m_LocalScale: {x: 1.06, y: 1.06, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 27
+  m_RootOrder: 28
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1884620409
 GameObject:
@@ -20404,6 +20404,8 @@ MonoBehaviour:
   - {fileID: 1132951494}
   - {fileID: 82708610}
   - {fileID: 802185535}
+  murderPanel: {fileID: 974267339}
+  murderedMessageText: {fileID: 1987010701}
 --- !u!4 &1884620411
 Transform:
   m_ObjectHideFlags: 0
@@ -21581,11 +21583,11 @@ RectTransform:
   m_Father: {fileID: 1262532039}
   m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 109.46, y: -1}
-  m_SizeDelta: {x: 57.76, y: 95.900024}
-  m_Pivot: {x: 0, y: 1}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -6.039917, y: -1}
+  m_SizeDelta: {x: 57.76001, y: 95.900024}
+  m_Pivot: {x: 1, y: 1}
 --- !u!114 &1981020508
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21599,7 +21601,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.24705882}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

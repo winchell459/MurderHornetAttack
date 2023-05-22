@@ -216,7 +216,7 @@ public class EnemyPhysics : Insect
 
     public override Vector2 GetCollisionVelocity(Transform collidingObject, Vector2 collidingVelocity)
     {
-        Debug.Log("GetCollisionVelocity");
+        //Debug.Log("GetCollisionVelocity");
         return 25 * (collidingObject.position - transform.position).normalized;
     }
 }

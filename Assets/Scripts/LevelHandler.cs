@@ -10,6 +10,8 @@ public class LevelHandler : MonoBehaviour
     public GameObject ExitPanel;
     public Transform Player;
     public GameObject PlayerPrefab;
+
+    private bool playerDead = false;
     
 
     public Text PlayerLoc, SpawnLoc, EndLoc;
@@ -82,7 +84,7 @@ public class LevelHandler : MonoBehaviour
     {
         //Time.timeScale = 0;
         yield return new WaitForSeconds(1);
-        loadingSplash.SetActive(false);
+        loadingSplash.GetComponent<UIHandler>().LoadUI();
         //Time.timeScale = 1;
     }
 
@@ -112,10 +114,10 @@ public class LevelHandler : MonoBehaviour
             //display player location on minimap
             MiniMap.singleton.SetPlayerMarker(Utility.Honeycomb.WorldPointToHoneycombGrid(Player.position), Player.up);
         }
-        else
+        else if(!playerDead)
         {
-            // spawnPlayer(PlayerSpawn);
-            MurderPanel.SetActive(true);
+            HandlePlayerDeath();
+            //MurderPanel.SetActive(true);
         }
         UpdatePlayerStats();
         //FPSText.text = Utility.FormatFloat(1 / Time.deltaTime, 1);
@@ -150,9 +152,26 @@ public class LevelHandler : MonoBehaviour
     private void spawnPlayer(Portal portal)
     {
         Player = Instantiate(PlayerPrefab, generator.PlayerSpawn.Chamber.locations[0], Quaternion.identity).transform;
+        playerDead = false;
         hc = Player.GetComponent<HornetController>();
         Cam.SetCameraTarget(Player);
         UpdatePlayerStats();
+    }
+
+    void HandlePlayerDeath()
+    {
+        playerDead = true;
+        
+        if(PlayerHandler.eggCount > 0)
+        {
+            PlayerHandler.eggCount = Mathf.Clamp(PlayerHandler.eggCount - 1, 0, int.MaxValue);
+            FindObjectOfType<UIHandler>().DisplayMurderedPanel(true, "Murder Hornet is Murdered");
+        }
+        else
+        {
+            gameOver = true;
+            FindObjectOfType<UIHandler>().DisplayMurderedPanel(true, "The Princess is in Another Hive");
+        }
     }
 
     public GameObject towerDropPrefab;
@@ -223,11 +242,19 @@ public class LevelHandler : MonoBehaviour
             yield return null;
         ReloadLevel();
     }
-
+    bool gameOver = false;
     public void RestartLevel()
     {
-        MurderPanel.SetActive(false);
-        spawnPlayer(generator.PlayerSpawn);
+        if(gameOver)
+        {
+            ReloadLevel();
+        }
+        else
+        {
+            MurderPanel.SetActive(false);
+            spawnPlayer(generator.PlayerSpawn);
+        }
+        
         
     }
 
@@ -337,6 +364,19 @@ public class LevelHandler : MonoBehaviour
 
     public bool HoneycombTowerSpawnEnemy(MapHoneycomb tower) {
         
-        return PlayerHandler.eggCount > 4;
+        return PlayerHandler.eggCount > 4 || PlayerHandler.royalJellyCount > 5;
+    }
+
+    int pillapillarLengthMin = 2;
+    public bool PillapillerSpawnTail(PillapillarController head)
+    {
+        int length = 0;
+        while(head != null)
+        {
+            head = head.Tail;
+            length += 1;
+        }
+
+        return length < PlayerHandler.eggCount + pillapillarLengthMin;
     }
 }

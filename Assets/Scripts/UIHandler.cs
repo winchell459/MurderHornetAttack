@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIHandler : MonoBehaviour
 {
     [SerializeField] private GameObject[] menuPanels;
     [SerializeField] private GameObject[] flowerPetals;
+
+    [SerializeField] private GameObject murderPanel;
+    [SerializeField] private Text murderedMessageText;
     // Start is called before the first frame update
     void Start()
     {
@@ -13,10 +17,13 @@ public class UIHandler : MonoBehaviour
         HideFlowerPetals();
     }
 
-    // Update is called once per frame
-    void Update()
+    //LevelHandler calls after LevelSetup is complete
+    public void LoadUI()
     {
-        
+        foreach(GameObject mainMenuUi in GameObject.FindGameObjectsWithTag("Main Menu"))
+        {
+            Destroy(mainMenuUi);
+        }
     }
 
     public void ToggleMenu()
@@ -44,5 +51,16 @@ public class UIHandler : MonoBehaviour
         {
             petal.SetActive(false);
         }
+    }
+
+    public void DisplayMurderedPanel(bool display, string message)
+    {
+        murderedMessageText.text = message;
+        murderPanel.SetActive(display);
+    }
+
+    public void MurderedPanelConfirmButton()
+    {
+        LevelHandler.singleton.RestartLevel();
     }
 }

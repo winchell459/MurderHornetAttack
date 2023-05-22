@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Honeycomb
   - Enemy
+  - Main Menu
   layers:
   - Default
   - TransparentFX
