@@ -67,8 +67,8 @@ public class MapHoneycomb
             
             if (isFloor)
             {
-                if(Map.StaticMap.DisplayFloor)honeycomb = Map.GetHoneycombChamberFloor();
-                honeycomb.GetComponent<HoneycombCell>().SetCapColor(color);
+                if(Map.StaticMap.DisplayFloor)honeycomb = Map.GetHoneycombChamberFloor(AreaType);
+                //honeycomb.GetComponent<HoneycombCell>().SetCapColor(color);
             }
             else if((depth < 5 || depth < 7 &&  !isLargeLoc ) || ignoreLarge && !beeuilding)
             {
@@ -137,7 +137,7 @@ public class MapHoneycomb
             honeycomb.SetActive(false);
             if (isFloor)
             {
-                Map.ReturnHoneycombChamberFloor(honeycomb);
+                Map.ReturnHoneycombChamberFloor(honeycomb, AreaType);
             }
             else if (!isLargeHoneycomb && honeycomb && !beeuilding)
             {

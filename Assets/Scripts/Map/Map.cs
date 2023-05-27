@@ -360,25 +360,30 @@ public class Map : MonoBehaviour
         StaticMap.beeCityPool.Add(beeCity);
     }
 
-    public static GameObject GetHoneycombChamberFloor()
+    Dictionary<HoneycombTypes.Areas, List<GameObject>> HoneycombChamberFloorPools = new Dictionary<HoneycombTypes.Areas, List<GameObject>>();
+    public static GameObject GetHoneycombChamberFloor(HoneycombTypes.Areas areaType)
     {
         //Debug.Log("GetHoneycombChamberFloor");
         GameObject honeycomb;
-        if(StaticMap.HoneycombFloorPool.Count > 0)
+        if (!StaticMap.HoneycombChamberFloorPools.ContainsKey(areaType)) StaticMap.HoneycombChamberFloorPools[areaType] = new List<GameObject>();
+        List<GameObject> honeycombChamberFloorPool = StaticMap.HoneycombChamberFloorPools[areaType];
+        if (honeycombChamberFloorPool.Count > 0)
         {
-            honeycomb = StaticMap.HoneycombFloorPool[0];
-            StaticMap.HoneycombFloorPool.RemoveAt(0);
+            honeycomb = honeycombChamberFloorPool[0];
+            honeycombChamberFloorPool.RemoveAt(0);
         }
         else
         {
             honeycomb = Instantiate(StaticMap.HoneycombChamberFloorPrefab, StaticMap.transform.position, Quaternion.identity);
+            honeycomb.GetComponent<HoneycombCell>().SetCapColor(ColorPalette.singleton.GetAreaColor(areaType, 0));
             StaticMap.honeycombCount += 1;
         }
         return honeycomb;
     }
-    public static void ReturnHoneycombChamberFloor(GameObject honeycombFloor)
+    public static void ReturnHoneycombChamberFloor(GameObject honeycombFloor, HoneycombTypes.Areas areaType)
     {
-        if (!Map.StaticMap.DestroyHoneycombReturn) StaticMap.HoneycombFloorPool.Add(honeycombFloor);
+        //List<GameObject> honeycombChamberFloorPool = StaticMap.HoneycombChamberFloorPools[areaType];
+        if (!StaticMap.DestroyHoneycombReturn) StaticMap.HoneycombChamberFloorPools[areaType].Add(honeycombFloor);
         else Destroy(honeycombFloor.gameObject);
     }
 }

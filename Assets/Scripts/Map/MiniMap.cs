@@ -240,8 +240,12 @@ public class MiniMap : MonoBehaviour
     }
     public void DisplayFlower(int flowerID, bool display)
     {
-        displayFlowers[flowerID] = display;
-        flowerMarkers[flowerID].gameObject.SetActive(display);
+        if(flowerID < displayFlowers.Count)
+        {
+            displayFlowers[flowerID] = display;
+            flowerMarkers[flowerID].gameObject.SetActive(display);
+        }
+        
     }
 
     private void HandleDisplayPOI()

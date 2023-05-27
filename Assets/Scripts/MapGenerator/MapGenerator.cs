@@ -25,8 +25,7 @@ public class MapGenerator : MonoBehaviour
 
 
     public PerlinNoise perlinNoise;
-    public enum GenerationTypes { randomVoids, perlinNoise, pillapillarPit}
-    public GenerationTypes generationType;
+    public MapGeneratorParameters parameters;
 
     public bool generating = false;
 
@@ -35,18 +34,18 @@ public class MapGenerator : MonoBehaviour
         generating = true;
         //createVoids();
         float start = Utility.Utility.GetTime();
-        if(generationType == GenerationTypes.randomVoids)
+        if(parameters.generationType == MapGeneratorParameters.GenerationTypes.randomVoids)
         {
             createRandomMap(Player, 10);
             
             Debug.Log("createRandomMap Time: " + (Utility.Utility.GetTime() - start) + " seconds.");
         }   
-        else if(generationType == GenerationTypes.perlinNoise)
+        else if(parameters.generationType == MapGeneratorParameters.GenerationTypes.perlinNoise)
         {
             StartCoroutine(CreatePerlinNoiseMap(Player));
             do { yield return null; }
             while (perlinNoiseGenerating);
-        }else if(generationType == GenerationTypes.pillapillarPit)
+        }else if(parameters.generationType == MapGeneratorParameters.GenerationTypes.pillapillarPit)
         {
             createPillapillarPit(Player, 1);
         }

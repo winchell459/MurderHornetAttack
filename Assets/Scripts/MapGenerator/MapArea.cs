@@ -20,6 +20,7 @@ public abstract class MapArea : MapChamber
         {
             //Debug.Log("MapNest.Check");
             if (!chamber.Check(honeycomb)) display = false;
+            
         }
 
         foreach (MapPath path in paths)
@@ -27,7 +28,12 @@ public abstract class MapArea : MapChamber
             if (!path.Check(honeycomb)) display = false;
         }
         //Debug.Log("MapNest.Check");
-
+        if (/*display &&*/ honeycomb.isFloor /*&& VoidType == HoneycombTypes.Variety.Chamber*/)
+        {
+            //Debug.Log(AreaType);
+            honeycomb.color = ColorPalette.singleton.GetAreaColor(AreaType, 0);
+            honeycomb.AreaType = AreaType;
+        }
         return display;
     }
 

@@ -6,7 +6,7 @@ public class ColorPalette : MonoBehaviour
 {
     public static ColorPalette singleton;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         singleton = this;
     }

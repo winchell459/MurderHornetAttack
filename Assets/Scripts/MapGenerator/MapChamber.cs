@@ -32,6 +32,7 @@ public class MapChamber : MapVoid
                 if (display)
                 {
                     honeycomb.isFloor = true;
+                    
                 }
                 
             }

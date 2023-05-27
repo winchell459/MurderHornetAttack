@@ -11,6 +11,7 @@ public class MainMenu : MonoBehaviour
     private float TouchToPlayDelay = 2;
     private float touchToPlayDelayStart;
 
+    public MapGeneratorParameters mapGeneratorParameters;
     public MapParameters mapParameters;
     public PerlinNoise perlinNoise;
     private bool preloadComplete = false;
@@ -37,7 +38,7 @@ public class MainMenu : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
 
-            if (preloadComplete)
+            if (mapGeneratorParameters.generationType != MapGeneratorParameters.GenerationTypes.perlinNoise || preloadComplete)
             {
                 //provides a buffer for next scene's loading - Destroy in next scene after loading complete
                 DontDestroyOnLoad(preloadingScreen);

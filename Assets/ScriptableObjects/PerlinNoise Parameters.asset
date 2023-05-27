@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cd9ada4d689635b4692e0dc92353b89e, type: 3}
-  m_Name: PerlinNoise
+  m_Name: PerlinNoise Parameters
   m_EditorClassIdentifier: 
   parameters:
     seed: 306977

@@ -754,6 +754,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TouchToPlayText: {fileID: 823561269}
   ThemeSource: {fileID: 1537123443}
+  mapGeneratorParameters: {fileID: 11400000, guid: aa8bca75e83ce8e4ea296241940545a7,
+    type: 2}
   mapParameters: {fileID: 11400000, guid: 87757fd5fe8ce5b4c978f2b499aaaa34, type: 2}
   perlinNoise: {fileID: 1803418758}
   preloadingScreen: {fileID: 705212562}

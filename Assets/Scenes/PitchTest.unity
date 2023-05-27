@@ -17898,7 +17898,7 @@ MonoBehaviour:
   AntSquad: {fileID: 1696449734}
   createAntFarm: 0
   perlinNoise: {fileID: 1681636334}
-  generationType: 1
+  parameters: {fileID: 11400000, guid: aa8bca75e83ce8e4ea296241940545a7, type: 2}
   generating: 0
 --- !u!4 &1660297123
 Transform:
@@ -19967,7 +19967,7 @@ MonoBehaviour:
     embeddedColor: {r: 0, g: 0, b: 0, a: 0}
     largeColor: {r: 0, g: 0, b: 0, a: 0}
   - area: 2
-    floorColor: {r: 0.754717, g: 0.5797813, b: 0.0035599943, a: 1}
+    floorColor: {r: 1, g: 0.8196079, b: 0.3921569, a: 1}
     edgeColor: {r: 0, g: 0, b: 0, a: 0}
     embeddedColor: {r: 0, g: 0, b: 0, a: 0}
     largeColor: {r: 0, g: 0, b: 0, a: 0}
@@ -20657,7 +20657,7 @@ MonoBehaviour:
   flowerMarkerPrefab: {fileID: 537954653118117406, guid: 3ab411eff17064c4dbd0450cf3464fd7,
     type: 3}
   debuggingMaps: 1
-  zoom: 2
+  zoom: 1
 --- !u!4 &1897938973
 Transform:
   m_ObjectHideFlags: 0
