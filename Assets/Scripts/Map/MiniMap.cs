@@ -69,7 +69,7 @@ public class MiniMap : MonoBehaviour
                 DisplayMiniMap();
             }
         }
-        else if (debuggingMaps && toDisplayHeatMap != displayingHeatMap)
+        else if (toDisplayHeatMap != displayingHeatMap)
         {
             
             displayingHeatMap = toDisplayHeatMap;
@@ -77,9 +77,9 @@ public class MiniMap : MonoBehaviour
             {
                 //depthMap = FindObjectOfType<Map>().GetDepthMap();
                 if(honeycombMap == null) honeycombMap = map.GetMapHoneycombMap();
-                DisplayMiniMap();
+                if(colorMap != null) DisplayMiniMap();
             }
-            else
+            else if(debuggingMaps)
             {
                 DisplayMap();
             }
@@ -89,7 +89,7 @@ public class MiniMap : MonoBehaviour
 
     bool generatingColorMap = false;
     bool waitingColorMap = false;
-    public int zoom = 2;
+    public int zoom = 1;
 
     //find start point
     int zoomWidth { get { return honeycombMap.GetLength(0) / zoom; } }
@@ -113,7 +113,7 @@ public class MiniMap : MonoBehaviour
             for (int y = yStart; y < yStart + zoomHeight; y += 1)
             {
                 MapHoneycomb honeycomb = honeycombMap[x, y];
-                if (!honeycomb.visited)
+                if (!honeycomb.visited && !debuggingMaps)
                 {
                     //colorMap[x + y * width] = emptyColor;
                     FillPixel(x - xStart, y - yStart, width, zoom, emptyColor);

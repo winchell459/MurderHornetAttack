@@ -213,42 +213,56 @@ public class MapGenerator : MonoBehaviour
 
     }
 
-    private void createRandomMap(Transform Player, float voidCount)
+    private void createRandomMap(Transform Player, int voidCount)
     {
 
         newVoids.Clear();
         //newConnected.Clear();
         //newLocations.Clear();
 
-        //Added player spawn point
-        PlayerSpawn = CreatePlayerSpawn(PortalPrefab, Player.position);
-        Player.position = PlayerSpawn.Chamber.locations[0];
-
-
-        CreateSpiderNest(Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(75, 105)));
-        CreateAntFarm(Utility.Honeycomb.WorldPointToHoneycombGrid(AntSquad.position));
-
-
         Map map = Map.StaticMap;
         Vector2 origin = new Vector2(map.MapOrigin.x * map.HorizontalSpacing, map.MapOrigin.y * map.VerticalSpacing);
         Vector2 mapMin = origin + new Vector2(15, 15);
         Vector2 mapMax = origin + new Vector2(map.MapWidth, map.MapHeight) - new Vector2(15, 15);
 
-        //create snake Chamber
-        Vector2 snakeChamberLoc = Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(150, 80));
-        CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc, true);
+        Debug.Log($"map origin: {origin} mapMin: {mapMin} mapMax:{mapMax}");
 
-        //create random chambers
-        //for (int i = 0; i < voidCount; i += 1)
-        //{
-        //    float xLoc = Random.Range(mapMin.x, mapMax.x);
-        //    float yLoc = Random.Range(mapMin.y, mapMax.y);
-        //    float radius = Random.Range(5, 15);
-        //    newVoids.Add(MapChamber.RandomChamber(new Vector2(xLoc, yLoc), radius));
-        //    //newConnected.Add(false);
+        Vector2[] voidLocations = new Vector2[voidCount + 2];
+        GetRandomLocation(voidLocations, mapMin, mapMax, 30);
 
-        //    //newLocations.Add(new Vector2(xLoc, yLoc));
-        //}
+        //Added player spawn point
+        PlayerSpawn = CreatePlayerSpawn(PortalPrefab, voidLocations[0]);
+        Player.position = PlayerSpawn.Chamber.locations[0];
+
+        //Exit = CreateExitTunnel(PortalPrefab, Player.position);
+        Exit = CreateExitTunnel(PortalPrefab, voidLocations[1]);
+        ExitTunnel.position = Exit.Chamber.Location;
+
+
+        //CreateSpiderNest(Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(75, 105)));
+        //CreateAntFarm(Utility.Honeycomb.WorldPointToHoneycombGrid(AntSquad.position));
+        //CreateAntFarm(AntSquad.position);
+
+        AntSquad.position = voidLocations[2];
+        CreateAntFarm(Utility.Honeycomb.WorldPointToHoneycombGrid(AntSquad.position));
+
+        int index = 3;
+        while(index < voidLocations.Length)
+        {
+            CreateSpiderNest(voidLocations[index]);
+            index++;
+
+            if (index >= voidLocations.Length) break;
+            //create snake Chamber
+            Vector2 snakeChamberLoc = voidLocations[index];//Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(150, 80));
+            CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc, true);
+
+            Debug.Log($"Spider Nest:{voidLocations[index - 1]} Pillapillar Garden:{snakeChamberLoc}");
+            index++;
+        }
+        
+
+        
 
         //MapChamber endChamber = (MapChamber)newVoids[newVoids.Count - 1];
         //for(int i = 1; i < voidCount - 1; i+=1)
@@ -260,9 +274,7 @@ public class MapGenerator : MonoBehaviour
 
 
 
-        //Exit = CreateExitTunnel(PortalPrefab, Player.position);
-        Exit = CreateExitTunnel(PortalPrefab, Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(200, 200)));
-        ExitTunnel.position = Exit.Chamber.Location;
+        
 
 
 
@@ -277,6 +289,35 @@ public class MapGenerator : MonoBehaviour
 
 
 
+    }
+
+    void GetRandomLocation(Vector2[] locations, Vector2 min, Vector2 max, float radius)
+    {
+        int breakCounter = 1000;
+        bool done = false;
+        while(!done && breakCounter > 0)
+        {
+            for(int i = 0; i < locations.Length; i++)
+            {
+                float x = Random.Range(min.x, max.x);
+                float y = Random.Range(min.y, max.y);
+                Vector2 newLoc = new Vector2(x, y);
+                bool valid = true;
+                for(int j = 0; j < i; j++)
+                {
+                    if(Vector2.Distance(newLoc, locations[j]) < radius)
+                    {
+                        valid = false;
+                        break;
+                    }
+                }
+                if (valid) locations[i] = newLoc;
+                else break;
+            }
+
+            breakCounter--;
+        }
+        if(breakCounter < 0)Debug.LogWarning($"breakCounter");
     }
 
 
@@ -301,7 +342,7 @@ public class MapGenerator : MonoBehaviour
             }
         }
     }
-    public  Portal CreatePlayerSpawn(GameObject PortalPrefab, Vector2 position)
+    public Portal CreatePlayerSpawn(GameObject PortalPrefab, Vector2 position)
    {
         MapChamber spawnChamber = MapChamber.RandomChamber(position, 3);
         Portal PlayerSpawn = (Portal)ChamberTrigger.SetupChamberTrigger(PortalPrefab, spawnChamber);
@@ -374,6 +415,7 @@ public class MapGenerator : MonoBehaviour
 
     public void CreateAntFarm(HoneycombPos position)
     {
+        Debug.Log($"ant farm start {position}");
         MapFarm farm = MapFarm.CreateRandomMaze(position, position + new HoneycombPos(50, 50), 2, 7, ChamberAntFarmTriggerPrefab.gameObject);
         newVoids.Add(farm);
     }
@@ -390,6 +432,7 @@ public class MapGenerator : MonoBehaviour
                 if (connecting != i)
                 {
                     //chambers.Add(MapPath.CreateJoggingPath(((MapChamber)chambers[i]).ClosestEntrancePoint(newLocations[connecting]), newLocations[connecting], -2, 2, 2, 6, 2, 2));
+                    Debug.Log($"{((MapChamber)chambers[connecting]).GetType()}");
                     chambers.Add(MapPath.CreateJoggingPath(((MapChamber)chambers[i]).ClosestEntrancePoint(((MapChamber)chambers[connecting]).Location), ((MapChamber)chambers[connecting]).Location, -2, 2, 2, 6, 3, 6));
                     ((MapChamber)chambers[i]).Connected = true;
                 }

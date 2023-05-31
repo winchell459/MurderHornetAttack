@@ -11,6 +11,7 @@ public static class TextureGenerator
         //texture.wrapMode = TextureWrapMode.Clamp;
         //texture.SetPixels(colorMap);
         //texture.Apply();
+        //Debug.Log($"{texture.width} {texture.height} {colorMap.Length}");
         return TextureFromColorMap(texture, colorMap, width, height);
     }
 

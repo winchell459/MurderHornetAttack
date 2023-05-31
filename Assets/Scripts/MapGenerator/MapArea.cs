@@ -16,24 +16,35 @@ public abstract class MapArea : MapChamber
     public override bool Check(MapHoneycomb honeycomb)
     {
         bool display = honeycomb.display;
-        foreach (MapChamber chamber in chambers)
+        if (display)
         {
-            //Debug.Log("MapNest.Check");
-            if (!chamber.Check(honeycomb)) display = false;
-            
-        }
+            bool isFloorCheck = !honeycomb.isFloor;
+            foreach (MapChamber chamber in chambers)
+            {
+                //Debug.Log("MapNest.Check");
+                if (!chamber.Check(honeycomb))
+                {
+                    display = false;
+                }
 
-        foreach (MapPath path in paths)
-        {
-            if (!path.Check(honeycomb)) display = false;
+            }
+
+            foreach (MapPath path in paths)
+            {
+                if (!path.Check(honeycomb))
+                {
+                    display = false;
+                }
+            }
+            //Debug.Log("MapNest.Check");
+            if (isFloorCheck && honeycomb.isFloor /*&& VoidType == HoneycombTypes.Variety.Chamber*/)
+            {
+                //Debug.Log(AreaType);
+                honeycomb.color = ColorPalette.singleton.GetAreaColor(AreaType, 0);
+                honeycomb.AreaType = AreaType;
+            }
         }
-        //Debug.Log("MapNest.Check");
-        if (/*display &&*/ honeycomb.isFloor /*&& VoidType == HoneycombTypes.Variety.Chamber*/)
-        {
-            //Debug.Log(AreaType);
-            honeycomb.color = ColorPalette.singleton.GetAreaColor(AreaType, 0);
-            honeycomb.AreaType = AreaType;
-        }
+        
         return display;
     }
 

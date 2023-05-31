@@ -72,6 +72,7 @@ public class MapChamber : MapVoid
                 index = i;
             }
         }
+        Debug.Log($"ClosestEntrancePoint {distance} {index} {point}");
         return distance * (locations[index] - point).normalized + point;
     }
 

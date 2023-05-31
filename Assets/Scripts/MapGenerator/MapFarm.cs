@@ -21,7 +21,7 @@ public class MapFarm : MapArea
 
     public static MapFarm CreateRandomMaze(HoneycombPos startPoint, HoneycombPos endPoint, float edgeWidth, int nodeCount, GameObject AntSquadTriggerPrefab)
     {
-        MapFarm farm = new MapFarm(startPoint.vector2);
+        MapFarm farm = new MapFarm(startPoint.worldPos);
         farm.locations.Add(farm.Location);
         farm.widths.Add(5);
         farm.startPoint = startPoint;
