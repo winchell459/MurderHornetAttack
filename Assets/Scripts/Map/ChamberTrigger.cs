@@ -32,15 +32,15 @@ public abstract class ChamberTrigger : MonoBehaviour
             
         }
     }
-    public static ChamberTrigger SetupChamberTrigger(GameObject prefab, MapChamber chamber)
+    public static ChamberTrigger SetupChamberTrigger(GameObject prefab, MapChamber chamber, Color triggerColor)
     {
         ChamberTrigger trigger = Instantiate(prefab, chamber.Location, Quaternion.identity).GetComponent<ChamberTrigger>();
-        return (trigger).Setup(chamber);
+        return (trigger).Setup(chamber,triggerColor);
     }
 
     protected abstract void OnStay(Collider2D collision);
     protected abstract void OnExit(Collider2D collision);
-    protected ChamberTrigger Setup(MapChamber chamber)
+    protected ChamberTrigger Setup(MapChamber chamber, Color triggerColor)
     {
         Chamber = chamber;
 
@@ -60,7 +60,7 @@ public abstract class ChamberTrigger : MonoBehaviour
             GameObject circle = Instantiate(CirclePrefab, chamber.locations[i], Quaternion.identity);
             circle.transform.parent = transform;
             circle.transform.localScale = new Vector2(chamber.widths[i], chamber.widths[i]);
-            circle.GetComponent<SpriteRenderer>().color = Color.black;
+            circle.GetComponent<SpriteRenderer>().color = triggerColor;
             //Debug.Log(chamber.locations[i] + " " + chamber.widths[i]);
         }
         

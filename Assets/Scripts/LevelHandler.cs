@@ -108,7 +108,7 @@ public class LevelHandler : MonoBehaviour
         if (Player)
         {
             displayLocation(Utility.Honeycomb.WorldPointToHoneycombGrid(Player.position).vector2, PlayerLoc);
-            //displayLocation(Map.StaticMap.GetChunkIndex( Utility.Honeycomb.GetMapChunk(Player.position)), SpawnLoc);
+            displayLocation(Map.StaticMap.GetChunkIndex( Utility.Honeycomb.GetMapChunk(Player.position)), SpawnLoc);
             //Debug.Log(Utility.GetMapChunk(Player.position).ChunkIndex + " chunkOffset: " + Utility.GetMapChunk(Player.position).mapOffset);
 
             //display player location on minimap
@@ -158,11 +158,12 @@ public class LevelHandler : MonoBehaviour
         UpdatePlayerStats();
     }
 
+    public bool infiniteLives = true;
     void HandlePlayerDeath()
     {
         playerDead = true;
         
-        if(PlayerHandler.eggCount > 0)
+        if(infiniteLives || PlayerHandler.eggCount > 0)
         {
             PlayerHandler.eggCount = Mathf.Clamp(PlayerHandler.eggCount - 1, 0, int.MaxValue);
             FindObjectOfType<UIHandler>().DisplayMurderedPanel(true, "Murder Hornet is Murdered");

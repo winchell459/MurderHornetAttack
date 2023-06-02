@@ -12258,6 +12258,7 @@ MonoBehaviour:
   EnemyDropPrefab: {fileID: 7903702654899577405, guid: 8052195b8c5247c4193a991b99f19a5f,
     type: 3}
   loadingSplash: {fileID: 1884620409}
+  infiniteLives: 1
   towerDropPrefab: {fileID: 1174156814334646262, guid: 2c2238df2713196459b3d66d8a7a2d57,
     type: 3}
 --- !u!4 &1047031842
@@ -13748,11 +13749,11 @@ RectTransform:
   m_Father: {fileID: 1262532039}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -63.4, y: -5.419922}
-  m_SizeDelta: {x: 300.1, y: 69.19}
-  m_Pivot: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 221, y: -5.419922}
+  m_SizeDelta: {x: 129, y: 69.19}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1200924955
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19976,6 +19977,11 @@ MonoBehaviour:
     edgeColor: {r: 0.9056604, g: 0.2691349, b: 0.71760607, a: 1}
     embeddedColor: {r: 0.8490566, g: 0.83110017, b: 0.7809719, a: 1}
     largeColor: {r: 0.6273585, g: 1, b: 0.98118997, a: 1}
+  - area: 3
+    floorColor: {r: 0.4056604, g: 0.28870383, b: 0.009567461, a: 1}
+    edgeColor: {r: 0, g: 0, b: 0, a: 0}
+    embeddedColor: {r: 0, g: 0, b: 0, a: 0}
+    largeColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!4 &1799806878
 Transform:
   m_ObjectHideFlags: 0

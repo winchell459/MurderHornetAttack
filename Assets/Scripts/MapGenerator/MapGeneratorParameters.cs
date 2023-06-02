@@ -7,4 +7,6 @@ public class MapGeneratorParameters : ScriptableObject
 {
     public enum GenerationTypes { randomVoids, perlinNoise, pillapillarPit }
     public GenerationTypes generationType;
+
+    public int nestCount = 3, gardenCount = 3, antMoundCount = 5;
 }

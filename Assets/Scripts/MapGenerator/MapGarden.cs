@@ -15,7 +15,7 @@ public class MapGarden : MapArea
         MapGarden garden = new MapGarden(pos);
 
         MapChamber chamber = MapChamber.RandomChamber(pos, radius);
-        ChamberTrigger.SetupChamberTrigger(ChamberTriggerPrefab, chamber);
+        ChamberTrigger.SetupChamberTrigger(ChamberTriggerPrefab, chamber, Color.clear);
         garden.chambers.Add(chamber);
         for(int i = 0; i < chamber.locations.Count; i += 1)
         {

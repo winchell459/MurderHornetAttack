@@ -19,6 +19,40 @@ public class MapFarm : MapArea
 
     //}
 
+    public static MapFarm CreateRandomMazeWithPoints(HoneycombPos startPoint, HoneycombPos endPoint, float edgeWidth, HoneycombPos[] moundLocations, GameObject AntSquadTriggerPrefab)
+    {
+        MapFarm farm = new MapFarm(startPoint.worldPos);
+        farm.locations.Add(farm.Location);
+        farm.widths.Add(5);
+        farm.startPoint = startPoint;
+        farm.endPoint = endPoint;
+
+        farm.maze.Add(startPoint);
+        for(int i = 1; i < moundLocations.Length; i++)
+        {
+            farm.locations.Add(moundLocations[i].worldPos);
+            farm.widths.Add(5);
+            farm.maze.Add(moundLocations[i]);
+        }
+        
+
+        farm.maze = farm.connectNodes(new List<HoneycombPos>(), startPoint);
+        farm.maze.Add(endPoint);
+
+        //connect ant mounds
+        List<MapPath> edges = farm.generateEdges(farm.maze);
+
+
+
+        SetupMounds(farm, AntSquadTriggerPrefab, edges);
+
+        //finish farm setup
+        farm.StartPoints.Add(farm.maze[0]);
+        farm.EndPoints.Add(farm.maze[farm.maze.Count - 1]);
+
+        return farm;
+    }
+
     public static MapFarm CreateRandomMaze(HoneycombPos startPoint, HoneycombPos endPoint, float edgeWidth, int nodeCount, GameObject AntSquadTriggerPrefab)
     {
         MapFarm farm = new MapFarm(startPoint.worldPos);
@@ -26,35 +60,48 @@ public class MapFarm : MapArea
         farm.widths.Add(5);
         farm.startPoint = startPoint;
         farm.endPoint = endPoint;
+
+        //place ant mounds
         farm.generateMaze(nodeCount);
 
+        //connect ant mounds
         List<MapPath> edges = farm.generateEdges(farm.maze);
 
-        List<ChamberAntFarmTrigger> triggers = new List<ChamberAntFarmTrigger>();
-        //bool lastSet = false;
-        foreach(HoneycombPos node in farm.maze)
-        {
-            MapChamber chamber = new MapChamber(node.worldPos);
-            Debug.Log("node.pos " + node);
-            chamber.VoidType = HoneycombTypes.Variety.Chamber;
-            chamber.AddChamber(chamber.Location, 5);
-            ChamberAntFarmTrigger trigger = (ChamberAntFarmTrigger)ChamberTrigger.SetupChamberTrigger(AntSquadTriggerPrefab, chamber);
+        
 
-            triggers.Add(trigger);
-            farm.chambers.Add(chamber);
-        }
+        SetupMounds(farm, AntSquadTriggerPrefab, edges);
 
-        for(int i = 0; i < triggers.Count; i += 1)
-        {
-            if(i > 0)triggers[i].PreviousNode = triggers[i - 1];
-            if(i < triggers.Count - 1) triggers[i].AntPath = edges[i];
-        }
-
+        //finish farm setup
         farm.StartPoints.Add(farm.maze[0]);
         farm.EndPoints.Add(farm.maze[farm.maze.Count - 1]);
         //farm.paths = edges;
 
         return farm;
+    }
+
+    private static void SetupMounds(MapFarm farm, GameObject AntSquadTriggerPrefab, List<MapPath> edges)
+    {
+        //place triggers at each mound
+        List<ChamberAntFarmTrigger> triggers = new List<ChamberAntFarmTrigger>();
+        //bool lastSet = false;
+        foreach (HoneycombPos node in farm.maze)
+        {
+            MapChamber chamber = new MapChamber(node.worldPos);
+            Debug.Log("node.pos " + node);
+            chamber.VoidType = HoneycombTypes.Variety.Chamber;
+            chamber.AddChamber(chamber.Location, 5);
+            ChamberAntFarmTrigger trigger = (ChamberAntFarmTrigger)ChamberTrigger.SetupChamberTrigger(AntSquadTriggerPrefab, chamber, Color.black);
+
+            triggers.Add(trigger);
+            farm.chambers.Add(chamber);
+        }
+
+        //connect chamber ant farm triggers
+        for (int i = 0; i < triggers.Count; i += 1)
+        {
+            if (i > 0) triggers[i].PreviousNode = triggers[i - 1];
+            if (i < triggers.Count - 1) triggers[i].AntPath = edges[i];
+        }
     }
 
     private void generateMaze(int nodeCount)
@@ -92,8 +139,8 @@ public class MapFarm : MapArea
                 if (fails >= failsCoefficient * nodeCount) Debug.Log("Maze build fail: node.Count = " + nodes.Count);
             }
         }
+
         List<HoneycombPos> edges = new List<HoneycombPos>();
-        //edges.Add(startPoint);
         maze = connectNodes(edges, startPoint);
     }
 
