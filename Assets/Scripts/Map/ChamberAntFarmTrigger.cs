@@ -10,6 +10,16 @@ public class ChamberAntFarmTrigger : ChamberTrigger
     public bool Triggered = false;
     public MapPath AntPath;
 
+    private void Update()
+    {
+        if (PreviousNode)
+        {
+            Color lineColor = Color.blue;
+            if (!PreviousNode.PreviousNode) lineColor = Color.green;
+
+            Debug.DrawLine(PreviousNode.transform.position, transform.position, lineColor);
+        }
+    }
     protected override void OnExit(Collider2D collision)
     {
         

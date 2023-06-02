@@ -54,6 +54,13 @@ public class AntSquad : MonoBehaviour
             //
             Destroy(gameObject);
         }
+
+        for(int i = 1; i < MarchingPoints.Length; i++)
+        {
+
+            Debug.DrawLine(MarchingPoints[i - 1], MarchingPoints[i], Color.red);
+        }
+        
     }
 
     public void StartMarch() 
