@@ -14,8 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MapWidth: 300
   MapHeight: 240
-  VerticalSpacing: 0.27
-  HorizontalSpacing: 0.45
   ChunkHeight: 18
   ChunkWidth: 12
-  ChunkRadius: 4
+  ChunkRadius: 8

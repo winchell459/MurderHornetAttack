@@ -12,8 +12,20 @@ public class CameraController : MonoBehaviour
     //public Transform Layer2;
     //private float layer2Scale;
     public Transform[] Layers;
+    public bool rotateTargetLocked;
+    public float defaultRotation;
+    private float offsetRotation = 0;
     
     private List<float> scales = new List<float>();
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            offsetRotation = -Target.eulerAngles.z + transform.eulerAngles.z;
+            rotateTargetLocked = !rotateTargetLocked;
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -37,7 +49,7 @@ public class CameraController : MonoBehaviour
         {
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(Target.position.x, Target.position.y, transform.position.z), ControlParameters.StaticControlParams.CameraSpeed*Time.deltaTime);
             //transform.up = Target.up;
-            transform.eulerAngles = Target.eulerAngles;
+            if(rotateTargetLocked)transform.eulerAngles = Target.eulerAngles + offsetRotation * Vector3.forward;
             for(int i = 1; i < Layers.Length; i+=1)
             {
                 Transform layer = Layers[i];
