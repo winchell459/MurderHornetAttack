@@ -28,7 +28,11 @@ public class UIHandler : MonoBehaviour
 
     public void ToggleMenu()
     {
-        if (menuPanels.Length > 0) DisplayMenu(!menuPanels[0].activeSelf);
+        if (menuPanels.Length > 0)
+        {
+            DisplayMenu(!menuPanels[0].activeSelf);
+            MiniMap.singleton.ToggleSize();
+        }
     }
     private void DisplayMenu(bool on)
     {

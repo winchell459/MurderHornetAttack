@@ -21,6 +21,8 @@ public class HornetController : Insect
 
     public bool MobileControls;
     public bool ExitButtonPressed;
+
+    public Retical retical;
     
     // Start is called before the first frame update
     void Start()
@@ -35,7 +37,11 @@ public class HornetController : Insect
         MobileControls = true;
 #else
         SetMousePosition();
+        MobileControls = false;
 #endif
+
+        if (!MobileControls) GetComponent<MobileController>().enabled = false;
+
     }
     //Vector2 mouseScreenPosition;
     float mousePosition;
@@ -95,7 +101,7 @@ public class HornetController : Insect
 
         if (!MobileControls)
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKey(KeyCode.E))
             {
                 ExitButtonPressed = true;
             }
@@ -133,13 +139,30 @@ public class HornetController : Insect
 
         if(ShotCount > 0)
         {
-            if (!ph) ph = FindObjectOfType<PlayerHandler>();
-            HornetPlasm.FirePlasma(HornetPlasmPrefab, transform.position, 10 * transform.up, ph.GetPlasmaPower());
-
-            ShotCount -= 1;
-
-            FindObjectOfType<LevelHandler>().UpdatePlayerStats();
+            HandleFiring();
         }
+        else
+        {
+            HandleEmptyFiring();
+        }
+
+    }
+    private void HandleFiring()
+    {
+        if (!ph) ph = FindObjectOfType<PlayerHandler>();
+        HornetPlasm.FirePlasma(HornetPlasmPrefab, transform.position, 10 * transform.up, ph.GetPlasmaPower());
+        AudioHandler.singleton.PlayClip(AudioHandler.FXClipName.fire);
+        ShotCount -= 1;
+        LevelHandler.singleton.UpdatePlayerStats();
+    }
+
+    private void HandleEmptyFiring()
+    {
+        AudioHandler.singleton.PlayClip(AudioHandler.FXClipName.empty);
+    }
+
+    public void PlasmaCharged()
+    {
 
     }
 

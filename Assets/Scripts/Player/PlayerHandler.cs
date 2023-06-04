@@ -200,6 +200,7 @@ public class PlayerHandler : MonoBehaviour
             {
                 lastPlasmaCharge = Time.fixedTime;
                 player.ShotCount += 1;
+                player.PlasmaCharged();
                 //FindObjectOfType<LevelHandler>().UpdatePlayerStats();
             }
             else if(player.ShotCount > GetMaxShot())

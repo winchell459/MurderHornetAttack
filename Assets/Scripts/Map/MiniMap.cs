@@ -41,11 +41,18 @@ public class MiniMap : MonoBehaviour
 
     public bool debuggingMaps;
 
+    private Vector2 defaultPos;
+
     // Start is called before the first frame update
     void Awake()
     {
         if (singleton == null) singleton = this;
         else Destroy(gameObject);
+    }
+
+    private void Start()
+    {
+        defaultPos = mapDisplay.rawImage.GetComponent<RectTransform>().position;
     }
 
     // Update is called once per frame
@@ -161,15 +168,40 @@ public class MiniMap : MonoBehaviour
         }
     }
 
+    bool centerMap = true;
+    public Transform hexMapPanel;
     Texture2D texture;
     private void DisplayMiniMap()
     {
         if (texture == null) texture = TextureGenerator.TextureFromColorMap(colorMap, honeycombMap.GetLength(0), honeycombMap.GetLength(1));
         else texture = TextureGenerator.TextureFromColorMap(texture, colorMap, honeycombMap.GetLength(0), honeycombMap.GetLength(1));
         mapDisplay.DrawTexture(texture, currentSize);
+        RectTransform mapTran = mapDisplay.rawImage.rectTransform;
+        if (currentSize == maximizedSize && centerMap)
+        {
+            
+            
+            if (mapTran.parent != hexMapPanel)
+            {
+                Vector2 imageSize = mapTran.sizeDelta;
+                Vector3 newPos = new Vector3(Screen.width / 2 + (imageSize.x * mapTran.parent.GetComponent<RectTransform>().localScale.x) / 2, Screen.height / 2 + (imageSize.y * mapTran.parent.GetComponent<RectTransform>().localScale.y) / 2);
+                Debug.Log($"({Screen.width}/2 + ({imageSize.x}*{mapTran.parent.GetComponent<RectTransform>().localScale.x})/2, {Screen.height}/2 + {imageSize.y * mapTran.parent.GetComponent<RectTransform>().localScale.y}/2) = {newPos}");
+                mapTran.position = newPos;
+                mapTran.SetParent(hexMapPanel, true);
+            }
+        }
+        else
+        {
+            if (mapTran.parent == hexMapPanel)
+            {
+                mapTran.SetParent(hexMapPanel.parent, true);
+                mapDisplay.rawImage.rectTransform.position = defaultPos;
+            }
+        }
         HandleDisplayPOI();
         
-}
+    }
+
     private void DisplayMap()
     {
         mapDisplay.DrawTexture(TextureGenerator.TextureFromHeightMap(heatMaps[displayingHeatMap]), currentSize);
