@@ -156,6 +156,10 @@ public class EnemyPhysics : Insect
         }
     }
 
+    public void SetTarget(GameObject target)
+    {
+        this.target = target;
+    }
     private void MoveToPlayer()
     {
         if (!target) target = GameObject.FindWithTag("Player");

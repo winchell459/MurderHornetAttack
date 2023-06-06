@@ -31,12 +31,24 @@ public class HoneycombTower : Honeycomb
         {
             if (lh.HoneycombTowerSpawnEnemy(honeyGrid))
             {
-               // Debug.Log("HoneycombTower Attacks");
-                Instantiate(/*honeyGrid.GetEnemyPrefab()*/enemyPrefab, transform.position, Quaternion.identity);
-                lastSpawn = Time.time;
+                SpawnBee(player.gameObject);
             }
             
         }
+    }
+    public EnemyPhysics SpawnBee(GameObject target)
+    {
+
+        if (enemyPrefab)
+        {
+            GameObject spawnedInsect = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
+            
+            Debug.Log("HoneycombTower Attacks");
+            lastSpawn = Time.time;
+            spawnedInsect.GetComponent<EnemyPhysics>().SetTarget(target);
+            return spawnedInsect.GetComponent<EnemyPhysics>();
+        }
+        return null;
     }
     public override void DamageHoneycomb(float damage)
     {

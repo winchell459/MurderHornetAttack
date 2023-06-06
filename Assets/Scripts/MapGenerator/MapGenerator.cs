@@ -48,6 +48,16 @@ public class MapGenerator : MonoBehaviour
         }else if(parameters.generationType == MapGeneratorParameters.GenerationTypes.pillapillarPit)
         {
             createPillapillarPit(Player, 1);
+        }else if(parameters.generationType == MapGeneratorParameters.GenerationTypes.beeCity)
+        {
+            Player.position = new Vector3(65, 85);
+
+            mapVoids.Add(new MapBeeCity(Player.position, Player.position + new Vector3(50,0), 4, 15,30));
+            Map.StaticMap.AddVoid(mapVoids);
+            Exit = CreatePlayerSpawn(PortalPrefab, Player.position);
+            Exit.transform.position = Player.position + new Vector3(50, 0);
+            FindObjectOfType<QueenController>().transform.position = Player.position + new Vector3(50, 0);
+            addPathEnemies();
         }
 
 

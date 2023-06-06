@@ -37,6 +37,10 @@ public class MapPath : MapVoid
     {
         return Points[pathIndex + 1];
     }
+    public Vector2 GetPoint(int index)
+    {
+        return Points[index];
+    }
 
     public override bool Check(MapHoneycomb honeycomb)
     {
@@ -103,8 +107,67 @@ public class MapPath : MapVoid
         return path;
     }
 
-    public Vector2 GetPoint(int index)
+    //Vector2Int[] spiralOrder = {new Vector2Int()}
+    static int[] spiralOrder = { 0, 300, 240, 180, 120, 60 }; //clockwise default hex spiral order
+    public static MapPath GetHexSpiralPath(float pathWidth, float spiralWidth, Vector2 start, int startDir, Vector2 end)
     {
-        return Points[index];
+        
+        int spiralStart = 0;
+        while(spiralStart < 6 && MapPath.spiralOrder[spiralStart] != startDir)
+        {
+            spiralStart++;
+        }
+
+        if(spiralStart >= 6)
+        {
+            Debug.LogWarning($"MapPath GetHexSpiralPath start angle: {startDir} not found");
+            return null;
+        }
+
+        int[] spiralOrder = new int[6];
+        for(int i = 0; i < 6; i++)
+        {
+            spiralOrder[i] = MapPath.spiralOrder[(i + spiralStart) % 6];
+        }
+
+        MapPath hexMapPath = new MapPath(start);
+        float radius = Vector2.Distance(start, end);
+        int loopBreaker = 100;
+        while(Vector2.Distance(start, end) > spiralWidth && loopBreaker > 0)
+        {
+            Vector2 newPoint;
+            for (int i = 0; i < 4; i++)
+            {
+                newPoint = new Vector2(start.x + radius * Mathf.Cos(spiralOrder[i] * Mathf.PI / 180), start.y + radius * Mathf.Sin(spiralOrder[i] * Mathf.PI / 180));
+
+                hexMapPath.Add(newPoint, pathWidth);
+                start = newPoint;
+
+                if (Vector2.Distance(start, end) <= spiralWidth) break;
+            }
+            if (Vector2.Distance(start, end) <= spiralWidth) break;
+            radius -= spiralWidth;
+            newPoint = new Vector2(start.x + radius * Mathf.Cos(spiralOrder[4] * Mathf.PI / 180), start.y + radius * Mathf.Sin(spiralOrder[4] * Mathf.PI / 180));
+
+            hexMapPath.Add(newPoint, pathWidth);
+            start = newPoint;
+
+            if (Vector2.Distance(start, end) <= spiralWidth) break;
+            radius += spiralWidth;
+            newPoint = new Vector2(start.x + radius * Mathf.Cos(spiralOrder[5] * Mathf.PI / 180), start.y + radius * Mathf.Sin(spiralOrder[5] * Mathf.PI / 180));
+
+            hexMapPath.Add(newPoint, pathWidth);
+            start = newPoint;
+
+            radius -= spiralWidth;
+
+            loopBreaker--;
+        }
+        
+        
+
+        return hexMapPath;
     }
+
+    
 }

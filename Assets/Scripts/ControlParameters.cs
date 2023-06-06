@@ -56,7 +56,11 @@ public class ControlParameters : MonoBehaviour
 
     public void UpdateControllers()
     {
-        FindObjectOfType<TouchControlsKit.TCKJoystick>().borderSize = JoystickBoarderSize;
-        FindObjectOfType<TouchControlsKit.TCKJoystick>().sensitivity = JoystickSensitivity;
+        if (FindObjectOfType<TouchControlsKit.TCKJoystick>())
+        {
+            FindObjectOfType<TouchControlsKit.TCKJoystick>().borderSize = JoystickBoarderSize;
+            FindObjectOfType<TouchControlsKit.TCKJoystick>().sensitivity = JoystickSensitivity;
+        }
+        
     }
 }

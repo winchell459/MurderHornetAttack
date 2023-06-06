@@ -9,13 +9,13 @@ public class PrincessController : MonoBehaviour
     public float playerActiveRadius = 15;
     private HornetController player;
     public Transform body;
-    private Transform camera;
+    private Transform cam;
     public bool inLove;
     public float speed = 1;
     // Start is called before the first frame update
     void Start()
     {
-        camera = FindObjectOfType<CameraController>().transform;
+        cam = FindObjectOfType<CameraController>().transform;
     }
 
     // Update is called once per frame
@@ -25,7 +25,7 @@ public class PrincessController : MonoBehaviour
 
         if(player && Vector2.Distance(player.transform.position, exit.position) < playerActiveRadius)
         {
-            transform.up = camera.up;
+            transform.up = cam.up;
 
             if (inLove)
             {

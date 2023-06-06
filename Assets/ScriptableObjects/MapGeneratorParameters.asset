@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d1006ea57b1764499a79f919c3f565c, type: 3}
   m_Name: MapGeneratorParameters
   m_EditorClassIdentifier: 
-  generationType: 1
+  generationType: 3
   nestCount: 3
   gardenCount: 3
   antMoundCount: 5

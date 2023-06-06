@@ -11,32 +11,13 @@ public class LevelHandler : MonoBehaviour
     public Transform Player;
     public GameObject PlayerPrefab;
 
-    private bool playerDead = false;
-    
-
-    public Text PlayerLoc, SpawnLoc, EndLoc;
-    public Text BeesMurderedText, HornetMurderedText;
-    public Text eggCountText, flowerCountText, royalJellyCountText;
-    public Text HealthMeterText;
-    public RawImage HealthMeterBar;
-
-    public Text PlasmaMeterText;
-    public RawImage PlasmaMeterBar;
-
-    public Text PlasmaPowerText, PlasmaChargeRateText, PlasmaChargeCapacityText;
-    //public Text FPSText;
-    public InputField CameraTrackingInput, VSensInput, HSensInput, JoystickBoarderSizeInput, JoystickSensitivityInput;
-    public Toggle InverseReverseToggle;
-
     public CameraController Cam;
-
-    
 
     public GameObject EnemyDropPrefab;
 
-    
     private PlayerHandler ph;
 
+    private bool playerDead = false;
     private bool levelEnding = false;
 
     MapGenerator generator;
@@ -44,7 +25,7 @@ public class LevelHandler : MonoBehaviour
     private bool _paused = false;
     public bool paused { get { return _paused; } }
 
-    public GameObject loadingSplash;
+    public UIHandler uIHandler;
 
 
     // Start is called before the first frame update
@@ -72,7 +53,7 @@ public class LevelHandler : MonoBehaviour
         Cam.SetCameraTarget(Player);
         ph = FindObjectOfType<PlayerHandler>();
         
-        displayLocation(Utility.Honeycomb.WorldPointToHoneycombGrid(generator.Exit.transform.position).vector2, EndLoc);
+        uIHandler.DisplayExitLocation(Utility.Honeycomb.WorldPointToHoneycombGrid(generator.Exit.transform.position).vector2);
         MiniMap.singleton.StartDisplayMiniMap();
         MiniMap.singleton.SetPrincessPos(Utility.Honeycomb.WorldPointToHoneycombGrid(generator.Exit.transform.position));
         MiniMap.singleton.DisplayPrincessMarker(true);
@@ -84,7 +65,7 @@ public class LevelHandler : MonoBehaviour
     {
         //Time.timeScale = 0;
         yield return new WaitForSeconds(1);
-        loadingSplash.GetComponent<UIHandler>().LoadUI();
+        uIHandler.LoadUI();
         //Time.timeScale = 1;
     }
 
@@ -107,8 +88,8 @@ public class LevelHandler : MonoBehaviour
 
         if (Player)
         {
-            displayLocation(Utility.Honeycomb.WorldPointToHoneycombGrid(Player.position).vector2, PlayerLoc);
-            displayLocation(Map.StaticMap.GetChunkIndex( Utility.Honeycomb.GetMapChunk(Player.position)), SpawnLoc);
+            uIHandler.DisplayPlayerLocation(Utility.Honeycomb.WorldPointToHoneycombGrid(Player.position).vector2);
+            uIHandler.DisplaySpawnLocation(Map.StaticMap.GetChunkIndex( Utility.Honeycomb.GetMapChunk(Player.position)));
             //Debug.Log(Utility.GetMapChunk(Player.position).ChunkIndex + " chunkOffset: " + Utility.GetMapChunk(Player.position).mapOffset);
 
             //display player location on minimap
@@ -137,17 +118,7 @@ public class LevelHandler : MonoBehaviour
         _paused = !_paused;
     }
 
-    private void displayLocation(Vector2 loc, Text text)
-    {
-        int decimals = 2;
-        float factor = Mathf.Pow(10, decimals);
-        float x = (int)loc.x * factor;
-        x = (float)x / factor;
-        float y = (int)loc.y * factor;
-        y /= factor;
-        text.text = x + " " + y;
-
-    }
+    
     HornetController hc;
     private void spawnPlayer(Portal portal)
     {
@@ -179,6 +150,11 @@ public class LevelHandler : MonoBehaviour
     public void BeeuildingDestroyed(Vector2 towerPos)
     {
         Instantiate(towerDropPrefab, towerPos, Quaternion.identity);
+    }
+
+    public void QueenDeath()
+    {
+        FindObjectOfType<PrincessController>().inLove = true;
     }
 
     public void EnemyDeath(GameObject enemy)
@@ -287,30 +263,13 @@ public class LevelHandler : MonoBehaviour
 
     public void UpdatePlayerStats()
     {
-        
-        BeesMurderedText.text = PlayerHandler.BeesMurderedCount.ToString();
-        HornetMurderedText.text = PlayerHandler.HornetMurderedCount.ToString();
-
-        //PlayerHandler ph = FindObjectOfType<PlayerHandler>();
-        //HornetController hc = FindObjectOfType<HornetController>();
+        uIHandler.UpdateKillCounts(PlayerHandler.BeesMurderedCount, PlayerHandler.HornetMurderedCount);
 
         if(ph && hc)
         {
-            float barPercent = hc.Health / ph.GetMaxHealth();
-            HealthMeterBar.rectTransform.localScale = new Vector3(barPercent, 1, 1);
-            HealthMeterText.text = hc.Health.ToString();
-
-            float plasmaPercent = (float)hc.ShotCount / ph.GetMaxShot();
-            PlasmaMeterBar.rectTransform.localScale = new Vector3(plasmaPercent, plasmaPercent, 1);
-            PlasmaMeterText.text = hc.ShotCount.ToString();
-
-            PlasmaPowerText.text = (int)ph.GetPlasmaPower() + " " + (int)ph.GetPlasmaPowerBuffTime();
-            PlasmaChargeRateText.text = Utility.Utility.FormatFloat(ph.GetPlasmaChargeRate(),2) + " " + (int)ph.GetPlasmaChargeRateBuffTime();
-            PlasmaChargeCapacityText.text = ph.GetMaxShot() + " " + (int)ph.GetMaxShotBuffTime();
-
-            eggCountText.text = PlayerHandler.eggCount.ToString();
-            flowerCountText.text = PlayerHandler.flowerCount.ToString();
-            royalJellyCountText.text = PlayerHandler.royalJellyCount.ToString();
+            uIHandler.UpdatePlayerBuffs(hc.Health, ph.GetMaxHealth(), hc.ShotCount, ph.GetMaxShot(), ph.GetPlasmaPower(),
+                ph.GetPlasmaPowerBuffTime(), ph.GetPlasmaChargeRate(), ph.GetPlasmaChargeRateBuffTime(), ph.GetMaxShotBuffTime(),
+                PlayerHandler.eggCount, PlayerHandler.flowerCount, PlayerHandler.royalJellyCount);
         }
         
     }
@@ -331,36 +290,9 @@ public class LevelHandler : MonoBehaviour
         UpdatePlayerStats();
     }
 
-    
-
-    public void SetControlParameters()
-    {
-        try
-        {
-            float cameraSpeed = float.Parse(CameraTrackingInput.text);
-            float v = float.Parse(VSensInput.text);
-            float h = float.Parse(HSensInput.text);
-            float sensitivity = float.Parse(JoystickSensitivityInput.text);
-            float boarderSize = float.Parse(JoystickBoarderSizeInput.text);
-            //Debug.Log(h);
-            bool inverseReverse = InverseReverseToggle.isOn;
-            ControlParameters.StaticControlParams.SetControlParameters(cameraSpeed, sensitivity, boarderSize, v, h, inverseReverse);
-        }
-        catch
-        {
-            Debug.Log("SetControlParameters Error");
-        }
-
-    }
-
     public void SetControlParameters(float cameraSpeed, float sensitivity, float joystickBoardSize, float v, float h, bool inverseReverse)
     {
-        CameraTrackingInput.text = cameraSpeed.ToString();
-        VSensInput.text = v.ToString();
-        HSensInput.text = h.ToString();
-        InverseReverseToggle.isOn = inverseReverse;
-        JoystickBoarderSizeInput.text = joystickBoardSize.ToString();
-        JoystickSensitivityInput.text = sensitivity.ToString();
+        uIHandler.SetControlParameters(cameraSpeed, sensitivity, joystickBoardSize, v, h, inverseReverse);
     }
 
     public bool HoneycombTowerSpawnEnemy(MapHoneycomb tower) {
