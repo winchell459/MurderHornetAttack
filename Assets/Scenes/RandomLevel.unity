@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37312, g: 0.38074034, b: 0.35872716, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2315,7 +2315,7 @@ MonoBehaviour:
   - {fileID: 1603867335}
   - {fileID: 1883427109}
   - {fileID: 1646867041}
-  rotateTargetLocked: 0
+  rotateTargetLocked: 1
   defaultRotation: 0
 --- !u!4 &516643015
 Transform:
@@ -4516,7 +4516,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 14
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -5422,6 +5422,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42bd51c68e00b334f90065f2c0cdab53, type: 3}
+--- !u!1 &1119074386 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 847612664558513977, guid: 42bd51c68e00b334f90065f2c0cdab53,
+    type: 3}
+  m_PrefabInstance: {fileID: 1119074385}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1123207075 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5817613351928686494, guid: 29dd420e32655cc4a8ab94d576eadead,
@@ -8648,6 +8654,8 @@ MonoBehaviour:
   - {fileID: 802185535}
   murderPanel: {fileID: 974267339}
   murderedMessageText: {fileID: 1987010701}
+  mobileTouchUI:
+  - {fileID: 1119074386}
 --- !u!4 &1884620411
 Transform:
   m_ObjectHideFlags: 0
@@ -8898,7 +8906,7 @@ MonoBehaviour:
   princessMarker: {fileID: 1373541815}
   flowerMarkerPrefab: {fileID: 537954653118117406, guid: 3ab411eff17064c4dbd0450cf3464fd7,
     type: 3}
-  debuggingMaps: 1
+  debuggingMaps: 0
   zoom: 1
   hexMapPanel: {fileID: 1964085682}
 --- !u!4 &1897938973
@@ -10872,6 +10880,16 @@ PrefabInstance:
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1047031841}
+    - target: {fileID: 5817613351739031578, guid: 29dd420e32655cc4a8ab94d576eadead,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5817613351857529671, guid: 29dd420e32655cc4a8ab94d576eadead,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5817613351917623436, guid: 29dd420e32655cc4a8ab94d576eadead,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

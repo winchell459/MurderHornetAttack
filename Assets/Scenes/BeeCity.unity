@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37312, g: 0.38074034, b: 0.35872716, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2315,7 +2315,7 @@ MonoBehaviour:
   - {fileID: 1603867335}
   - {fileID: 1883427109}
   - {fileID: 1646867041}
-  rotateTargetLocked: 0
+  rotateTargetLocked: 1
   defaultRotation: 0
 --- !u!4 &516643015
 Transform:
@@ -6923,6 +6923,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e0fbc5517fc73f48b18baed86174330, type: 3}
+--- !u!1 &1571457552 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 847612664558513977, guid: 42bd51c68e00b334f90065f2c0cdab53,
+    type: 3}
+  m_PrefabInstance: {fileID: 1119074385}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1575889762
 GameObject:
   m_ObjectHideFlags: 0
@@ -8649,6 +8655,8 @@ MonoBehaviour:
   - {fileID: 802185535}
   murderPanel: {fileID: 974267339}
   murderedMessageText: {fileID: 1987010701}
+  mobileTouchUI:
+  - {fileID: 1571457552}
 --- !u!4 &1884620411
 Transform:
   m_ObjectHideFlags: 0
@@ -10872,6 +10880,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5817613351739031578, guid: 29dd420e32655cc4a8ab94d576eadead,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5817613351857529671, guid: 29dd420e32655cc4a8ab94d576eadead,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5817613351917623436, guid: 29dd420e32655cc4a8ab94d576eadead,
         type: 3}

@@ -16,4 +16,4 @@ MonoBehaviour:
   MapHeight: 240
   ChunkHeight: 18
   ChunkWidth: 12
-  ChunkRadius: 7
+  ChunkRadius: 5

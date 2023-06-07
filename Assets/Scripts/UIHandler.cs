@@ -24,6 +24,8 @@ public class UIHandler : MonoBehaviour
 
     [SerializeField] private GameObject murderPanel;
     [SerializeField] private Text murderedMessageText;
+
+    [SerializeField] private GameObject[] mobileTouchUI;
     // Start is called before the first frame update
     void Start()
     {
@@ -34,7 +36,14 @@ public class UIHandler : MonoBehaviour
     //LevelHandler calls after LevelSetup is complete
     public void LoadUI()
     {
-        foreach(GameObject mainMenuUi in GameObject.FindGameObjectsWithTag("Main Menu"))
+#if UNITY_IOS
+        DisplayMobileTouchUI(true);
+
+#else 
+        DisplayMobileTouchUI(false);
+
+#endif
+        foreach (GameObject mainMenuUi in GameObject.FindGameObjectsWithTag("Main Menu"))
         {
             Destroy(mainMenuUi);
         }
@@ -55,6 +64,13 @@ public class UIHandler : MonoBehaviour
     private void DisplayMenu(bool on)
     {
         foreach (GameObject menuPanel in menuPanels) menuPanel.SetActive(on);
+    }
+    private void DisplayMobileTouchUI(bool setVisible)
+    {
+        foreach(GameObject touchUI in mobileTouchUI)
+        {
+            touchUI.SetActive(setVisible);
+        }
     }
 
     public void NewLevelButton()

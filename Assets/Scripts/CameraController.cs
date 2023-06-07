@@ -8,6 +8,7 @@ public class CameraController : MonoBehaviour
     private Vector2 offset;
     public float TrackingSpeed = 1;
     public Camera cam;
+    
 
     //public Transform Layer2;
     //private float layer2Scale;
@@ -29,6 +30,12 @@ public class CameraController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+//#if UNITY_IOS
+//       cam.orthographicSize =  
+
+//#else
+        
+//#endif
         offset = Target.position - cam.transform.position;
         //Debug.Log(offset);
         transform.position = new Vector3(Target.position.x, Target.position.y, transform.position.z);
