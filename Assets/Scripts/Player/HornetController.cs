@@ -228,6 +228,11 @@ public class HornetController : Insect
 
             //Destroy(collision.gameObject);
             collision.transform.GetComponent<Honeycomb>().DestroyHoneycomb();
+        }else if (collision.transform.GetComponent<QueenController>())
+        {
+            Insect collider = collision.transform.GetComponent<Insect>();
+
+            TakeDamage(collider.CollisionDamage, collision.transform.GetComponent<Insect>().GetCollisionVelocity(transform, rb.velocity));
         }
         
     }
@@ -243,6 +248,8 @@ public class HornetController : Insect
             collider.TakeDamage(GetComponent<Insect>().CollisionDamage);
         }
     }
+
+
 
     public override void TakeDamage(float Damage)
     {

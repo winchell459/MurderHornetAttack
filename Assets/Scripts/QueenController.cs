@@ -34,6 +34,19 @@ public class QueenController : Insect
         SpawnShield();
     }
 
+    private void FixedUpdate()
+    {
+        foreach(EnemyPhysics bee in beeShield)
+        {
+            if (bee)
+            {
+                Vector2 normal = (transform.position - bee.transform.position);
+                bee.rb.AddForce(Vector2.Perpendicular(normal.normalized) * (1 / normal.magnitude));
+            }
+            
+        }
+    }
+
     void MoveToPlayer()
     {
         if (player && Vector2.Distance(player.transform.position, transform.position) > minDistance)
@@ -46,7 +59,8 @@ public class QueenController : Insect
     {
         if(lastSpawnShieldTime + spawnShieldTime < Time.time && GetShieldCount() < shieldMaxCount)
         {
-            HoneycombTower[] towers = FindObjectsOfType<HoneycombTower>();
+            HoneycombTower[] towers = GetClosestTowers();
+
             foreach(HoneycombTower tower in towers)
             {
                 if (beeShield.Count < shieldMaxCount)
@@ -59,13 +73,69 @@ public class QueenController : Insect
             lastSpawnShieldTime = Time.time;
         }
     }
+
+    void ShieldAttack()
+    {
+        while(GetShieldCount() > 0)
+        {
+            BeeAttack();
+        }
+    }
+
+    void BeeAttack()
+    {
+        EnemyPhysics bee = GetBee();
+        if (bee)
+        {
+            bee.SetTarget(player.gameObject);
+            bee.rb.AddForce((player.transform.position - bee.transform.position).normalized * 10);
+        }
+    }
+
+    EnemyPhysics GetBee()
+    {
+        if(GetShieldCount() > 0)
+        {
+            EnemyPhysics bee = beeShield[0];
+            beeShield.RemoveAt(0);
+            return bee;
+        }
+        else
+        {
+            return null;
+        }
+    }
     private int GetShieldCount()
     {
         for(int i = beeShield.Count - 1; i >= 0; i--)
         {
             if (!beeShield[i]) beeShield.RemoveAt(i);
+            else if (!beeShield[i].gameObject.activeSelf)
+            {
+                beeShield[i].SetTarget(player.gameObject);
+                beeShield.RemoveAt(i);
+            }
         }
         return beeShield.Count;
+    }
+
+    private HoneycombTower[] GetClosestTowers()
+    {
+        HoneycombTower[] towers = FindObjectsOfType<HoneycombTower>();
+        for(int i = 0; i < towers.Length; i++)
+        {
+            for(int j = 1; j < towers.Length; j++)
+            {
+                if(Vector2.Distance(transform.position, towers[j-1].transform.position) > Vector2.Distance(transform.position, towers[j].transform.position))
+                {
+                    HoneycombTower temp = towers[j];
+                    towers[j] = towers[j - 1];
+                    towers[j - 1] = temp;
+                }
+            }
+        }
+        return towers;
+
     }
 
     public override void TakeDamage(float Damage)
@@ -76,5 +146,18 @@ public class QueenController : Insect
             FindObjectOfType<LevelHandler>().QueenDeath();
             Destroy(gameObject);
         }
+
+        if(Health % 10 == 0)
+        {
+            ShieldAttack();
+            lastSpawnShieldTime = int.MinValue;
+        }
+        else
+        {
+            BeeAttack();
+        }
+        
     }
+
+
 }

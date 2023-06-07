@@ -10934,7 +10934,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: daac9ecda65a3c74d8342c977cce462f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CollisionDamage: 0
+  CollisionDamage: 5
   Health: 100
   MaxHealth: 100
   CollisionForce: {x: 0, y: 0}
@@ -10943,7 +10943,7 @@ MonoBehaviour:
   speed: 1
   minDistance: 2
   spawnShieldTime: 10
-  shieldMaxCount: 10
+  shieldMaxCount: 20
 --- !u!95 &910695821
 Animator:
   serializedVersion: 3
@@ -20551,6 +20551,11 @@ MonoBehaviour:
     largeColor: {r: 0.6273585, g: 1, b: 0.98118997, a: 1}
   - area: 3
     floorColor: {r: 0.65882355, g: 0.32156864, b: 0.027450982, a: 1}
+    edgeColor: {r: 0, g: 0, b: 0, a: 0}
+    embeddedColor: {r: 0, g: 0, b: 0, a: 0}
+    largeColor: {r: 0, g: 0, b: 0, a: 0}
+  - area: 4
+    floorColor: {r: 1, g: 0.8196079, b: 0.3921569, a: 1}
     edgeColor: {r: 0, g: 0, b: 0, a: 0}
     embeddedColor: {r: 0, g: 0, b: 0, a: 0}
     largeColor: {r: 0, g: 0, b: 0, a: 0}

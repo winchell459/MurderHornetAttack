@@ -27,7 +27,11 @@ public class MapBeeCity : MapVoid
             if (!path.Check(honeycomb)) return false;
         }
 
-        if (queenChamber.Contains(honeycombPos)) return false;
+        if (queenChamber.Contains(honeycombPos))
+        {
+            honeycomb.AreaType = HoneycombTypes.Areas.City;
+            honeycomb.isFloor = true;
+        }
 
         return true;
     }

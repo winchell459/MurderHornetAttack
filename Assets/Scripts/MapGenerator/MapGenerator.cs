@@ -58,6 +58,8 @@ public class MapGenerator : MonoBehaviour
             Exit.transform.position = Player.position + new Vector3(50, 0);
             FindObjectOfType<QueenController>().transform.position = Player.position + new Vector3(50, 0);
             addPathEnemies();
+
+            Player.position = Exit.transform.position + new Vector3(-5, 0);
         }
 
 

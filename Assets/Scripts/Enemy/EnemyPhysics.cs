@@ -162,7 +162,7 @@ public class EnemyPhysics : Insect
     }
     private void MoveToPlayer()
     {
-        if (!target) target = GameObject.FindWithTag("Player");
+        if (!target) target = LevelHandler.singleton.Player.gameObject;
 
         if (target) playerLocation = target.transform.position;
         else playerLocation = spawnPoint;
