@@ -48,6 +48,7 @@ public class MapNest : MapArea
         foreach(Circle circle in circles)
         {
             GameObject.Instantiate(nestPrefab, circle.pos, Quaternion.identity);
+            //Map.GetSpiderHole().transform.position = circle.pos;
             //nest.locations.Add(loc);
 
             MapChamber chamber = new MapChamber(circle.pos);

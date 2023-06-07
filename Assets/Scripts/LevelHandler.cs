@@ -20,7 +20,7 @@ public class LevelHandler : MonoBehaviour
     private bool playerDead = false;
     private bool levelEnding = false;
 
-    MapGenerator generator;
+    protected MapGenerator generator;
 
     private bool _paused = false;
     public bool paused { get { return _paused; } }
@@ -78,8 +78,7 @@ public class LevelHandler : MonoBehaviour
         }
         //infiniteLevel();
         if (generator.Exit && generator.Exit.inChamber) {
-            ExitPanel.SetActive(true);
-            if (Player.GetComponent<HornetController>().ExitButtonPressed && !levelEnding && ph.flowersFound >= 5) LevelEndSequence();
+            HandleExit();
         }
         else
         {
@@ -152,9 +151,10 @@ public class LevelHandler : MonoBehaviour
         Instantiate(towerDropPrefab, towerPos, Quaternion.identity);
     }
 
-    public void QueenDeath()
+    public virtual void HandleExit()
     {
-        FindObjectOfType<PrincessController>().inLove = true;
+        ExitPanel.SetActive(true);
+        if (Player.GetComponent<HornetController>().ExitButtonPressed && !levelEnding && ph.flowersFound >= 5) LevelEndSequence();
     }
 
     public void EnemyDeath(GameObject enemy)
@@ -203,28 +203,28 @@ public class LevelHandler : MonoBehaviour
 
     private float levelEndStart;
     private float levelEndCountdown = 6.0f;
-    private void LevelEndSequence()
+    protected void LevelEndSequence()
     {
         levelEnding = true;
         levelEndStart = Time.fixedTime;
         FindObjectOfType<PrincessController>().inLove = true;
         generator.ExitTunnel.GetComponent<Animator>().SetTrigger("Activate");
         Map.StaticMap.Display = false;
-        StartCoroutine("LevelEndCoroutine");
+        StartCoroutine(LevelEndCoroutine());
     }
 
     IEnumerator LevelEndCoroutine()
     {
         while (levelEndStart + levelEndCountdown > Time.fixedTime)
             yield return null;
-        ReloadLevel();
+        LoadNextLevel();
     }
     bool gameOver = false;
     public void RestartLevel()
     {
         if(gameOver)
         {
-            ReloadLevel();
+            LoadMainMenu();
         }
         else
         {
@@ -234,31 +234,35 @@ public class LevelHandler : MonoBehaviour
         
         
     }
-
-    private void ReloadLevel()
+    protected void LoadMainMenu()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(1);
     }
 
-    private void infiniteLevel()
+    protected virtual void LoadNextLevel()
     {
-        if (Player)
-        {
-            //if (Player.transform.position.y > honeycombToWorldPostion(new Vector2(0, honeycombHeight - ChunkHeight)).y)
-            //{
-            //    createChunk(new Vector2(0, honeycombHeight), ChunkWidth, ChunkHeight);
-            //    honeycombHeight += ChunkHeight;
-            //    float randX = Random.Range(-2.3f, 2.3f);
-            //    path = new MapPath(path.Start(0), new Vector2(randX, path.End(0).y + 16), 2);
-            //    honeycombChunks[honeycombChunks.Count - 1].AddVoid(path);
-            //    honeycombChunks[honeycombChunks.Count - 1].DisplayChunk();
-            //}
-        }
-        else
-        {
-            MurderPanel.SetActive(true);
-        }
+        UnityEngine.SceneManagement.SceneManager.LoadScene(3);
     }
+
+    //private void infiniteLevel()
+    //{
+    //    if (Player)
+    //    {
+    //        //if (Player.transform.position.y > honeycombToWorldPostion(new Vector2(0, honeycombHeight - ChunkHeight)).y)
+    //        //{
+    //        //    createChunk(new Vector2(0, honeycombHeight), ChunkWidth, ChunkHeight);
+    //        //    honeycombHeight += ChunkHeight;
+    //        //    float randX = Random.Range(-2.3f, 2.3f);
+    //        //    path = new MapPath(path.Start(0), new Vector2(randX, path.End(0).y + 16), 2);
+    //        //    honeycombChunks[honeycombChunks.Count - 1].AddVoid(path);
+    //        //    honeycombChunks[honeycombChunks.Count - 1].DisplayChunk();
+    //        //}
+    //    }
+    //    else
+    //    {
+    //        MurderPanel.SetActive(true);
+    //    }
+    //}
 
 
     public void UpdatePlayerStats()
@@ -295,7 +299,7 @@ public class LevelHandler : MonoBehaviour
         uIHandler.SetControlParameters(cameraSpeed, sensitivity, joystickBoardSize, v, h, inverseReverse);
     }
 
-    public bool HoneycombTowerSpawnEnemy(MapHoneycomb tower) {
+    public virtual bool HoneycombTowerSpawnEnemy(MapHoneycomb tower) {
         
         return PlayerHandler.eggCount > 4 || PlayerHandler.royalJellyCount > 5;
     }

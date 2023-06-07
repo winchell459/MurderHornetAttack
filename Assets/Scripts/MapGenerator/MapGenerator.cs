@@ -54,12 +54,18 @@ public class MapGenerator : MonoBehaviour
 
             mapVoids.Add(new MapBeeCity(Player.position, Player.position + new Vector3(50,0), 4, 15,30));
             Map.StaticMap.AddVoid(mapVoids);
-            Exit = CreatePlayerSpawn(PortalPrefab, Player.position);
-            Exit.transform.position = Player.position + new Vector3(50, 0);
+            PlayerSpawn = CreatePlayerSpawn(PortalPrefab, Player.position);
+            PlayerSpawn.transform.position = Player.position + new Vector3(50, 0);
             FindObjectOfType<QueenController>().transform.position = Player.position + new Vector3(50, 0);
             addPathEnemies();
 
-            Player.position = Exit.transform.position + new Vector3(-5, 0);
+            Exit = CreateExitTunnel(PortalPrefab, Player.position + new Vector3(50, 0));
+            ExitTunnel.position = Exit.Chamber.Location;
+            ExitTunnel.gameObject.SetActive(false);
+
+            Debug.Log("createBeeCity Time: " + (Utility.Utility.GetTime() - start) + " seconds.");
+
+            //Player.position = PlayerSpawn.transform.position + new Vector3(-5, 0);
         }
 
 
@@ -73,23 +79,23 @@ public class MapGenerator : MonoBehaviour
         generating = false;
     }
 
-    private void createVoids(Transform Player)
-    {
-        //Debug.Log("magnitude of zero vector: " + Vector2.zero.normalized);
-        MapPath newPath = MapPath.CreateJoggingPath(Player.position, new Vector2(35, 3f), -5, 5, 1, 3, 2, 4);
-        Map.StaticMap.AddVoid(newPath);
+    //private void createVoids(Transform Player)
+    //{
+    //    //Debug.Log("magnitude of zero vector: " + Vector2.zero.normalized);
+    //    MapPath newPath = MapPath.CreateJoggingPath(Player.position, new Vector2(35, 3f), -5, 5, 1, 3, 2, 4);
+    //    Map.StaticMap.AddVoid(newPath);
 
-        newPath = MapPath.CreateJoggingPath(Player.position, new Vector2(-10, -10f), -5, 5, 1, 3, 2, 4);
-        Map.StaticMap.AddVoid(newPath);
+    //    newPath = MapPath.CreateJoggingPath(Player.position, new Vector2(-10, -10f), -5, 5, 1, 3, 2, 4);
+    //    Map.StaticMap.AddVoid(newPath);
 
-        MapChamber newChamber = new MapChamber(new Vector2(35, 5));
-        newChamber.AddChamber(new Vector2(35, 5), 10);
-        newChamber.AddChamber(new Vector2(30, 3), 6);
-        Map.StaticMap.AddVoid(newChamber);
+    //    MapChamber newChamber = new MapChamber(new Vector2(35, 5));
+    //    newChamber.AddChamber(new Vector2(35, 5), 10);
+    //    newChamber.AddChamber(new Vector2(30, 3), 6);
+    //    Map.StaticMap.AddVoid(newChamber);
 
 
-        Map.StaticMap.AddVoid(MapChamber.RandomChamber(new Vector2(-20, 20), 10));
-    }
+    //    Map.StaticMap.AddVoid(MapChamber.RandomChamber(new Vector2(-20, 20), 10));
+    //}
     List<MapVoid> newVoids = new List<MapVoid>();
 
     bool perlinNoiseGenerating = false;
@@ -430,12 +436,6 @@ public class MapGenerator : MonoBehaviour
 
     public void CreateCaterpillarGarden(GameObject ChamberTriggerPrefab, Vector2 position, bool random)
     {
-
-        //MapChamber snakeChamber = MapChamber.RandomChamber(position, 15);
-        ////ChamberTrigger snakeChamberTrigger = Instantiate(ChamberTriggerPrefab, snakeChamberLoc, Quaternion.identity).GetComponent<ChamberTrigger>();
-        ////addChamberTrigger(snakeChamberTrigger, snakeChamber);
-        //ChamberTrigger.SetupChamberTrigger(ChamberTriggerPrefab, snakeChamber);
-        //newVoids.Add(snakeChamber);
         if (random)
         {
             MapGarden garden = MapGarden.CreateRandomGarden(position, 15, ChamberTriggerPrefab);
@@ -446,7 +446,6 @@ public class MapGenerator : MonoBehaviour
         newPit.position = position;
         newPit.gameObject.SetActive(true);
         SnakePit.gameObject.SetActive(false);
-        //SnakePit.position = position;
     }
 
     void FillArea(PerlinNoiseArea area, float unitSize, GameObject unitPrefab)
@@ -478,12 +477,7 @@ public class MapGenerator : MonoBehaviour
         newVoids.Add(nest);
     }
 
-    //public void CreateAntFarm(HoneycombPos[] positions)
-    //{
-    //    Debug.Log($"ant farm start {position}");
-    //    MapFarm farm = MapFarm.CreateRandomMaze(position, position + new HoneycombPos(50, 50), 2, 7, ChamberAntFarmTriggerPrefab.gameObject);
-    //    newVoids.Add(farm);
-    //}
+    
     public void CreateAntFarm(HoneycombPos position)
     {
         //Debug.Log($"ant farm start {position}");
@@ -492,8 +486,6 @@ public class MapGenerator : MonoBehaviour
     }
     public void CreateAntFarm(HoneycombPos position, HoneycombPos end, HoneycombPos[] moundLocations)
     {
-        //Debug.Log($"ant farm start {position}");
-        //MapFarm farm = MapFarm.CreateRandomMaze(position, position + new HoneycombPos(50, 50), 2, 7, ChamberAntFarmTriggerPrefab.gameObject);
 
         MapFarm farm = MapFarm.CreateRandomMazeWithPoints(position, end, 2, moundLocations, ChamberAntFarmTriggerPrefab.gameObject);
         newVoids.Add(farm);

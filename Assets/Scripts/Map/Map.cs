@@ -10,6 +10,11 @@ public class Map : MonoBehaviour
     public GameObject HoneycombLargePrefab;
     public GameObject BeeCityPrefab;
     public GameObject HoneycombChamberFloorPrefab;
+    [SerializeField] private GameObject exitTunnelPrefab;
+    [SerializeField] private GameObject pillapillarPitPrefab;
+    [SerializeField] private GameObject spiderHolePrefab;
+    [SerializeField] private GameObject antMoundPrefab;
+
     public static Map StaticMap;
 
     public MapParameters parameters;
@@ -25,8 +30,8 @@ public class Map : MonoBehaviour
 
     public Vector2 MapOrigin; // bottom left corner of map
     
-    public List<GameObject> HoneycombPool = new List<GameObject>();
-    public List<GameObject> HoneycombLargePool = new List<GameObject>();
+    private List<GameObject> HoneycombPool = new List<GameObject>();
+    private List<GameObject> HoneycombLargePool = new List<GameObject>();
     private List<MapChunk> honeycombChunks = new List<MapChunk>();
     
     private List<bool> displayChunks = new List<bool>();
@@ -35,7 +40,7 @@ public class Map : MonoBehaviour
     //public Transform HoneycombLayer_1;
 
     public Transform[] HoneycombLayers;
-    public List<float> LayerScales = new List<float>();
+    private List<float> LayerScales = new List<float>();
 
 
 
@@ -386,4 +391,24 @@ public class Map : MonoBehaviour
         if (!StaticMap.DestroyHoneycombReturn) StaticMap.HoneycombChamberFloorPools[areaType].Add(honeycombFloor);
         else Destroy(honeycombFloor.gameObject);
     }
+
+    //public static GameObject GetExitTunnel()
+    //{
+
+    //}
+
+    //public static GameObject GetPillapillarPit()
+    //{
+
+    //}
+
+    //public static GameObject GetSpiderHole()
+    //{
+
+    //}
+
+    //public static GameObject GetAntMound()
+    //{
+
+    //}
 }

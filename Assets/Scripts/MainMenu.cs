@@ -17,10 +17,17 @@ public class MainMenu : MonoBehaviour
     private bool preloadComplete = false;
 
     public GameObject preloadingScreen;
+    public bool randomLevels = false;
+    public MapGeneratorParameters.GenerationTypes[] randomLevelList;
     // Start is called before the first frame update
     void Start()
     {
         //Application.targetFrameRate = 60;
+        if(randomLevels && randomLevelList.Length > 0)
+        {
+            int index = Random.Range(0, randomLevelList.Length);
+            mapGeneratorParameters.generationType = randomLevelList[index];
+        }
         touchToPlayDelayStart = Time.fixedTime;
         TouchToPlayText.gameObject.SetActive(false);
     }
@@ -43,6 +50,7 @@ public class MainMenu : MonoBehaviour
                 //provides a buffer for next scene's loading - Destroy in next scene after loading complete
                 DontDestroyOnLoad(preloadingScreen);
                 TouchToPlayText.gameObject.SetActive(false);
+                PlayerHandler.ResetStats();
                 SceneManager.LoadScene(2);
             }
             else

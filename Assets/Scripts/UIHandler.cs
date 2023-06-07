@@ -39,6 +39,10 @@ public class UIHandler : MonoBehaviour
             Destroy(mainMenuUi);
         }
     }
+    public void QuitButton()
+    {
+        Application.Quit();
+    }
 
     public void ToggleMenu()
     {

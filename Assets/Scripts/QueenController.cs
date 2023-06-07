@@ -143,7 +143,7 @@ public class QueenController : Insect
         Health -= Damage;
         if (Health <= 0)
         {
-            FindObjectOfType<LevelHandler>().QueenDeath();
+            FindObjectOfType<BeeCityLevelHandler>().QueenDeath();
             Destroy(gameObject);
         }
 
