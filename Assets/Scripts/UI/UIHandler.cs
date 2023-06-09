@@ -28,6 +28,12 @@ public class UIHandler : MonoBehaviour
     [SerializeField] private Text murderedMessageText;
 
     [SerializeField] private GameObject[] mobileTouchUI;
+
+    [SerializeField] private GameObject[] settingPanels;
+    [SerializeField] private string[] settingPanelLabels = { "Flight Controls", "Audio Controls"};
+    [SerializeField] private Text settingsToggelLabel;
+    int settingPanelIndex = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -61,6 +67,16 @@ public class UIHandler : MonoBehaviour
         {
             DisplayMenu(!menuPanels[0].activeSelf);
             MiniMap.singleton.ToggleSize();
+        }
+    }
+    public void ToggleSettingPanels()
+    {
+        settingPanelIndex = (settingPanelIndex + 1) % settingPanels.Length;
+        settingsToggelLabel.text = settingPanelLabels[settingPanelIndex];
+        for(int i = 0; i < settingPanels.Length; i++)
+        {
+            if (i == settingPanelIndex) settingPanels[i].SetActive(true);
+            else settingPanels[i].SetActive(false);
         }
     }
     private void DisplayMenu(bool on)

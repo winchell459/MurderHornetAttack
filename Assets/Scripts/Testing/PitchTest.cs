@@ -34,7 +34,7 @@ public class PitchTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        AS = GetComponent<AudioSource>();
+        //AS = GetComponent<AudioSource>();
         setTestPanelParameters();
         currentPitch = Pitch;
     }
