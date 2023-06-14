@@ -79,6 +79,7 @@ public class MapChunk
             honeycomb.display = space.Check(honeycomb);
         }
 
+        
 
     }
 

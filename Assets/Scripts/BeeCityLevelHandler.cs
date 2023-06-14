@@ -7,9 +7,19 @@ public class BeeCityLevelHandler : LevelHandler
     public bool queenDead = false;
     public void QueenDeath()
     {
-        FindObjectOfType<PrincessController>().inLove = true;
+        princess.inLove = true;
         queenDead = true;
-        generator.ExitTunnel.gameObject.SetActive(true);
+        ExitTunnel.gameObject.SetActive(true);
+    }
+
+    protected override IEnumerator SetupComplete()
+    {
+        //Time.timeScale = 0;
+        yield return new WaitForSeconds(1);
+        uIHandler.LoadUI();
+        queen.gameObject.SetActive(true);
+        //Time.timeScale = 1;
+
     }
 
     public override bool HoneycombTowerSpawnEnemy(MapHoneycomb tower)

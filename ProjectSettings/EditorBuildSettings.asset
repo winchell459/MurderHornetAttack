@@ -6,15 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SplashScene.unity
+    path: Assets/Scenes/BuildScenes/SplashScene.unity
     guid: 4492e29904c134c9e87ca99986387723
   - enabled: 1
-    path: Assets/Scenes/Main.unity
+    path: Assets/Scenes/BuildScenes/Main.unity
     guid: e70834fe54963894abd9e15b9949e760
   - enabled: 1
-    path: Assets/Scenes/RandomLevel.unity
+    path: Assets/Scenes/BuildScenes/RandomLevel.unity
     guid: 5982ba425f4253d468194b174c04bff2
   - enabled: 1
+    path: Assets/Scenes/BuildScenes/Scoring.unity
+    guid: 196b21405427a1a48a731d33570eb419
+  - enabled: 0
     path: Assets/Scenes/BeeCity.unity
     guid: 0093939caa0897440aa092b9338efdd6
   - enabled: 0

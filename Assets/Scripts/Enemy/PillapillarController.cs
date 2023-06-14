@@ -118,7 +118,7 @@ public class PillapillarController : Insect
         if (Tail) Tail.spawnTail();
         else
         {
-            PillapillarController tail = Instantiate(FindObjectOfType<MapGenerator>().SnakePrefab, transform.position - (-transform.right.normalized)*Time.deltaTime, Quaternion.identity).GetComponent<PillapillarController>();
+            PillapillarController tail = Instantiate(MapManager.singleton.SnakePrefab, transform.position - (-transform.right.normalized)*Time.deltaTime, Quaternion.identity).GetComponent<PillapillarController>();
 
             egg.PillapillarBornt(tail);
             

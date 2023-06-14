@@ -30,6 +30,7 @@ public class HornetPlasm : MonoBehaviour
                     Map.StaticMap.GetHoneycomb(hexPos.GetAdjecentHoneycomb(-1, -1)).honeycomb.GetComponent<Honeycomb>().DamageHoneycomb(10);
                     Map.StaticMap.GetHoneycomb(hexPos.GetAdjecentHoneycomb(-1, 1)).honeycomb.GetComponent<Honeycomb>().DamageHoneycomb(10);
                 }
+                GameManager.TerrainHit();
                 Destroy(gameObject);
             }
            
@@ -38,7 +39,7 @@ public class HornetPlasm : MonoBehaviour
         if (collision.transform.CompareTag("Enemy") && collision.transform.GetComponent<Insect>())
         {
             Insect collider = collision.transform.GetComponent<Insect>();
-
+            GameManager.EnemyHit(collider.type);
             
             collider.TakeDamage(Damage, GetComponent<Rigidbody2D>().velocity);
             FindObjectOfType<LevelHandler>().UpdatePlayerStats(1, 0);
@@ -53,6 +54,7 @@ public class HornetPlasm : MonoBehaviour
         GameObject plasm = Instantiate(HornetPlasmPrefab, location, Quaternion.identity);
         plasm.GetComponent<Rigidbody2D>().velocity = velocity;
         plasm.GetComponent<HornetPlasm>().Damage = power;
+        GameManager.ShotFired();
         Destroy(plasm, 15);
     }
 

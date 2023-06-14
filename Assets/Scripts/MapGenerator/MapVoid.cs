@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class MapVoid 
 {
     public abstract bool Check(MapHoneycomb honeycomb);
+    public virtual void Setup(/*ChamberTrigger triggerPrefab, GameObject otherPrefab*/) { }
 
     private const int locationDepthThreshold = 4;
     private List<MapHoneycomb> voidWalls = new List<MapHoneycomb>();

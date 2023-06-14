@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Map : MonoBehaviour
 {
-    
+    public enum MapObjects { uncappedHoneycomb, cappedHoneycomb, largeHoneycomb, honeycombTower, spiderHole,pillapillarPit,antMound,playerSpawn,exitTunnel}
     public GameObject HoneycombPrefab;
     public GameObject HoneycombCappedPrefab;
     public GameObject HoneycombLargePrefab;
@@ -271,7 +271,7 @@ public class Map : MonoBehaviour
         
     }
 
-    public void DisplayChunks()
+    public void SetupChunks()
     {
         foreach (MapChunk mp in honeycombChunks)
         {
@@ -280,6 +280,11 @@ public class Map : MonoBehaviour
                 mp.AddVoid(v);
             }
             //mp.DisplayChunk();
+        }
+
+        foreach(MapVoid v in voids)
+        {
+            v.Setup();
         }
     }
 

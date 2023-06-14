@@ -16,6 +16,13 @@ public class PerlineNoiseVoid : MapVoid
     int pathWidth = 1; //pathWidth: hexDepth delta min must me less than pathWidth to be on path
     public bool generating = true;
 
+    List<MapObject> mapObjects = new List<MapObject>();
+    struct MapObject
+    {
+        public Map.MapObjects mapObject;
+        public HoneycombPos hexPos;
+    }
+
     public PerlineNoiseVoid(PerlinNoise mapPerlinNoise, int width, int height)
     {
         generating = true;
@@ -28,6 +35,39 @@ public class PerlineNoiseVoid : MapVoid
         FindChambers(depthMap);
         VoidType = HoneycombTypes.Variety.Path;
 
+    }
+    public void AddMapObject(Map.MapObjects mapObject, HoneycombPos pos)
+    {
+        MapObject newMapObject = new MapObject();
+        newMapObject.mapObject = mapObject;
+        newMapObject.hexPos = pos;
+        mapObjects.Add(newMapObject);
+    }
+
+    public override void Setup()
+    {
+        foreach(MapObject mapObject in mapObjects)
+        {
+            GameObject unitPrefab = null;
+            switch (mapObject.mapObject)
+            {
+                
+                case Map.MapObjects.pillapillarPit:
+                    unitPrefab = MapManager.singleton.SnakePit.gameObject;
+                    break;
+                case Map.MapObjects.spiderHole:
+                    unitPrefab = MapManager.singleton.SpiderHole;
+                    break;
+            }
+
+            if (unitPrefab)
+            {
+                GameObject newUnit = GameObject.Instantiate(unitPrefab);
+                newUnit.transform.position = Utility.Honeycomb.HoneycombGridToWorldPostion(mapObject.hexPos);
+                newUnit.SetActive(true);
+            }
+            
+        }
     }
 
 

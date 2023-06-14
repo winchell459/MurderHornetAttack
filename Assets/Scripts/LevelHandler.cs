@@ -27,6 +27,12 @@ public class LevelHandler : MonoBehaviour
 
     public UIHandler uIHandler;
 
+    public Portal PlayerSpawn { get; set; }
+    public Portal Exit { get; set; }
+    public Transform ExitTunnel;
+
+    public PrincessController princess;
+    public QueenController queen;
 
     // Start is called before the first frame update
     void Start()
@@ -50,34 +56,41 @@ public class LevelHandler : MonoBehaviour
         while (generator.generating);
 
         Map.StaticMap.Display = true;
+
+        Player.position = PlayerSpawn.Chamber.locations[0];
+        ExitTunnel.position = Exit.Chamber.Location;
+
         Cam.SetCameraTarget(Player);
         ph = FindObjectOfType<PlayerHandler>();
         
-        uIHandler.DisplayExitLocation(Utility.Honeycomb.WorldPointToHoneycombGrid(generator.Exit.transform.position).vector2);
+        uIHandler.DisplayExitLocation(Utility.Honeycomb.WorldPointToHoneycombGrid(Exit.transform.position).vector2);
         MiniMap.singleton.StartDisplayMiniMap();
-        MiniMap.singleton.SetPrincessPos(Utility.Honeycomb.WorldPointToHoneycombGrid(generator.Exit.transform.position));
+        MiniMap.singleton.SetPrincessPos(Utility.Honeycomb.WorldPointToHoneycombGrid(Exit.transform.position));
         MiniMap.singleton.DisplayPrincessMarker(true);
         StartCoroutine(SetupComplete());
         //displayLocation(Utility.WorldToHoneycomb(PlayerSpawn.transform.position), SpawnLoc);
     }
 
-    IEnumerator SetupComplete()
+    protected virtual IEnumerator SetupComplete()
     {
         //Time.timeScale = 0;
         yield return new WaitForSeconds(1);
         uIHandler.LoadUI();
         //Time.timeScale = 1;
+        
     }
 
+    float playTime = 0;
     // Update is called once per frame
     void Update()
     {
+        playTime += Time.deltaTime;
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             PauseToggle();
         }
         //infiniteLevel();
-        if (generator.Exit && generator.Exit.inChamber) {
+        if (/*generator.*/Exit && /*generator.*/Exit.inChamber) {
             HandleExit();
         }
         else
@@ -121,7 +134,7 @@ public class LevelHandler : MonoBehaviour
     HornetController hc;
     private void spawnPlayer(Portal portal)
     {
-        Player = Instantiate(PlayerPrefab, generator.PlayerSpawn.Chamber.locations[0], Quaternion.identity).transform;
+        Player = Instantiate(PlayerPrefab, /*generator.*/PlayerSpawn.Chamber.locations[0], Quaternion.identity).transform;
         playerDead = false;
         hc = Player.GetComponent<HornetController>();
         Cam.SetCameraTarget(Player);
@@ -208,7 +221,7 @@ public class LevelHandler : MonoBehaviour
         levelEnding = true;
         levelEndStart = Time.fixedTime;
         FindObjectOfType<PrincessController>().inLove = true;
-        generator.ExitTunnel.GetComponent<Animator>().SetTrigger("Activate");
+        ExitTunnel.GetComponent<Animator>().SetTrigger("Activate");
         Map.StaticMap.Display = false;
         StartCoroutine(LevelEndCoroutine());
     }
@@ -229,19 +242,20 @@ public class LevelHandler : MonoBehaviour
         else
         {
             MurderPanel.SetActive(false);
-            spawnPlayer(generator.PlayerSpawn);
+            spawnPlayer(/*generator.*/PlayerSpawn);
         }
         
         
     }
     protected void LoadMainMenu()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+        GameManager.singleton.LoadMainMenu();
     }
 
     protected virtual void LoadNextLevel()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(3);
+        GameManager.SetPlayTime(playTime);
+        GameManager.singleton.LoadNextScene();
     }
 
     //private void infiniteLevel()

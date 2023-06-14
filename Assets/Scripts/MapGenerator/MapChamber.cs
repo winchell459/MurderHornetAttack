@@ -102,10 +102,18 @@ public class MapChamber : MapVoid
         return newChamber;
     }
 
-    public static MapChamber EndChamberTunnel(Vector2 location, float radius)
+    public static MapSpawn PlayerSpawnChamber(Vector2 location, float radius)
+    {
+        MapSpawn newChamber = new MapSpawn(location);
+        newChamber.AddChamber(location, radius * 2);
+        return newChamber;
+    }
+    
+
+    public static MapExit EndChamberTunnel(Vector2 location, float radius)
     {
         location = Utility.Honeycomb.WorldPointToHoneycombPos(location);
-        MapChamber newChamber = new MapChamber(location);
+        MapExit newChamber = new MapExit(location);
         newChamber.AddChamber(location, radius * 2);
         return newChamber;
     }

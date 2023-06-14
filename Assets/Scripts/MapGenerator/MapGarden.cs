@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class MapGarden : MapArea
 {
+    
     public MapGarden(Vector2 Location)
     {
         this.Location = Location;
         AreaType = HoneycombTypes.Areas.Garden;
     }
 
-    public static MapGarden CreateRandomGarden(Vector2 pos, float radius, GameObject ChamberTriggerPrefab)
+    public static MapGarden CreateRandomGarden(Vector2 pos, float radius)
     {
         MapGarden garden = new MapGarden(pos);
+        MapChamber chamber = RandomChamber(pos, radius);
 
-        MapChamber chamber = MapChamber.RandomChamber(pos, radius);
-        ChamberTrigger.SetupChamberTrigger(ChamberTriggerPrefab, chamber, Color.clear);
         garden.chambers.Add(chamber);
         for(int i = 0; i < chamber.locations.Count; i += 1)
         {
@@ -26,5 +26,9 @@ public class MapGarden : MapArea
         return garden;
     }
 
-    
+    public override void Setup()
+    {
+        Transform newPit = GameObject.Instantiate(MapManager.singleton.SnakePit);
+        newPit.transform.position = chambers[0].Location;
+    }
 }

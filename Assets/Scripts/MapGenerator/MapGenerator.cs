@@ -6,23 +6,13 @@ public class MapGenerator : MonoBehaviour
 {
     private List<MapVoid> mapVoids = new List<MapVoid>();
 
-    public GameObject PortalPrefab;
-    public GameObject ChamberTriggerPrefab;
     public GameObject EnemyPrefabs;
-    public GameObject SnakePrefab;
-    public ChamberAntFarmTrigger ChamberAntFarmTriggerPrefab;
 
-    public Transform ExitTunnel;
     public GameObject[] flowerPetals;
     private List<GameObject> placedFlowerPetals = new List<GameObject>();
-    public Transform SnakePit;
-    public GameObject SpiderHole;
+
     public Transform AntSquad;
     public bool createAntFarm = false;
-
-    public Portal PlayerSpawn { get; set; }
-    public Portal Exit { get; set; }
-
 
     public PerlinNoise perlinNoise;
     public MapGeneratorParameters parameters;
@@ -36,7 +26,7 @@ public class MapGenerator : MonoBehaviour
         float start = Utility.Utility.GetTime();
         if(parameters.generationType == MapGeneratorParameters.GenerationTypes.randomVoids)
         {
-            createRandomMap(Player, 10);
+            createRandomMap(Player/*, 10*/);
             
             Debug.Log("createRandomMap Time: " + (Utility.Utility.GetTime() - start) + " seconds.");
         }   
@@ -53,15 +43,17 @@ public class MapGenerator : MonoBehaviour
             Player.position = new Vector3(65, 85);
 
             mapVoids.Add(new MapBeeCity(Player.position, Player.position + new Vector3(50,0), 4, 15,30));
-            Map.StaticMap.AddVoid(mapVoids);
-            PlayerSpawn = CreatePlayerSpawn(PortalPrefab, Player.position);
-            PlayerSpawn.transform.position = Player.position + new Vector3(50, 0);
-            FindObjectOfType<QueenController>().transform.position = Player.position + new Vector3(50, 0);
+            
+            CreatePlayerSpawn(Player.position);
+            
+            LevelHandler.singleton.queen.transform.position = Player.position + new Vector3(50, 0);
             addPathEnemies();
 
-            Exit = CreateExitTunnel(PortalPrefab, Player.position + new Vector3(50, 0));
-            ExitTunnel.position = Exit.Chamber.Location;
-            ExitTunnel.gameObject.SetActive(false);
+            CreateExitTunnel(Player.position + new Vector3(50, 0));
+            LevelHandler.singleton.ExitTunnel.gameObject.SetActive(false);
+
+            Map.StaticMap.AddVoid(mapVoids);
+            Map.StaticMap.AddVoid(newVoids);
 
             Debug.Log("createBeeCity Time: " + (Utility.Utility.GetTime() - start) + " seconds.");
 
@@ -71,7 +63,7 @@ public class MapGenerator : MonoBehaviour
 
         
         start = Utility.Utility.GetTime();
-        Map.StaticMap.DisplayChunks();
+        Map.StaticMap.SetupChunks();
         Debug.Log("DisplayChunks Time: " + (Utility.Utility.GetTime() - start) + " seconds.");
 
         //setup enemies in Paths
@@ -79,23 +71,7 @@ public class MapGenerator : MonoBehaviour
         generating = false;
     }
 
-    //private void createVoids(Transform Player)
-    //{
-    //    //Debug.Log("magnitude of zero vector: " + Vector2.zero.normalized);
-    //    MapPath newPath = MapPath.CreateJoggingPath(Player.position, new Vector2(35, 3f), -5, 5, 1, 3, 2, 4);
-    //    Map.StaticMap.AddVoid(newPath);
 
-    //    newPath = MapPath.CreateJoggingPath(Player.position, new Vector2(-10, -10f), -5, 5, 1, 3, 2, 4);
-    //    Map.StaticMap.AddVoid(newPath);
-
-    //    MapChamber newChamber = new MapChamber(new Vector2(35, 5));
-    //    newChamber.AddChamber(new Vector2(35, 5), 10);
-    //    newChamber.AddChamber(new Vector2(30, 3), 6);
-    //    Map.StaticMap.AddVoid(newChamber);
-
-
-    //    Map.StaticMap.AddVoid(MapChamber.RandomChamber(new Vector2(-20, 20), 10));
-    //}
     List<MapVoid> newVoids = new List<MapVoid>();
 
     bool perlinNoiseGenerating = false;
@@ -106,7 +82,6 @@ public class MapGenerator : MonoBehaviour
         int mapWidth = (int)(mapParameters.MapWidth / mapParameters.HorizontalSpacing);
         int mapHeight = (int)(mapParameters.MapHeight / mapParameters.VerticalSpacing) / 2;
         pregenerated = new PerlineNoiseVoid(perlinNoise, mapWidth, mapHeight);
-        //return pregenerated;
     }
     private IEnumerator CreatePerlinNoiseMap(Transform player)
     {
@@ -123,13 +98,13 @@ public class MapGenerator : MonoBehaviour
             
 
             HoneycombPos exitHexPos = perlineNoiseVoid.GetAreaPos(8, false);
-            Exit = CreateExitTunnel(PortalPrefab, Utility.Honeycomb.HoneycombGridToWorldPostion(exitHexPos));
-            ExitTunnel.position = Exit.Chamber.Location;
+            CreateExitTunnel( Utility.Honeycomb.HoneycombGridToWorldPostion(exitHexPos));
+            
 
             //Added player spawn point
-            HoneycombPos playerHexSpawn = exitHexPos;// perlineNoiseVoid.GetAreaPos(3, true);
-            PlayerSpawn = CreatePlayerSpawn(PortalPrefab, Utility.Honeycomb.HoneycombGridToWorldPostion(playerHexSpawn));
-            player.position = PlayerSpawn.Chamber.locations[0];
+            HoneycombPos playerHexSpawn = exitHexPos;
+            CreatePlayerSpawn(Utility.Honeycomb.HoneycombGridToWorldPostion(playerHexSpawn));
+            
 
             bool areasFilled = false;
             int count = 0;
@@ -142,17 +117,15 @@ public class MapGenerator : MonoBehaviour
                 
                 if (pillapillarHexPos == new HoneycombPos(-1, -1)) break;
                 pillapillarHexPos = perlineNoiseVoid.GetPerlinNoiseArea(pillapillarHexPos).parentArea.pos;
-                Vector2 snakeChamberLoc = Utility.Honeycomb.HoneycombGridToWorldPostion(pillapillarHexPos);
-                //CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc, false);
-                FillArea(perlineNoiseVoid.GetPerlinNoiseArea(pillapillarHexPos), pillapillarPitSize, SnakePit.gameObject);
+               
+                FillArea(perlineNoiseVoid,pillapillarHexPos, pillapillarPitSize, Map.MapObjects.pillapillarPit);
                 perlineNoiseVoid.SetAreaType(pillapillarHexPos, HoneycombTypes.Areas.Garden);
 
 
                 int spiderHoleSize = 5;
                 HoneycombPos SpiderNestHexPos = perlineNoiseVoid.GetAreaPos(spiderHoleSize, true);
                 if (SpiderNestHexPos == new HoneycombPos(-1, -1)) break;
-                //CreateSpiderNest(Utility.Honeycomb.HoneycombGridToWorldPostion(SpiderNestHexPos));
-                FillArea(perlineNoiseVoid.GetPerlinNoiseArea(SpiderNestHexPos).parentArea, spiderHoleSize, SpiderHole);
+                FillArea(perlineNoiseVoid,SpiderNestHexPos, spiderHoleSize, Map.MapObjects.spiderHole);
                 perlineNoiseVoid.SetAreaType(SpiderNestHexPos, HoneycombTypes.Areas.Nest);
                 
 
@@ -201,20 +174,16 @@ public class MapGenerator : MonoBehaviour
 
         newVoids.Clear();
 
-        PlayerSpawn = CreatePlayerSpawn(PortalPrefab, Player.position);
-        Player.position = PlayerSpawn.Chamber.locations[0];
+        CreatePlayerSpawn(Player.position);
 
         Map map = Map.StaticMap;
 
 
         //create snake Chamber
         Vector2 snakeChamberLoc = Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(150, 80));
-        CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc, true);
+        CreateCaterpillarGarden(snakeChamberLoc, true);
 
-
-        //Exit = CreateExitTunnel(PortalPrefab, Player.position);
-        Exit = CreateExitTunnel(PortalPrefab, Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(200, 200)));
-        ExitTunnel.position = Exit.Chamber.Location;
+        CreateExitTunnel( Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(200, 200)));
 
 
 
@@ -231,7 +200,7 @@ public class MapGenerator : MonoBehaviour
 
     }
 
-    private void createRandomMap(Transform Player, int voidCount)
+    private void createRandomMap(Transform Player/*, int voidCount*/)
     {
 
         newVoids.Clear();
@@ -245,9 +214,10 @@ public class MapGenerator : MonoBehaviour
 
         Debug.Log($"map origin: {origin} mapMin: {mapMin} mapMax:{mapMax}");
 
-        int antMounds = 5;
-        Vector2[] voidLocations = new Vector2[voidCount + 2 + antMounds];
-        float[] locationRadius = new float[voidCount + 2 + antMounds];
+        int antMounds = parameters.antMoundCount;
+        int voidCount = parameters.gardenCount + parameters.nestCount + parameters.antMoundCount;
+        Vector2[] voidLocations = new Vector2[voidCount + 2 ];
+        float[] locationRadius = new float[voidCount + 2];
         locationRadius[0] = 5;
         locationRadius[1] = 20;
         for(int i = 2; i < voidCount + 2; i++)
@@ -265,53 +235,47 @@ public class MapGenerator : MonoBehaviour
         GetRandomLocation(voidLocations, locationRadius, mapMin, mapMax);
 
         //Added player spawn point
-        PlayerSpawn = CreatePlayerSpawn(PortalPrefab, voidLocations[0],5);
-        Player.position = PlayerSpawn.Chamber.locations[0];
+        CreatePlayerSpawn(voidLocations[0],5);
 
-        //Exit = CreateExitTunnel(PortalPrefab, Player.position);
         HoneycombPos exitHex = Utility.Honeycomb.WorldPointToHoneycombGrid(voidLocations[1]);
-        Exit = CreateExitTunnel(PortalPrefab, voidLocations[1]);
-        ExitTunnel.position = Exit.Chamber.Location;
+        CreateExitTunnel(voidLocations[1]);
 
-
-        //CreateSpiderNest(Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(75, 105)));
-        //CreateAntFarm(Utility.Honeycomb.WorldPointToHoneycombGrid(AntSquad.position));
-        //CreateAntFarm(AntSquad.position);
-
-        AntSquad.position = voidLocations[voidLocations.Length - antMounds];
-        HoneycombPos[] antMoundLocations = new HoneycombPos[antMounds];
-        for(int i = 0; i < antMounds; i++)
+        if(antMounds > 0)
         {
-            antMoundLocations[i] = Utility.Honeycomb.WorldPointToHoneycombGrid(voidLocations[i + voidLocations.Length - antMounds]);
-            //Debug.Log($"ant mound location: {antMoundLocations[i].worldPos} index:{i + voidLocations.Length - antMounds} count:{voidLocations.Length}");
-        }
-        CreateAntFarm(Utility.Honeycomb.WorldPointToHoneycombGrid(AntSquad.position), exitHex, antMoundLocations);
+            AntSquad.position = voidLocations[voidLocations.Length - antMounds];
+            HoneycombPos[] antMoundLocations = new HoneycombPos[antMounds];
 
-        for(int i = 1; i < antMoundLocations.Length; i++)
-        {
-            if (UnplacedFlowerPetals())
+            for (int i = 0; i < antMounds; i++)
             {
-                GetFlowerPetalDrop().transform.position = Utility.Honeycomb.HoneycombGridToWorldPostion(antMoundLocations[i]);
-                MiniMap.singleton.SetFlower(antMoundLocations[i], true);
+                antMoundLocations[i] = Utility.Honeycomb.WorldPointToHoneycombGrid(voidLocations[i + voidLocations.Length - antMounds]);
+                //Debug.Log($"ant mound location: {antMoundLocations[i].worldPos} index:{i + voidLocations.Length - antMounds} count:{voidLocations.Length}");
+            }
+            CreateAntFarm(Utility.Honeycomb.WorldPointToHoneycombGrid(AntSquad.position), exitHex, antMoundLocations);
+
+            for (int i = 1; i < antMoundLocations.Length; i++)
+            {
+                if (UnplacedFlowerPetals())
+                {
+                    GetFlowerPetalDrop().transform.position = Utility.Honeycomb.HoneycombGridToWorldPostion(antMoundLocations[i]);
+                    MiniMap.singleton.SetFlower(antMoundLocations[i], true);
+                }
             }
         }
         
-
-
-        int index = 2;
-        while(index < voidCount + 2)
+        
+        
+        for(int i = 0; i < parameters.nestCount; i++)
         {
-            CreateSpiderNest(voidLocations[index]);
-            index++;
-
-            if (index >= voidCount + 2) break;
-            //create snake Chamber
-            Vector2 snakeChamberLoc = voidLocations[index];//Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(150, 80));
-            CreateCaterpillarGarden(ChamberTriggerPrefab, snakeChamberLoc, true);
-
-            //Debug.Log($"Spider Nest:{voidLocations[index - 1]} Pillapillar Garden:{snakeChamberLoc}");
-            index++;
+            CreateSpiderNest(voidLocations[i + 2]);
         }
+
+        for (int i = 0; i < parameters.gardenCount; i++)
+        {
+            Vector2 snakeChamberLoc = voidLocations[i +parameters.nestCount +2];//Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(150, 80));
+            CreateCaterpillarGarden(snakeChamberLoc, true);
+        }
+
+        
 
         string locationstr = "";
         foreach(Vector2 location in voidLocations)
@@ -408,48 +372,36 @@ public class MapGenerator : MonoBehaviour
             }
         }
     }
-    public Portal CreatePlayerSpawn(GameObject PortalPrefab, Vector2 position, float radius)
+    public void CreatePlayerSpawn(Vector2 position, float radius)
     {
-        MapChamber spawnChamber = MapChamber.RandomChamber(position, radius);
-        Portal PlayerSpawn = (Portal)ChamberTrigger.SetupChamberTrigger(PortalPrefab, spawnChamber, Color.clear);
-
-        //newLocations.Add(position);
-        newVoids.Add(PlayerSpawn.Chamber);
-        //newConnected.Add(false);
-        return PlayerSpawn;
+        MapSpawn spawnChamber = MapChamber.PlayerSpawnChamber(position, radius);
+        newVoids.Add(spawnChamber);
     }
-    public Portal CreatePlayerSpawn(GameObject PortalPrefab, Vector2 position)
+    public void CreatePlayerSpawn(Vector2 position)
    {
-        
-        return CreatePlayerSpawn(PortalPrefab, position, 3);
+        CreatePlayerSpawn(position, 3);
     }
 
-    public  Portal CreateExitTunnel(GameObject PortalPrefab, Vector2 position)
+    public void CreateExitTunnel(Vector2 position)
     {
-        MapChamber endChamber = MapChamber.EndChamberTunnel(position, 8);
+        MapExit endChamber = MapChamber.EndChamberTunnel(position, 8);
 
         newVoids.Add(endChamber);
-        //newConnected.Add(false);
-        //newLocations.Add(Utility.WorldPointToHoneycombPos(position));
-        return (Portal)ChamberTrigger.SetupChamberTrigger(PortalPrefab, endChamber, Color.clear);
     }
 
-    public void CreateCaterpillarGarden(GameObject ChamberTriggerPrefab, Vector2 position, bool random)
+    public void CreateCaterpillarGarden(Vector2 position, bool random)
     {
         if (random)
         {
-            MapGarden garden = MapGarden.CreateRandomGarden(position, 15, ChamberTriggerPrefab);
+            MapGarden garden = MapGarden.CreateRandomGarden(position, 15);
             newVoids.Add(garden);
         }
         
-        Transform newPit = Instantiate(SnakePit);
-        newPit.position = position;
-        newPit.gameObject.SetActive(true);
-        SnakePit.gameObject.SetActive(false);
     }
 
-    void FillArea(PerlinNoiseArea area, float unitSize, GameObject unitPrefab)
+    void FillArea(PerlineNoiseVoid perlineNoiseVoid, HoneycombPos hexPos, float unitSize, Map.MapObjects mapObject)
     {
+        PerlinNoiseArea area = perlineNoiseVoid.GetPerlinNoiseArea(hexPos).parentArea;
         List<PerlinNoiseArea> nonIntersecting = new List<PerlinNoiseArea>();
         nonIntersecting.Add(area);
         for(int i = 1; i < area.mergedAreas.Count; i++)
@@ -464,15 +416,14 @@ public class MapGenerator : MonoBehaviour
         }
         foreach(PerlinNoiseArea valid in nonIntersecting)
         {
-            GameObject newUnit = Instantiate(unitPrefab);
-            newUnit.transform.position = Utility.Honeycomb.HoneycombGridToWorldPostion(valid.pos);
-            newUnit.SetActive(true);
+            perlineNoiseVoid.AddMapObject(mapObject, valid.pos);
+            
         }
     }
 
     public void CreateSpiderNest(Vector2 position)
     {
-        MapNest nest = MapNest.CreateRandomNest(position, 5, 10, SpiderHole);
+        MapNest nest = MapNest.CreateRandomNest(position, 5, 10);
         connectChambers(nest);
         newVoids.Add(nest);
     }
@@ -481,13 +432,13 @@ public class MapGenerator : MonoBehaviour
     public void CreateAntFarm(HoneycombPos position)
     {
         //Debug.Log($"ant farm start {position}");
-        MapFarm farm = MapFarm.CreateRandomMaze(position, position + new HoneycombPos(50, 50), 2, 7, ChamberAntFarmTriggerPrefab.gameObject);
+        MapFarm farm = MapFarm.CreateRandomMaze(position, position + new HoneycombPos(50, 50), 2, 7/*, ChamberAntFarmTriggerPrefab.gameObject*/);
         newVoids.Add(farm);
     }
     public void CreateAntFarm(HoneycombPos position, HoneycombPos end, HoneycombPos[] moundLocations)
     {
 
-        MapFarm farm = MapFarm.CreateRandomMazeWithPoints(position, end, 2, moundLocations, ChamberAntFarmTriggerPrefab.gameObject);
+        MapFarm farm = MapFarm.CreateRandomMazeWithPoints(position, end, 2, moundLocations/*, ChamberAntFarmTriggerPrefab.gameObject*/);
         newVoids.Add(farm);
     }
 

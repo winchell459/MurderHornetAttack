@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class MapNest : MapArea
 {
-    
-    
+
+    List<Circle> circles;
 
     public MapNest(Vector2 Location)
     {
@@ -15,14 +15,14 @@ public class MapNest : MapArea
 
     
 
-    public static MapNest CreateRandomNest(Vector2 pos, int nestCount, float radius, GameObject nestPrefab)
+    public static MapNest CreateRandomNest(Vector2 pos, int nestCount, float radius/*, GameObject nestPrefab*/)
     {
         MapNest nest = new MapNest(pos);
         nest.locations.Add(pos);
         nest.widths.Add(radius * 2);
         float distributionAngle = 2 * Mathf.PI / nestCount;
 
-        List<Circle> circles = new List<Circle>();
+        /*List<Circle>*/ nest.circles = new List<Circle>();
         for(int i = 0; i < nestCount; i+= 1)
         {
             Circle circle = new Circle();
@@ -40,14 +40,14 @@ public class MapNest : MapArea
                 circle.pos = loc;
                 maxRadius += radius / 4;
             }
-            while (Utility.Utility.ShapeOverlappped(circle, circles));
+            while (Utility.Utility.ShapeOverlappped(circle, nest.circles));
 
-            circles.Add(circle);
+            nest.circles.Add(circle);
         }
 
-        foreach(Circle circle in circles)
+        foreach(Circle circle in nest.circles)
         {
-            GameObject.Instantiate(nestPrefab, circle.pos, Quaternion.identity);
+           // GameObject.Instantiate(nestPrefab, circle.pos, Quaternion.identity);
             //Map.GetSpiderHole().transform.position = circle.pos;
             //nest.locations.Add(loc);
 
@@ -64,9 +64,17 @@ public class MapNest : MapArea
         return nest;
     }
 
-    
+    public override void Setup()
+    {
+        GameObject nestPrefab = MapManager.singleton.SpiderHole;
+        foreach (Circle circle in circles)
+        {
+            GameObject.Instantiate(nestPrefab, circle.pos, Quaternion.identity);
+            
+        }
+    }
 
-    
 
-    
+
+
 }
