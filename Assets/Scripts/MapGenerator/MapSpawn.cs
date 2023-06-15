@@ -7,7 +7,7 @@ public class MapSpawn : MapChamber
     public MapSpawn(Vector2 Location)
     {
         this.Location = Location;
-        VoidType = HoneycombTypes.Variety.Chamber;
+        ChamberSetup();
     }
     public override void Setup()
     {

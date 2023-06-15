@@ -10,7 +10,7 @@ public class MapHoneycomb
     public bool display;
     public Vector2 position;
     public GameObject honeycomb;
-    private GameObject EnemyPrefab;
+    private bool hasEnemy = false;
 
     public Color color = new Color(74/256, 156 / 256, 101 / 256);
 
@@ -75,7 +75,7 @@ public class MapHoneycomb
                 honeycomb = Map.GetHoneycomb();
                 isLargeHoneycomb = false;
                 beeuilding = false;
-                if(EnemyPrefab) setupEnemyTrigger(true);
+                if(hasEnemy) setupEnemyTrigger(true);
                 
             }
             else if (beeuilding)
@@ -131,7 +131,7 @@ public class MapHoneycomb
         //visible = false;
         if (display && honeycomb)
         {
-            if (EnemyPrefab) setupEnemyTrigger(false);
+            if (hasEnemy) setupEnemyTrigger(false);
 
             honeycomb.GetComponent<Honeycomb>().HideHoneycomb();
             honeycomb.SetActive(false);
@@ -164,15 +164,15 @@ public class MapHoneycomb
         display = false;
     }
 
-    public void AddEnemy(GameObject EnemyPrefab)
+    public void AddEnemy(bool hasEnemy)
     {
-        this.EnemyPrefab = EnemyPrefab;
+        this.hasEnemy = hasEnemy;
         //honeycomb.GetComponent<Collider2D>().enabled = true;
     }
     
     public GameObject GetEnemyPrefab()
     {
-        return EnemyPrefab;
+        return MapManager.singleton.EnemyPrefab;
     }
 
     private void setupEnemyTrigger(bool active)

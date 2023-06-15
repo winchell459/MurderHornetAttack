@@ -10,7 +10,7 @@ public class MapNest : MapArea
     public MapNest(Vector2 Location)
     {
         this.Location = Location;
-        AreaType = HoneycombTypes.Areas.Nest;
+        AreaSetup(HoneycombTypes.Areas.Nest);
     }
 
     

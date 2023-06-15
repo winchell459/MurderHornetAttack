@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/BuildScenes/Main.unity
     guid: e70834fe54963894abd9e15b9949e760
   - enabled: 1
-    path: Assets/Scenes/BuildScenes/RandomLevel.unity
+    path: Assets/Scenes/BuildScenes/Game.unity
     guid: 5982ba425f4253d468194b174c04bff2
   - enabled: 1
     path: Assets/Scenes/BuildScenes/Scoring.unity

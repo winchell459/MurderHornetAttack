@@ -167,7 +167,7 @@ public class LevelHandler : MonoBehaviour
     public virtual void HandleExit()
     {
         ExitPanel.SetActive(true);
-        if (Player.GetComponent<HornetController>().ExitButtonPressed && !levelEnding && ph.flowersFound >= 5) LevelEndSequence();
+        if (Player && Player.GetComponent<HornetController>().ExitButtonPressed && !levelEnding && ph.flowersFound >= 5) LevelEndSequence();
     }
 
     public void EnemyDeath(GameObject enemy)
@@ -177,7 +177,7 @@ public class LevelHandler : MonoBehaviour
         if (enemy.GetComponent<SpiderEnemy>()) dropCheck = 0;
         if(Random.Range(0,10) > dropCheck)
         {
-            int dropItem = dropCheck == 0 && generator.UnplacedFlowerPetals()? Random.Range(0, 11) : Random.Range(0, 10); //0-2 Health 3 Power 4-6 Storage 7-9 Rapid 10 Flower
+            int dropItem = dropCheck == 0 && MapManager.singleton.UnplacedFlowerPetals()? Random.Range(0, 11) : Random.Range(0, 10); //0-2 Health 3 Power 4-6 Storage 7-9 Rapid 10 Flower
             float power;
             float duration = Random.Range(6 , 12) * 5;
             if(dropItem < 7)
@@ -191,7 +191,7 @@ public class LevelHandler : MonoBehaviour
 
             if(dropItem == 10)
             {
-                generator.GetFlowerPetalDrop().transform.position = enemy.transform.position;
+                MapManager.singleton.GetFlowerPetalDrop().transform.position = enemy.transform.position;
             }
             else
             {

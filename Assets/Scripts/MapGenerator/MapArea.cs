@@ -13,6 +13,13 @@ public abstract class MapArea : MapChamber
 
     public HoneycombTypes.Areas AreaType;
 
+    public virtual void AreaSetup(HoneycombTypes.Areas AreaType)
+    {
+        this.AreaType = AreaType;
+        ChamberSetup();
+
+    }
+
     public override bool Check(MapHoneycomb honeycomb)
     {
         bool display = honeycomb.display;

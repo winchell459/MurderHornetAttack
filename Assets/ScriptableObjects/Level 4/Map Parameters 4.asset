@@ -9,10 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d1006ea57b1764499a79f919c3f565c, type: 3}
-  m_Name: MapGeneratorParameters
+  m_Script: {fileID: 11500000, guid: 3b3e91814c040ad428813d3d45ceb388, type: 3}
+  m_Name: Map Parameters 4
   m_EditorClassIdentifier: 
-  generationType: 0
-  nestCount: 0
-  gardenCount: 0
-  antMoundCount: 2
+  MapWidth: 300
+  MapHeight: 240
+  ChunkHeight: 18
+  ChunkWidth: 12
+  ChunkRadius: 6

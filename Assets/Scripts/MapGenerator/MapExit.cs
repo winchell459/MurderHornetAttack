@@ -7,7 +7,7 @@ public class MapExit : MapChamber
     public MapExit(Vector2 Location)
     {
         this.Location = Location;
-        VoidType = HoneycombTypes.Variety.Chamber;
+        ChamberSetup();
     }
     public override void Setup()
     {

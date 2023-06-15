@@ -16,8 +16,10 @@ public class MapChamber : MapVoid
     public MapChamber(Vector2 Location)
     {
         this.Location = Location;
-        VoidType = HoneycombTypes.Variety.Chamber;
+        ChamberSetup();
     }
+    protected virtual void ChamberSetup() { VoidType = HoneycombTypes.Variety.Chamber; }
+
     public override bool Check(MapHoneycomb honeycomb)
     {
         bool display = honeycomb.display;

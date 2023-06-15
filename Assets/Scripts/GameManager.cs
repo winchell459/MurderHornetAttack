@@ -47,6 +47,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void LoadStartScene()
+    {
+
+    }
+
     public void LoadMainMenu()
     {
         level = 0;

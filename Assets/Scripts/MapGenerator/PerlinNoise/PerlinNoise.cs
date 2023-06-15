@@ -10,21 +10,7 @@ public class PerlinNoise : MonoBehaviour
     private PerlinNoiseParameters parameters { get { return parametersScriptable.parameters; } }
     //public enum NormalizeMode { Local, Global };
     public int seed { get { return parameters.seed; } }
-    //public float scale;
-    //public int octaves;
-    //[Range(0, 1)]
-    //public float persistance;
-    //public float lacunarity;
-    //public Vector2 offset;
-    //public NormalizeMode normalizeMode;
-
-    //public AnimationCurve depthCurve;
     public float threshold { get { return parameters.threshold; } }
-
-    //public bool randomSeed = false;
-
-    //public enum FalloffTypes { none, honecomb}
-    //public FalloffTypes falloffType;
 
     public int[,] GenerateDepthMap(int mapWidth, int mapHeight)
     {

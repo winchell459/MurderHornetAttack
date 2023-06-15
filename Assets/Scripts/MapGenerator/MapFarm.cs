@@ -11,7 +11,7 @@ public class MapFarm : MapArea
     public MapFarm(Vector2 Location)
     {
         this.Location = Location;
-        AreaType = HoneycombTypes.Areas.Farm;
+        AreaSetup(HoneycombTypes.Areas.Farm);
     }
 
     //public static MapFarm CreateFlowerMaze(PerlineNoiseVoid noiseVoid, PerlinNoiseChamber startChamber, List<HoneycombPos> flowerPetals, PerlinNoiseChamber endChamber, GameObject AntSquadTriggerPrefab)
@@ -102,19 +102,18 @@ public class MapFarm : MapArea
     }
     public override void Setup()
     {
+        //MapManager.singleton.AntSquad.position = Location;
+
         //place triggers at each mound
         List<ChamberAntFarmTrigger> triggers = new List<ChamberAntFarmTrigger>();
         //bool lastSet = false;
         foreach (HoneycombPos node in maze)
         {
-            //MapChamber chamber = new MapChamber(node.worldPos);
-            //Debug.Log("node.pos " + node);
-            //chamber.VoidType = HoneycombTypes.Variety.Chamber;
-            //chamber.AddChamber(chamber.Location, 5);
+            
             ChamberAntFarmTrigger trigger = (ChamberAntFarmTrigger)ChamberTrigger.SetupChamberTrigger(MapManager.singleton.ChamberAntFarmTriggerPrefab.gameObject, chambers[0], Color.black);
 
             triggers.Add(trigger);
-            //farm.chambers.Add(chamber);
+            
         }
         //connect chamber ant farm triggers
         for (int i = 0; i < triggers.Count; i += 1)

@@ -6,12 +6,6 @@ public class MapGenerator : MonoBehaviour
 {
     private List<MapVoid> mapVoids = new List<MapVoid>();
 
-    public GameObject EnemyPrefabs;
-
-    public GameObject[] flowerPetals;
-    private List<GameObject> placedFlowerPetals = new List<GameObject>();
-
-    public Transform AntSquad;
     public bool createAntFarm = false;
 
     public PerlinNoise perlinNoise;
@@ -94,7 +88,7 @@ public class MapGenerator : MonoBehaviour
 
         if (true)
         {
-            System.Random random = new System.Random(perlinNoise.seed);
+            //System.Random random = new System.Random(perlinNoise.seed);
             
 
             HoneycombPos exitHexPos = perlineNoiseVoid.GetAreaPos(8, false);
@@ -135,19 +129,22 @@ public class MapGenerator : MonoBehaviour
 
             // ---------------------- Place Flower Petals -----------------------------
             List<PerlinNoiseChamber> unusedChambers = perlineNoiseVoid.GetUnusedChambers();
-            while(UnplacedFlowerPetals() && unusedChambers.Count > 0)
+            int pedalCount = 5;
+            while(pedalCount > 0 && unusedChambers.Count > 0)
             {
                 PerlinNoiseChamber chamber = unusedChambers[0];
                 unusedChambers.RemoveAt(0);
                 HoneycombPos petalHex = perlineNoiseVoid.GetAreaPos(2, chamber);
                 if(petalHex != new HoneycombPos(-1, -1))
                 {
-                    GetFlowerPetalDrop().transform.position = Utility.Honeycomb.HoneycombGridToWorldPostion(petalHex);
-                    MiniMap.singleton.SetFlower(petalHex, true);
+                    //GetFlowerPetalDrop().transform.position = Utility.Honeycomb.HoneycombGridToWorldPostion(petalHex);
+                    //MiniMap.singleton.SetFlower(petalHex, true);
+                    newVoids.Add(new MapPedal(petalHex));
+                    pedalCount--;
                 }
             }
 
-            if(createAntFarm)CreateAntFarm(Utility.Honeycomb.WorldPointToHoneycombGrid(AntSquad.position));
+            //if(createAntFarm)CreateAntFarm(Utility.Honeycomb.WorldPointToHoneycombGrid(AntSquad.position));
         }
 
 
@@ -157,17 +154,7 @@ public class MapGenerator : MonoBehaviour
         Map.StaticMap.AddVoid(mapVoids);
         perlinNoiseGenerating = false;
     }
-    public bool UnplacedFlowerPetals() { return flowerPetals.Length > placedFlowerPetals.Count; }
-    public GameObject GetFlowerPetalDrop()
-    {
-        if (UnplacedFlowerPetals())
-        {
-            GameObject flowerPetal = flowerPetals[placedFlowerPetals.Count];
-            placedFlowerPetals.Add(flowerPetals[placedFlowerPetals.Count]);
-            return flowerPetal;
-        }
-        else return null;
-    }
+
 
     private void createPillapillarPit(Transform Player, float voidCount)
     {
@@ -181,11 +168,9 @@ public class MapGenerator : MonoBehaviour
 
         //create snake Chamber
         Vector2 snakeChamberLoc = Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(150, 80));
-        CreateCaterpillarGarden(snakeChamberLoc, true);
+        CreatePillapillarGarden(snakeChamberLoc, true);
 
         CreateExitTunnel( Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(200, 200)));
-
-
 
         //connect chambers
         connectChambers(newVoids);
@@ -200,7 +185,7 @@ public class MapGenerator : MonoBehaviour
 
     }
 
-    private void createRandomMap(Transform Player/*, int voidCount*/)
+    private void createRandomMap(Transform Player)
     {
 
         newVoids.Clear();
@@ -242,7 +227,7 @@ public class MapGenerator : MonoBehaviour
 
         if(antMounds > 0)
         {
-            AntSquad.position = voidLocations[voidLocations.Length - antMounds];
+            //AntSquad.position = voidLocations[voidLocations.Length - antMounds];
             HoneycombPos[] antMoundLocations = new HoneycombPos[antMounds];
 
             for (int i = 0; i < antMounds; i++)
@@ -250,15 +235,11 @@ public class MapGenerator : MonoBehaviour
                 antMoundLocations[i] = Utility.Honeycomb.WorldPointToHoneycombGrid(voidLocations[i + voidLocations.Length - antMounds]);
                 //Debug.Log($"ant mound location: {antMoundLocations[i].worldPos} index:{i + voidLocations.Length - antMounds} count:{voidLocations.Length}");
             }
-            CreateAntFarm(Utility.Honeycomb.WorldPointToHoneycombGrid(AntSquad.position), exitHex, antMoundLocations);
+            CreateAntFarm(Utility.Honeycomb.WorldPointToHoneycombGrid(voidLocations[voidLocations.Length - antMounds]), exitHex, antMoundLocations);
 
             for (int i = 1; i < antMoundLocations.Length; i++)
             {
-                if (UnplacedFlowerPetals())
-                {
-                    GetFlowerPetalDrop().transform.position = Utility.Honeycomb.HoneycombGridToWorldPostion(antMoundLocations[i]);
-                    MiniMap.singleton.SetFlower(antMoundLocations[i], true);
-                }
+                newVoids.Add(new MapPedal(antMoundLocations[i]));
             }
         }
         
@@ -272,7 +253,7 @@ public class MapGenerator : MonoBehaviour
         for (int i = 0; i < parameters.gardenCount; i++)
         {
             Vector2 snakeChamberLoc = voidLocations[i +parameters.nestCount +2];//Utility.Honeycomb.HoneycombGridToWorldPostion(new HoneycombPos(150, 80));
-            CreateCaterpillarGarden(snakeChamberLoc, true);
+            CreatePillapillarGarden(snakeChamberLoc, true);
         }
 
         
@@ -365,7 +346,7 @@ public class MapGenerator : MonoBehaviour
                 {
                     if (Random.Range(0, 10) < 1)
                     {
-                        mhc.AddEnemy(EnemyPrefabs);
+                        mhc.AddEnemy(true);
                         //Debug.Log("Enemy Added");
                     }
                 }
@@ -389,7 +370,7 @@ public class MapGenerator : MonoBehaviour
         newVoids.Add(endChamber);
     }
 
-    public void CreateCaterpillarGarden(Vector2 position, bool random)
+    public void CreatePillapillarGarden(Vector2 position, bool random)
     {
         if (random)
         {
@@ -447,15 +428,16 @@ public class MapGenerator : MonoBehaviour
         int voidCount = chambers.Count ;
         for (int i = 0; i < voidCount; i += 1)
         {
-            //Debug.Log("newConnected: " + newConnected.Count + " voidCount: " + voidCount);
+            if (chambers[i].VoidType != HoneycombTypes.Variety.Chamber) continue;
             while (!((MapChamber)chambers[i]).Connected)
             {
                 int connecting = (int)Random.Range(0, voidCount - 1);
-                if (connecting != i)
+                if (connecting != i && chambers[connecting].VoidType == HoneycombTypes.Variety.Chamber)
                 {
-                    //chambers.Add(MapPath.CreateJoggingPath(((MapChamber)chambers[i]).ClosestEntrancePoint(newLocations[connecting]), newLocations[connecting], -2, 2, 2, 6, 2, 2));
-                    //Debug.Log($"{((MapChamber)chambers[connecting]).GetType()}");
-                    chambers.Add(MapPath.CreateJoggingPath(((MapChamber)chambers[i]).ClosestEntrancePoint(((MapChamber)chambers[connecting]).Location), ((MapChamber)chambers[connecting]).Location, -2, 2, 2, 6, 3, 6));
+                    Vector2 start = ((MapChamber)chambers[i]).ClosestEntrancePoint(((MapChamber)chambers[connecting]).Location);
+                    Vector2 end = ((MapChamber)chambers[connecting]).Location;
+
+                    chambers.Add(MapPath.CreateJoggingPath(start, end, -2, 2, 2, 6, 3, 6));
                     ((MapChamber)chambers[i]).Connected = true;
                 }
             }

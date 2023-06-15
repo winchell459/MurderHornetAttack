@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37312, g: 0.38074034, b: 0.35872716, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6072,7 +6072,7 @@ MonoBehaviour:
     type: 3}
   ChamberTriggerPrefab: {fileID: 7926056111465507770, guid: 1a9879ce821076540bac519132064716,
     type: 3}
-  EnemyPrefabs: {fileID: 1301808763863226240, guid: a84a7fa051b764d6f9e5e2e8748f3f76,
+  EnemyPrefab: {fileID: 1301808763863226240, guid: a84a7fa051b764d6f9e5e2e8748f3f76,
     type: 3}
   SnakePrefab: {fileID: 2010293437201622713, guid: 0b283abda00c04e44b2914c947b99923,
     type: 3}
@@ -10852,6 +10852,7 @@ MonoBehaviour:
   Health: 100
   MaxHealth: 100
   CollisionForce: {x: 0, y: 0}
+  type: 0
   InsectPrefab: {fileID: 0}
   body: {fileID: 0}
   speed: 1
@@ -18174,15 +18175,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3a520ebe99912448a833678a42d5d7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyPrefabs: {fileID: 1301808763863226240, guid: a84a7fa051b764d6f9e5e2e8748f3f76,
-    type: 3}
-  flowerPetals:
-  - {fileID: 1477598014}
-  - {fileID: 103884518}
-  - {fileID: 1890177194}
-  - {fileID: 1192713083}
-  - {fileID: 763749279}
-  AntSquad: {fileID: 1696449734}
   createAntFarm: 0
   perlinNoise: {fileID: 1681636334}
   parameters: {fileID: 11400000, guid: aa8bca75e83ce8e4ea296241940545a7, type: 2}
