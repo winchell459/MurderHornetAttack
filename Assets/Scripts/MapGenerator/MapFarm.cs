@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class MapFarm : MapArea
 {
-    HoneycombPos startPoint;
-    HoneycombPos endPoint;
-    List<HoneycombPos> maze = new List<HoneycombPos>();
-    
+    Vector2 startPoint;
+    Vector2 endPoint;
+    //List<HoneycombPos> maze = new List<HoneycombPos>();
+    List<Vector2> maze = new List<Vector2>();
+
     public MapFarm(Vector2 Location)
     {
         this.Location = Location;
@@ -19,76 +20,78 @@ public class MapFarm : MapArea
 
     //}
 
-    public static MapFarm CreateRandomMazeWithPoints(HoneycombPos startPoint, HoneycombPos endPoint, float edgeWidth, HoneycombPos[] moundLocations/*, GameObject AntSquadTriggerPrefab*/)
+    public static MapFarm CreateRandomMazeWithPoints(Vector2 worldPos, HoneycombPos startPoint,  HoneycombPos endPoint, float edgeWidth, HoneycombPos[] moundLocations, MapParameters mapParameters)
     {
-        MapFarm farm = new MapFarm(startPoint.worldPos);
+        MapFarm farm = new MapFarm(worldPos);
         farm.locations.Add(farm.Location);
         farm.widths.Add(5);
-        farm.startPoint = startPoint;
-        farm.endPoint = endPoint;
+        //farm.startPoint = startPoint;
+        //farm.endPoint = endPoint;
 
-        farm.maze.Add(startPoint);
+        farm.startPoint = worldPos;
+        farm.endPoint = Utility.Honeycomb.HoneycombGridToWorldPostion(endPoint, mapParameters);
+
+        farm.maze.Add(worldPos);
+
         for(int i = 1; i < moundLocations.Length; i++)
         {
-            farm.locations.Add(moundLocations[i].worldPos);
+            
+            farm.locations.Add(Utility.Honeycomb.HoneycombGridToWorldPostion(moundLocations[i], mapParameters));
             farm.widths.Add(5);
-            farm.maze.Add(moundLocations[i]);
+            //farm.maze.Add(moundLocations[i]);
+            farm.maze.Add(Utility.Honeycomb.HoneycombGridToWorldPostion(moundLocations[i], mapParameters));
         }
         
 
-        farm.maze = farm.connectNodes(new List<HoneycombPos>(), startPoint);
-        farm.maze.Add(endPoint);
+        farm.maze = farm.connectNodes(new List<Vector2>(), farm.startPoint);
+        //farm.maze.Add(endPoint);
+        farm.maze.Add(farm.endPoint);
 
         //connect ant mounds
         List<MapPath> edges = farm.generateEdges(farm.maze);
 
+        SetupMounds(farm, edges);
 
-
-        SetupMounds(farm/*, AntSquadTriggerPrefab*/, edges);
-
-        //finish farm setup
-        farm.StartPoints.Add(farm.maze[0]);
-        farm.EndPoints.Add(farm.maze[farm.maze.Count - 1]);
+        farm.StartPoints.Add(Utility.Honeycomb.WorldPointToHoneycombGrid( farm.maze[0],mapParameters));
+        farm.EndPoints.Add(Utility.Honeycomb.WorldPointToHoneycombGrid(farm.maze[farm.maze.Count - 1], mapParameters));
 
         return farm;
     }
 
-    public static MapFarm CreateRandomMaze(HoneycombPos startPoint, HoneycombPos endPoint, float edgeWidth, int nodeCount/*, GameObject AntSquadTriggerPrefab*/)
-    {
-        MapFarm farm = new MapFarm(startPoint.worldPos);
-        farm.locations.Add(farm.Location);
-        farm.widths.Add(5);
-        farm.startPoint = startPoint;
-        farm.endPoint = endPoint;
+    //public static MapFarm CreateRandomMaze(HoneycombPos startPoint, HoneycombPos endPoint, float edgeWidth, int nodeCount, MapParameters mapParameters)
+    //{
+    //    MapFarm farm = new MapFarm(startPoint.worldPos);
+    //    farm.locations.Add(farm.Location);
+    //    farm.widths.Add(5);
+    //    farm.startPoint = Utility.Honeycomb.HoneycombGridToWorldPostion(startPoint, mapParameters);
+    //    farm.endPoint = Utility.Honeycomb.HoneycombGridToWorldPostion(endPoint, mapParameters);
 
-        //place ant mounds
-        farm.generateMaze(nodeCount);
+    //    //place ant mounds
+    //    farm.generateMaze(nodeCount);
 
-        //connect ant mounds
-        List<MapPath> edges = farm.generateEdges(farm.maze);
+    //    //connect ant mounds
+    //    List<MapPath> edges = farm.generateEdges(farm.maze);
 
         
 
-        SetupMounds(farm/*, AntSquadTriggerPrefab*/, edges);
+    //    SetupMounds(farm/*, AntSquadTriggerPrefab*/, edges);
 
-        //finish farm setup
-        farm.StartPoints.Add(farm.maze[0]);
-        farm.EndPoints.Add(farm.maze[farm.maze.Count - 1]);
-        //farm.paths = edges;
+    //    //finish farm setup
+    //    farm.StartPoints.Add(Utility.Honeycomb.WorldPointToHoneycombGrid(farm.maze[0], mapParameters));
+    //    farm.EndPoints.Add(Utility.Honeycomb.WorldPointToHoneycombGrid(farm.maze[farm.maze.Count - 1], mapParameters));
+    //    //farm.paths = edges;
 
-        return farm;
-    }
+    //    return farm;
+    //}
 
     List<MapPath> edges;
     private static void SetupMounds(MapFarm farm, /*GameObject AntSquadTriggerPrefab,*/ List<MapPath> edges)
     {
         farm.edges = edges;
         //place triggers at each mound
-        //List<ChamberAntFarmTrigger> triggers = new List<ChamberAntFarmTrigger>();
-        //bool lastSet = false;
-        foreach (HoneycombPos node in farm.maze)
+        foreach (Vector2 node in farm.maze)
         {
-            MapChamber chamber = new MapChamber(node.worldPos);
+            MapChamber chamber = new MapChamber(node);
             Debug.Log("node.pos " + node);
             chamber.VoidType = HoneycombTypes.Variety.Chamber;
             chamber.AddChamber(chamber.Location, 5);
@@ -106,11 +109,11 @@ public class MapFarm : MapArea
 
         //place triggers at each mound
         List<ChamberAntFarmTrigger> triggers = new List<ChamberAntFarmTrigger>();
-        //bool lastSet = false;
-        foreach (HoneycombPos node in maze)
-        {
-            
-            ChamberAntFarmTrigger trigger = (ChamberAntFarmTrigger)ChamberTrigger.SetupChamberTrigger(MapManager.singleton.ChamberAntFarmTriggerPrefab.gameObject, chambers[0], Color.black);
+
+        for(int i = 0; i < maze.Count; i++) {
+
+            Debug.Log($"chamber {i} is at {chambers[i].Location}");
+            ChamberAntFarmTrigger trigger = (ChamberAntFarmTrigger)ChamberTrigger.SetupChamberTrigger(MapManager.singleton.ChamberAntFarmTriggerPrefab.gameObject, chambers[i], Color.black);
 
             triggers.Add(trigger);
             
@@ -123,53 +126,53 @@ public class MapFarm : MapArea
         }
     }
 
-    private void generateMaze(int nodeCount)
-    {
+    //private void generateMaze(int nodeCount/*, int seed*/)
+    //{
+    //    //System.Random random = new System.Random(seed);
+    //    float edgeLength = 10;
+    //    maze.Add(startPoint);
+    //    maze.Add(endPoint);
+    //    Vector2 minRangePoint = new Vector2(startPoint.x - edgeLength -1 < endPoint.x - edgeLength - 1?  startPoint.x - (int)edgeLength - 1 :endPoint.x - (int)edgeLength -1 , startPoint.y - edgeLength - 1 < endPoint.y - edgeLength - 1 ? startPoint.y - (int)edgeLength - 1 : endPoint.y - (int)edgeLength - 1);
+    //    Vector2 maxRangePoint = new Vector2(startPoint.x + edgeLength + 1 > endPoint.x + edgeLength + 1 ? startPoint.x + (int)edgeLength + 1 : endPoint.x + (int)edgeLength + 1, startPoint.y + edgeLength + 1 > endPoint.y + edgeLength + 1 ? startPoint.y + (int)edgeLength + 1 : endPoint.y + (int)edgeLength + 1);
 
-        float edgeLength = 10;
-        maze.Add(startPoint);
-        maze.Add(endPoint);
-        HoneycombPos minRangePoint = new HoneycombPos(startPoint.x - edgeLength -1 < endPoint.x - edgeLength - 1?  startPoint.x - (int)edgeLength - 1 :endPoint.x - (int)edgeLength -1 , startPoint.y - edgeLength - 1 < endPoint.y - edgeLength - 1 ? startPoint.y - (int)edgeLength - 1 : endPoint.y - (int)edgeLength - 1);
-        HoneycombPos maxRangePoint = new HoneycombPos(startPoint.x + edgeLength + 1 > endPoint.x + edgeLength + 1 ? startPoint.x + (int)edgeLength + 1 : endPoint.x + (int)edgeLength + 1, startPoint.y + edgeLength + 1 > endPoint.y + edgeLength + 1 ? startPoint.y + (int)edgeLength + 1 : endPoint.y + (int)edgeLength + 1);
-
-        Debug.Log(minRangePoint + " " + maxRangePoint);
+    //    Debug.Log(minRangePoint + " " + maxRangePoint);
         
-        List<Circle> nodes = new List<Circle>();
-        nodes.Add(new Circle(startPoint.worldPos, edgeLength));
-        nodes.Add(new Circle(endPoint.worldPos, edgeLength));
-        int fails = 0;
-        int failsCoefficient = 50;
-        while(nodes.Count < nodeCount && fails < failsCoefficient * nodeCount)
-        {
-            float randX = Random.Range(minRangePoint.worldPos.x, maxRangePoint.worldPos.x);
-            float randY = Random.Range(minRangePoint.worldPos.y, maxRangePoint.worldPos.y);
-            Circle newNode = new Circle(new Vector2(randX, randY),edgeLength/2);
-            if(!Utility.Utility.ShapeOverlappped(newNode, nodes))
-            {
-                nodes.Add(newNode);
-                maze.Add(endPoint);
+    //    List<Circle> nodes = new List<Circle>();
+    //    nodes.Add(new Circle(startPoint, edgeLength));
+    //    nodes.Add(new Circle(endPoint, edgeLength));
+    //    int fails = 0;
+    //    int failsCoefficient = 50;
+    //    while(nodes.Count < nodeCount && fails < failsCoefficient * nodeCount)
+    //    {
+    //        float randX = Utility.Utility.Random(minRangePoint.x, maxRangePoint.x);
+    //        float randY = Utility.Utility.Random(minRangePoint.y, maxRangePoint.y);
+    //        Circle newNode = new Circle(new Vector2(randX, randY),edgeLength/2);
+    //        if(!Utility.Utility.ShapeOverlappped(newNode, nodes))
+    //        {
+    //            nodes.Add(newNode);
+    //            maze.Add(endPoint);
 
-                maze[maze.Count - 2] = Utility.Honeycomb.WorldPointToHoneycombGrid(newNode.pos);
+    //            maze[maze.Count - 2] = newNode.pos;
                 
-            }
-            else
-            {
-                fails += 1;
-                if (fails >= failsCoefficient * nodeCount) Debug.Log("Maze build fail: node.Count = " + nodes.Count);
-            }
-        }
+    //        }
+    //        else
+    //        {
+    //            fails += 1;
+    //            if (fails >= failsCoefficient * nodeCount) Debug.Log("Maze build fail: node.Count = " + nodes.Count);
+    //        }
+    //    }
 
-        List<HoneycombPos> edges = new List<HoneycombPos>();
-        maze = connectNodes(edges, startPoint);
-    }
+    //    List<Vector2> edges = new List<Vector2>();
+    //    maze = connectNodes(edges, startPoint);
+    //}
 
-    private List<HoneycombPos> connectNodes(List<HoneycombPos> edges, HoneycombPos node)
+    private List<Vector2> connectNodes(List<Vector2> edges, Vector2 node)
     {
-        List<HoneycombPos> newEdges = new List<HoneycombPos>();
+        List<Vector2> newEdges = new List<Vector2>();
         if (edges.Contains(node) || (edges.Count > 0 && checkIntersecting(node, edges))) return edges;
         else
         {
-            foreach (HoneycombPos pos in edges)
+            foreach (Vector2 pos in edges)
             {
                 newEdges.Add(pos);
 
@@ -182,11 +185,11 @@ public class MapFarm : MapArea
             if (newEdges.Count == maze.Count) break;
             if (!newEdges.Contains(maze[i]))
             {
-                List<HoneycombPos> tempEdges = connectNodes(newEdges, maze[i]);
+                List<Vector2> tempEdges = connectNodes(newEdges, maze[i]);
                 if (tempEdges.Count == maze.Count)
                 {
                     newEdges.Clear();
-                    foreach (HoneycombPos pos in tempEdges)
+                    foreach (Vector2 pos in tempEdges)
                     {
                         newEdges.Add(pos);
                     }
@@ -196,31 +199,31 @@ public class MapFarm : MapArea
         }
         return newEdges;
     }
-    private void generateBranches()
-    {
-        for(int i = 0; i < maze.Count -1; i += 1)
-        {
-            //Vector2 start = (Utility.HoneycombGridToWorldPostion(endPoint) - Utility.HoneycombGridToWorldPostion(startPoint)).normalized * 
-            //MapPath.CreateJoggingPath()
-        }
-    }
+    //private void generateBranches()
+    //{
+    //    for(int i = 0; i < maze.Count -1; i += 1)
+    //    {
+    //        //Vector2 start = (Utility.HoneycombGridToWorldPostion(endPoint) - Utility.HoneycombGridToWorldPostion(startPoint)).normalized * 
+    //        //MapPath.CreateJoggingPath()
+    //    }
+    //}
 
-    private List<MapPath> generateEdges(List<HoneycombPos> nodes)
+    private List<MapPath> generateEdges(List<Vector2> nodes)
     {
         List<MapPath> edges = new List<MapPath>();
         for(int i = 1; i < nodes.Count; i += 1)
         {
-            edges.Add(MapPath.CreateJoggingPath(nodes[i].worldPos, nodes[i - 1].worldPos, 1, 2, 2, 3, 2, 3));
+            edges.Add(MapPath.CreateJoggingPath(nodes[i], nodes[i - 1], 1, 2, 2, 3, 2, 3));
         }
         return edges;
     }
-    private bool checkIntersecting(HoneycombPos point, List<HoneycombPos> edges)
+    private bool checkIntersecting(Vector2 point, List<Vector2> edges)
     {
         bool intersects = false;
-        HoneycombPos point0 = edges[edges.Count - 1];
+        Vector2 point0 = edges[edges.Count - 1];
         for(int i = 1; i < edges.Count - 1; i += 1)
         {
-            if(Utility.Utility.CheckIntersecting(point.worldPos,point0.worldPos, edges[i - 1].worldPos, edges[i].worldPos))
+            if(Utility.Utility.CheckIntersecting(point,point0, edges[i - 1], edges[i]))
             {
                 intersects = true;
             }

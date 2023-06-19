@@ -7,14 +7,16 @@ public class GameManager : MonoBehaviour
     public static GameManager singleton;
     public int level = 0;
     public enum Stage { ready, generating, loading, playing, scoring }
-    public Stage stage;
+    [SerializeField]private Stage stage;
 
     public StageParameters[] stageParameters;
     [System.Serializable]
     public struct StageParameters
     {
+        public PerlinNoiseScriptableObject perlinNoiseParameters;
         public MapGeneratorParameters mapGeneratorParameters;
         public MapParameters mapParameters;
+        public List<MapVoid> stageMapVoids;
     }
 
     List<PlayerScore> PlayerScores = new List<PlayerScore>();
@@ -34,6 +36,8 @@ public class GameManager : MonoBehaviour
         
     }
 
+    
+
     private void Start()
     {
         if (!singleton)
@@ -47,36 +51,90 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void LoadStartScene()
+    public void LoadStartScene() //MainMenu calls when player clicks on screen
     {
-
+        LoadLevel();
     }
 
-    public void LoadMainMenu()
+    public void LoadMainMenu() //LevelHandler when gameover and GameManager when no more levels
     {
         level = 0;
         stage = Stage.ready;
         UnityEngine.SceneManagement.SceneManager.LoadScene(1);
     }
 
-    public void LoadNextScene()
+    public void LoadNextScene() //LevelHandler calls at end of level
     {
+        stage = Stage.scoring;
         UnityEngine.SceneManagement.SceneManager.LoadScene(3);
-
+        
     }
-    public void LoadNextLevel()
+    public void LoadNextLevel() //ScoreHandler called when player clicks screen
     {
-        level++;
+        if(stage == Stage.scoring || stage == Stage.ready)
+            level++;
+        LoadLevel();
+    }
+    private void LoadLevel()
+    {
         if (level < stageParameters.Length)
         {
-            LevelManager.mapParameters = stageParameters[level].mapParameters;
-            LevelManager.mapGeneratorParameters = stageParameters[level].mapGeneratorParameters;
-            UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+            if (stage == Stage.loading)
+            {
+                stage = Stage.playing;
+                UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+            }
+            else if (stage != Stage.generating)
+            {
+                stage = Stage.generating;
+                StartCoroutine(Preloading());
+            }
+            
         }
         else
         {
             LoadMainMenu();
         }
+    }
+    private bool preloadComplete = false;
+    IEnumerator Preloading()
+    {
+        preloadComplete = false;
+
+        MapGeneratorParameters mapGeneratorParameters = stageParameters[level].mapGeneratorParameters;
+        MapParameters mapParameters = stageParameters[level].mapParameters;
+        PerlinNoiseScriptableObject perlinNoiseParameters = stageParameters[level].perlinNoiseParameters;
+
+        LevelManager.perlinNoiseParameters = perlinNoiseParameters;
+        LevelManager.mapParameters = mapParameters;
+        LevelManager.mapGeneratorParameters = mapGeneratorParameters;
+        
+        if (mapGeneratorParameters.generationType == MapGeneratorParameters.GenerationTypes.perlinNoise)
+        {
+            MapGenerator.PregeneratePerlineNoiseVoid(new PerlinNoise(perlinNoiseParameters), mapParameters);
+            while (MapGenerator.pregenerated.generating) yield return null;
+            preloadComplete = true;
+
+        }
+        else
+        {
+            MapGenerator.onGenerationPreloadComplete += PreGenerationComplete;
+
+            MapGenerator.GenerateMap(mapGeneratorParameters, mapParameters);
+            while (!preloadComplete) yield return null;
+
+        }
+        stage = Stage.loading;
+        FindObjectOfType<LevelLoadUI>().PreGenerationComplete();
+    }
+
+    void PreGenerationComplete(List<MapVoid> mapVoids)
+    {
+        MapGenerator.onGenerationPreloadComplete -= PreGenerationComplete;
+        LevelManager.levelMapVoids = mapVoids;
+
+        preloadComplete = true;
+        Debug.Log("Preloading Complete");
     }
 
     public PlayerScore GetLevelScore()
@@ -171,9 +229,27 @@ public class GameManager : MonoBehaviour
     public static void BeeHit()
     {
         singleton.GetPlayerScore(singleton.level).beesHit++;
+        DisplayPlayerStats(singleton.level);
     }
     public static void SetPlayTime(float time)
     {
         singleton.GetPlayerScore(singleton.level).time = time;
+        DisplayPlayerStats(singleton.level);
     }
+    public static void DisplayPlayerStats(int level)
+    {
+        PlayerScore ps = singleton.PlayerScores[level];
+        Debug.Log($"kiaBees: {ps.beesHit} kiaSiders: {ps.spidersKilled}/{ps.spidersHit} kiaPill: {ps.pillapillarLinksKilled}/{ps.pillapillarsKilled}/{ps.pillapillarHit} time: {ps.time} ");
+
+    //public float time;
+    //public int shotsFired;
+    //public int beesHit;
+    //public int terrainHit;
+    //public int honeycombTowerHit;
+    //public int honeycombTowersDestroyed;
+    //public int spidersHit, spidersKilled;
+    //public int pillapillarHit, pillapillarLinksKilled, pillapillarsKilled;
+    //public int antsKilled;
+    //public int queenHits;
+}
 }

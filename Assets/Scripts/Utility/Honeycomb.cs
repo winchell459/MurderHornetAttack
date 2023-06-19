@@ -12,22 +12,45 @@ namespace Utility
 
             return HoneycombGridToWorldPostion(WorldPointToHoneycombGrid(point));
         }
+        public static Vector2 WorldPointToHoneycombPos(Vector2 point, MapParameters map)
+        {
 
+            return HoneycombGridToWorldPostion(WorldPointToHoneycombGrid(point, map), map.HorizontalSpacing, map.VerticalSpacing, map.MapOrigin);
+        }
         public static Vector2 HoneycombGridToWorldPostion(HoneycombPos honeyPos)
         {
             Map map = Map.StaticMap;
-            float xPos = honeyPos.x * map.HorizontalSpacing;
-            float yPos = yPos = honeyPos.y * map.VerticalSpacing * 2;
-            if (honeyPos.x % 2 == 0) yPos += map.VerticalSpacing;
-
-            return new Vector2(xPos, yPos) + new Vector2(map.MapOrigin.x * map.HorizontalSpacing, map.MapOrigin.y * map.VerticalSpacing);
+            return HoneycombGridToWorldPostion(honeyPos, map.HorizontalSpacing, map.VerticalSpacing, map.MapOrigin);
+        }
+        public static Vector2 HoneycombGridToWorldPostion(HoneycombPos honeyPos, MapParameters map)
+        {
+           
+            return HoneycombGridToWorldPostion(honeyPos, map.HorizontalSpacing, map.VerticalSpacing, map.MapOrigin);
         }
 
+        public static Vector2 HoneycombGridToWorldPostion(HoneycombPos honeyPos, float HorizontalSpacing, float VerticalSpacing, Vector2 MapOrigin)
+        {
+            
+            float xPos = honeyPos.x * HorizontalSpacing;
+            float yPos = yPos = honeyPos.y * VerticalSpacing * 2;
+            if (honeyPos.x % 2 == 0) yPos += VerticalSpacing;
+
+            return new Vector2(xPos, yPos) + new Vector2(MapOrigin.x * HorizontalSpacing, MapOrigin.y * VerticalSpacing);
+        }
+        public static HoneycombPos WorldPointToHoneycombGrid(Vector2 worldPos, MapParameters map)
+        {
+            return WorldPointToHoneycombGrid(worldPos, map.HorizontalSpacing, map.VerticalSpacing, map.MapOrigin);
+        }
         public static HoneycombPos WorldPointToHoneycombGrid(Vector2 worldPos)
         {
             Map map = Map.StaticMap;
-            int x = (int)((worldPos.x + map.HorizontalSpacing / 3) / map.HorizontalSpacing - map.MapOrigin.x);
-            int y = (int)((worldPos.y + map.VerticalSpacing) / (2 * map.VerticalSpacing) - map.MapOrigin.y / 2);
+            return WorldPointToHoneycombGrid(worldPos, map.HorizontalSpacing, map.VerticalSpacing, map.MapOrigin);
+        }
+        public static HoneycombPos WorldPointToHoneycombGrid(Vector2 worldPos, float HorizontalSpacing, float VerticalSpacing, Vector2 MapOrigin)
+        {
+            
+            int x = (int)((worldPos.x + HorizontalSpacing / 3) / HorizontalSpacing - MapOrigin.x);
+            int y = (int)((worldPos.y + VerticalSpacing) / (2 * VerticalSpacing) - MapOrigin.y / 2);
 
             List<Vector2> honeyCandidates = new List<Vector2>();
             int xMin = x;
@@ -46,7 +69,7 @@ namespace Utility
                 for (int j = yMin; j <= yMax; j += 1)
                 {
                     //debugStr += " (" + i + ", " + j + ")";
-                    float check = Vector2.Distance(worldPos, HoneycombGridToWorldPostion(new HoneycombPos(i, j)));
+                    float check = Vector2.Distance(worldPos, HoneycombGridToWorldPostion(new HoneycombPos(i, j), HorizontalSpacing, VerticalSpacing, MapOrigin));
                     if (check < distance)
                     {
                         distance = check;
@@ -61,7 +84,7 @@ namespace Utility
         }
 
 
-        public static MapChunk GetMapChunk(Vector2 worldPos)
+        public static MapChunk GetMapChunk(Vector2 worldPos/*, MapParameters map*/)
         {
             HoneycombPos honeyIndex = WorldPointToHoneycombGrid(worldPos);
             Map map = Map.StaticMap;

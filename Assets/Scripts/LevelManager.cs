@@ -4,8 +4,15 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
+    public static PerlinNoiseScriptableObject perlinNoiseParameters;
     public static MapGeneratorParameters mapGeneratorParameters;
     public static MapParameters mapParameters;
+    public static List<MapVoid> levelMapVoids;
+
+    [SerializeField] private PerlinNoiseScriptableObject perlinNoiseParametersDebug;
+    [SerializeField] private MapGeneratorParameters mapGeneratorParametersDebug;
+    //[SerializeField] private MapParameters mapParametersDebug;
+    //[SerializeField] private static MapParameters mapParametersDebug;
 
     public Map map;
     public MapGenerator mapGenerator;
@@ -17,15 +24,23 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         if (mapParameters) map.parameters = mapParameters;
+        else
+        {
+            mapParameters = map.parameters;
+        }
+        map.SetupMap();
+
+        if (!perlinNoiseParameters) perlinNoiseParameters = perlinNoiseParametersDebug;
         if (mapGeneratorParameters)
         {
-            mapGenerator.parameters = mapGeneratorParameters;
+            //mapGenerator.parameters = mapGeneratorParameters;
             SetupLevelHandler(mapGeneratorParameters);
             
         }
         else
         {
-            SetupLevelHandler(mapGenerator.parameters);
+            mapGeneratorParameters = mapGeneratorParametersDebug;
+            SetupLevelHandler(mapGeneratorParametersDebug);
         }
 
     }

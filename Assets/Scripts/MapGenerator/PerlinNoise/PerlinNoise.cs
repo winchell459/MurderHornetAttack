@@ -4,13 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class PerlinNoise : MonoBehaviour
+public class PerlinNoise /*: MonoBehaviour*/
 {
-    public PerlinNoiseScriptableObject parametersScriptable;
-    private PerlinNoiseParameters parameters { get { return parametersScriptable.parameters; } }
+    //public PerlinNoiseScriptableObject parametersScriptable;
+    private PerlinNoiseParameters parameters; /*{ get { return parametersScriptable.parameters; } }*/
     //public enum NormalizeMode { Local, Global };
     public int seed { get { return parameters.seed; } }
     public float threshold { get { return parameters.threshold; } }
+
+    public PerlinNoise(PerlinNoiseScriptableObject parametersScriptable)
+    {
+        parameters = parametersScriptable.parameters;
+    }
 
     public int[,] GenerateDepthMap(int mapWidth, int mapHeight)
     {

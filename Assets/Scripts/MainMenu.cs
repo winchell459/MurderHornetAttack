@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MainMenu : MonoBehaviour
+public class MainMenu : LevelLoadUI
 {
     public Text TouchToPlayText;
     public AudioSource ThemeSource;
@@ -13,7 +13,8 @@ public class MainMenu : MonoBehaviour
 
     public MapGeneratorParameters mapGeneratorParameters;
     public MapParameters mapParameters;
-    public PerlinNoise perlinNoise;
+    public PerlinNoiseScriptableObject perlinNoiseParameters;
+    
     private bool preloadComplete = false;
 
     public GameObject preloadingScreen;
@@ -44,34 +45,39 @@ public class MainMenu : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-
-            if (mapGeneratorParameters.generationType != MapGeneratorParameters.GenerationTypes.perlinNoise || preloadComplete)
-            {
-                //provides a buffer for next scene's loading - Destroy in next scene after loading complete
-                DontDestroyOnLoad(preloadingScreen);
-                TouchToPlayText.gameObject.SetActive(false);
-                PlayerHandler.ResetStats();
-                SceneManager.LoadScene(2);
-            }
-            else
-            {
-                TouchToPlayText.text = "LOADING";
-                StartCoroutine(Preloading());
-            }
+            HandleLoadingNextScene();
+            
         }
 
+        if(preloadComplete) TouchToPlayText.text = "TOUCH TO CONTINUE";
     }
 
-    
-    IEnumerator Preloading()
+    public void HandleLoadingNextScene()
     {
-        if (perlinNoise)
+        if (preloadComplete)
         {
-            MapGenerator.PregeneratePerlineNoiseVoid(perlinNoise, mapParameters);
-            while (MapGenerator.pregenerated.generating) yield return null;
+            //provides a buffer for next scene's loading - Destroy in next scene after loading complete
+            DontDestroyOnLoad(preloadingScreen);
+            TouchToPlayText.gameObject.SetActive(false);
+            PlayerHandler.ResetStats();
+            GameManager.singleton.LoadStartScene();
         }
+        else
+        {
+            TouchToPlayText.text = "LOADING";
+            GameManager.singleton.LoadStartScene();
+            //StartCoroutine(Preloading());
+        }
+    }
+
+
+    public override void PreGenerationComplete()
+    {
         preloadComplete = true;
-        TouchToPlayText.text = "TOUCH TO CONTINUE";
     }
 }
 
+public abstract class LevelLoadUI : MonoBehaviour
+{
+    public abstract void PreGenerationComplete();
+}

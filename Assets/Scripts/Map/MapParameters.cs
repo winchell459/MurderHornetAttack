@@ -10,6 +10,7 @@ public class MapParameters : ScriptableObject
 
     public float MapWidth = 200;
     public float MapHeight = 160;
+    public Vector2 MapOrigin;
 
     public int ChunkHeight = 12;
     public int ChunkWidth = 16;

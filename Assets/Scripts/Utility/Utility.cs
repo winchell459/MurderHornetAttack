@@ -6,6 +6,20 @@ namespace Utility
 {
     public static class Utility
     {
+        public static int seed = 0;
+        static System.Random random;
+
+        public static int Random(int min, int max)
+        {
+            if (random == null) random = new System.Random(seed);
+            return random.Next(min, max);
+        }
+        public static float Random(float min, float max)
+        {
+            if (random == null) random = new System.Random(seed);
+            return ((float)random.NextDouble() * (max - min) + min);
+        }
+
         public static float GetTime()
         {
             return (System.DateTime.Now.Hour * 60 + System.DateTime.Now.Minute) * 60 + System.DateTime.Now.Second;

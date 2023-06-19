@@ -90,9 +90,9 @@ public class MapPath : MapVoid
         while (path.Count < 1 || path.Points[path.Count -1] != end)
         {
             
-            Vector2 forward = Random.Range(pathLengthMin, pathWidthMax) * direction;
-            Vector2 jog = Random.Range(jogWidthMin, jogWidthMax) * normal;
-            float width = Random.Range(pathWidthMin, pathWidthMax);
+            Vector2 forward = Utility.Utility.Random(pathLengthMin, pathWidthMax) * direction;
+            Vector2 jog = Utility.Utility.Random(jogWidthMin, jogWidthMax) * normal;
+            float width = Utility.Utility.Random(pathWidthMin, pathWidthMax);
             float nextX = forward.x + jog.x + linePoint.x;
             float nextY = forward.y + jog.y + linePoint.y;
             linePoint = Utility.Utility.ClosestPointOnLine(new Vector2(nextX, nextY), start, end);

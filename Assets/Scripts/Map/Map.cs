@@ -28,8 +28,8 @@ public class Map : MonoBehaviour
     public int ChunkWidth { get { return parameters.ChunkWidth; } }
     //public int ChunkRadius = 3; //number of chunks from the player to render
 
-    public Vector2 MapOrigin; // bottom left corner of map
-    
+    public Vector2 MapOrigin { get { return parameters.MapOrigin; } } // bottom left corner of map
+
     private List<GameObject> HoneycombPool = new List<GameObject>();
     private List<GameObject> HoneycombLargePool = new List<GameObject>();
     private List<MapChunk> honeycombChunks = new List<MapChunk>();
@@ -53,11 +53,12 @@ public class Map : MonoBehaviour
     private int honeycombCount = 0;
     public int TunnelDestructionDepth = 3;
 
-    // Start is called before the first frame update
-    void Awake()
+    private void Awake()
     {
         StaticMap = this;
-        
+    }
+    public void SetupMap()
+    {
         createChunks();
         
         for(int i = 0; i < HoneycombLayers.Length; i += 1)

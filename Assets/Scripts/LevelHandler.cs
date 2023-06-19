@@ -47,13 +47,31 @@ public class LevelHandler : MonoBehaviour
         ControlParameters.StaticControlParams.LoadControlParameters();
         
     }
+    bool generatorGenerating;
+    void OnGenerationComplete()
+    {
+        generatorGenerating = false;
+    }
 
     IEnumerator SetupLevel()
     {
         generator = FindObjectOfType<MapGenerator>();
-        StartCoroutine(generator.GenerateMap(Player));
+        generatorGenerating = true;
+        MapGenerator.onGenerationComplete += OnGenerationComplete;
+        if (LevelManager.levelMapVoids != null)
+        {
+            generator.GenerateMap(LevelManager.levelMapVoids);
+            LevelManager.levelMapVoids = null;
+        }
+        else
+        {
+            StartCoroutine(generator.GenerateMap(/*Player*/LevelManager.mapGeneratorParameters, LevelManager.mapParameters, LevelManager.perlinNoiseParameters));
+        }
+
         do { yield return null; }
-        while (generator.generating);
+        while (generatorGenerating);
+
+        MapGenerator.onGenerationComplete -= OnGenerationComplete;
 
         Map.StaticMap.Display = true;
 
@@ -177,7 +195,7 @@ public class LevelHandler : MonoBehaviour
         if (enemy.GetComponent<SpiderEnemy>()) dropCheck = 0;
         if(Random.Range(0,10) > dropCheck)
         {
-            int dropItem = dropCheck == 0 && MapManager.singleton.UnplacedFlowerPetals()? Random.Range(0, 11) : Random.Range(0, 10); //0-2 Health 3 Power 4-6 Storage 7-9 Rapid 10 Flower
+            int dropItem = dropCheck == 0 && MapManager.singleton.UnplacedFlowerPetals()? Random.Range(0, 15) : Random.Range(0, 10); //0-2 Health 3 Power 4-6 Storage 7-9 Rapid 10 Flower
             float power;
             float duration = Random.Range(6 , 12) * 5;
             if(dropItem < 7)
@@ -189,9 +207,12 @@ public class LevelHandler : MonoBehaviour
                 power = Random.Range(0.05f, 0.45f) * 2;
             }
 
-            if(dropItem == 10)
+            if(dropItem >= 10)
             {
-                MapManager.singleton.GetFlowerPetalDrop().transform.position = enemy.transform.position;
+                GameObject pedel = MapManager.singleton.GetFlowerPetalDrop();
+                pedel.transform.position = enemy.transform.position;
+                HoneycombPos hexPos = Utility.Honeycomb.WorldPointToHoneycombGrid(pedel.transform.position);
+                MiniMap.singleton.SetFlower(hexPos, true);
             }
             else
             {

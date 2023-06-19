@@ -15,7 +15,7 @@ public class MapNest : MapArea
 
     
 
-    public static MapNest CreateRandomNest(Vector2 pos, int nestCount, float radius/*, GameObject nestPrefab*/)
+    public static MapNest CreateRandomNest(Vector2 pos, int nestCount, float radius, MapParameters mapParameters)
     {
         MapNest nest = new MapNest(pos);
         nest.locations.Add(pos);
@@ -31,8 +31,8 @@ public class MapNest : MapArea
             do
             {
                 float angle = i * distributionAngle - distributionAngle / 2;
-                angle = Random.Range(angle, angle + distributionAngle);
-                float distance = Random.Range(minRadius, maxRadius);
+                angle = Utility.Utility.Random(angle, angle + distributionAngle);
+                float distance = Utility.Utility.Random(minRadius, maxRadius);
                 float x = distance * Mathf.Cos(angle);
                 float y = distance * Mathf.Sin(angle);
                 Vector2 loc = pos + new Vector2(x, y);
@@ -56,7 +56,7 @@ public class MapNest : MapArea
 
             chamber.AddChamber(chamber.Location, radius);
             nest.chambers.Add(chamber);
-            nest.AltPoints.Add(Utility.Honeycomb.WorldPointToHoneycombGrid(circle.pos));
+            nest.AltPoints.Add(Utility.Honeycomb.WorldPointToHoneycombGrid(circle.pos,mapParameters));
         }
 
         

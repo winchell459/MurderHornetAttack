@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: MapGeneratorParameters 2
   m_EditorClassIdentifier: 
   generationType: 0
-  nestCount: 0
+  seed: 0
+  nestCount: 5
   gardenCount: 0
-  antMoundCount: 2
+  antMoundCount: 0

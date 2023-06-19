@@ -80,7 +80,7 @@ public class MapChamber : MapVoid
 
     public static MapChamber RandomChamber(Vector2 location, float radius)
     {
-        int voidCount = Random.Range(2, (int)radius);
+        int voidCount = Utility.Utility.Random(2, (int)radius);
         
         return RandomChamber(location, radius, voidCount);
     }
@@ -91,8 +91,8 @@ public class MapChamber : MapVoid
         //newChamber.Location = location;
         for (int i = 0; i < voidCount; i++)
         {
-            float alpha = Random.Range(0, 360);
-            float h = Random.Range(radius / 4, radius); //may need to change the range do we don't get a void with zero width
+            float alpha = Utility.Utility.Random(0, 360);
+            float h = Utility.Utility.Random(radius / 4, radius); //may need to change the range do we don't get a void with zero width
             Vector2 loc = new Vector2(h * Mathf.Cos(alpha), h * Mathf.Sin(alpha));
             loc += location;
             float r = radius - Vector2.Distance(location, loc);
@@ -104,7 +104,7 @@ public class MapChamber : MapVoid
         return newChamber;
     }
 
-    public static MapSpawn PlayerSpawnChamber(Vector2 location, float radius)
+    public static MapSpawn PlayerSpawnChamber(Vector2 location, float radius/*, MapParameters map*/)
     {
         MapSpawn newChamber = new MapSpawn(location);
         newChamber.AddChamber(location, radius * 2);
@@ -112,9 +112,9 @@ public class MapChamber : MapVoid
     }
     
 
-    public static MapExit EndChamberTunnel(Vector2 location, float radius)
+    public static MapExit EndChamberTunnel(Vector2 location, float radius, MapParameters map)
     {
-        location = Utility.Honeycomb.WorldPointToHoneycombPos(location);
+        location = Utility.Honeycomb.WorldPointToHoneycombPos(location,map);
         MapExit newChamber = new MapExit(location);
         newChamber.AddChamber(location, radius * 2);
         return newChamber;

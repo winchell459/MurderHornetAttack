@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScoreHandler : MonoBehaviour
+public class ScoreHandler : LevelLoadUI
 {
+    public Text TouchToPlayText;
     public Text levelText, timeText, accuracyText, diggingTimeText, percentExploredText;
+    private bool preloadComplete = false;
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +21,7 @@ public class ScoreHandler : MonoBehaviour
 
             GameManager.singleton.LoadNextLevel();
         }
+        if (preloadComplete) TouchToPlayText.text = "TOUCH TO CONTINUE";
     }
 
     private void HandleScoring(GameManager.PlayerScore playerLevelScore)
@@ -45,5 +48,10 @@ public class ScoreHandler : MonoBehaviour
         int shotsFired = playerLevelScore.shotsFired;
         int terrainHit = playerLevelScore.terrainHit;
         return Utility.Utility.FormatFloat((float)terrainHit / shotsFired, 2).ToString();
+    }
+
+    public override void PreGenerationComplete()
+    {
+        preloadComplete = true;
     }
 }
