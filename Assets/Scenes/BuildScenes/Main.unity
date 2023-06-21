@@ -209,17 +209,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
-        type: 3}
-      propertyPath: level
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
-        type: 3}
-      propertyPath: stageParameters.Array.data[3].perlinNoiseParameters
-      value: 
-      objectReference: {fileID: 11400000, guid: cfcb69847ad4a0a49a5ea55030c0187e,
-        type: 2}
     - target: {fileID: 3434082560216437097, guid: 8677fea7f7372c640a9b5fd87163d4a1,
         type: 3}
       propertyPath: m_RootOrder

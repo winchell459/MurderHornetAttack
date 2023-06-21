@@ -125,15 +125,15 @@ public class MapGenerator : MonoBehaviour
     public static List<MapVoid> CreateBeeCity(Vector2 playerPos, MapParameters mapParameters)
     {
         List<MapVoid> newVoids = new List<MapVoid>();
-        newVoids.Add(new MapBeeCity(playerPos, playerPos + new Vector2(50, 0), 4, 15, 30));
+        newVoids.Add(new MapBeeCity(playerPos, playerPos + new Vector2(50, 0), 4, 15, 30, mapParameters));
 
         newVoids.Add(CreatePlayerSpawn(playerPos));
 
-        LevelHandler.singleton.queen.transform.position = playerPos + new Vector2(50, 0);
+        
 
 
         newVoids.Add(CreateExitTunnel(playerPos + new Vector2(50, 0), mapParameters));
-        LevelHandler.singleton.ExitTunnel.gameObject.SetActive(false);
+        
 
         return newVoids;
     }

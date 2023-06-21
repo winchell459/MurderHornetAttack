@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     [System.Serializable]
     public struct StageParameters
     {
+        public string name;
         public PerlinNoiseScriptableObject perlinNoiseParameters;
         public MapGeneratorParameters mapGeneratorParameters;
         public MapParameters mapParameters;

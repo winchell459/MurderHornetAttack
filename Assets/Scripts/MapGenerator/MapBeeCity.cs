@@ -8,13 +8,13 @@ public class MapBeeCity : MapVoid
     private Vector2 queenChamberPos;
     private List<HoneycombPos> queenChamber;
 
-    public MapBeeCity(Vector2 start, Vector2 end, float pathWidth, float spiralWidth, int queenChamberRadius)
+    public MapBeeCity(Vector2 start, Vector2 end, float pathWidth, float spiralWidth, int queenChamberRadius, MapParameters mapParameters)
     {
         queenChamberPos = end;
         MapPath pathToQueen = MapPath.GetHexSpiralPath(pathWidth, spiralWidth, start, 60, end);//new MapPath(start, end, 4);
         paths.Add(pathToQueen);
 
-        queenChamber = Utility.Honeycomb.WorldPointToHoneycombGrid(end).GetAdjecentHoneycomb(queenChamberRadius);
+        queenChamber = Utility.Honeycomb.WorldPointToHoneycombGrid(end, mapParameters).GetAdjecentHoneycomb(queenChamberRadius);
     }
     public override bool Check(MapHoneycomb honeycomb)
     {
@@ -36,5 +36,10 @@ public class MapBeeCity : MapVoid
         return true;
     }
 
-    
+    public override void Setup()
+    {
+        LevelHandler.singleton.queen.transform.position = queenChamberPos;
+        LevelHandler.singleton.ExitTunnel.gameObject.SetActive(false);
+    }
+
 }
