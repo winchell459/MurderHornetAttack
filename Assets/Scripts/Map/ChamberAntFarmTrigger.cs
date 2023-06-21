@@ -27,7 +27,7 @@ public class ChamberAntFarmTrigger : ChamberTrigger
 
     protected override void OnStay(Collider2D collision)
     {
-        if (collision.GetComponent<HornetController>() && (!Triggered || !antSquad.Alive() && !PreviousNode))
+        if (collision.GetComponent<HornetController>() && (!antSquad || (!antSquad.Alive() && !PreviousNode)))
         {
             if (PreviousNode && PreviousNode.Triggered)
             {
@@ -38,8 +38,12 @@ public class ChamberAntFarmTrigger : ChamberTrigger
             else if(!PreviousNode)
             {
                 Triggered = true;
-                antSquad = Instantiate(antSquadPrefab, transform.position, Quaternion.identity);
-                antSquad.SetMarchingPoints(getPathForSquad());
+                if (!antSquad)
+                {
+                    antSquad = Instantiate(antSquadPrefab, transform.position, Quaternion.identity);
+                    antSquad.SetMarchingPoints(getPathForSquad());
+                }
+                    
                 antSquad.StartMarch();
             }
         }
