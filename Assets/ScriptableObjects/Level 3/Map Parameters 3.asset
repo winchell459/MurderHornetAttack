@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b3e91814c040ad428813d3d45ceb388, type: 3}
   m_Name: Map Parameters 3
   m_EditorClassIdentifier: 
-  MapWidth: 300
-  MapHeight: 240
+  MapWidth: 150
+  MapHeight: 120
+  MapOrigin: {x: 0, y: 0}
   ChunkHeight: 18
   ChunkWidth: 12
   ChunkRadius: 6

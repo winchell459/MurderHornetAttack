@@ -106,6 +106,8 @@ public class GameManager : MonoBehaviour
         MapParameters mapParameters = stageParameters[level].mapParameters;
         PerlinNoiseScriptableObject perlinNoiseParameters = stageParameters[level].perlinNoiseParameters;
 
+        perlinNoiseParameters.parameters.seed = mapGeneratorParameters.seed;
+
         LevelManager.perlinNoiseParameters = perlinNoiseParameters;
         LevelManager.mapParameters = mapParameters;
         LevelManager.mapGeneratorParameters = mapGeneratorParameters;

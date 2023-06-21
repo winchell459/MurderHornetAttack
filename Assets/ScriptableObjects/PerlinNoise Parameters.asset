@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PerlinNoise Parameters
   m_EditorClassIdentifier: 
   parameters:
-    seed: 306977
+    seed: 0
     scale: 24
     octaves: 4
     persistance: 0.5
@@ -54,5 +54,5 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     threshold: 0.5
-    randomSeed: 1
+    randomSeed: 0
     falloffType: 1

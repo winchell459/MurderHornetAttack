@@ -209,6 +209,85 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
+        type: 3}
+      propertyPath: stageParameters.Array.data[0].name
+      value: Pillapillar Garden
+      objectReference: {fileID: 0}
+    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
+        type: 3}
+      propertyPath: stageParameters.Array.data[1].name
+      value: Spiders
+      objectReference: {fileID: 0}
+    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
+        type: 3}
+      propertyPath: stageParameters.Array.data[2].name
+      value: Ants
+      objectReference: {fileID: 0}
+    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
+        type: 3}
+      propertyPath: stageParameters.Array.data[3].name
+      value: Perlin Noise
+      objectReference: {fileID: 0}
+    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
+        type: 3}
+      propertyPath: stageParameters.Array.data[0].mapParameters
+      value: 
+      objectReference: {fileID: 11400000, guid: cd955af1f8fb24931bf1eaa849ff7aaa,
+        type: 2}
+    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
+        type: 3}
+      propertyPath: stageParameters.Array.data[1].mapParameters
+      value: 
+      objectReference: {fileID: 11400000, guid: 1de9265fb0d8841c098ab3a46d09459c,
+        type: 2}
+    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
+        type: 3}
+      propertyPath: stageParameters.Array.data[2].mapParameters
+      value: 
+      objectReference: {fileID: 11400000, guid: 224b29f184b4543c6bc7ad53fbada954,
+        type: 2}
+    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
+        type: 3}
+      propertyPath: stageParameters.Array.data[3].mapParameters
+      value: 
+      objectReference: {fileID: 11400000, guid: 14a525fec8f83469eb893a77125b6a76,
+        type: 2}
+    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
+        type: 3}
+      propertyPath: stageParameters.Array.data[0].perlinNoiseParameters
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
+        type: 3}
+      propertyPath: stageParameters.Array.data[3].perlinNoiseParameters
+      value: 
+      objectReference: {fileID: 11400000, guid: cfcb69847ad4a0a49a5ea55030c0187e,
+        type: 2}
+    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
+        type: 3}
+      propertyPath: stageParameters.Array.data[0].mapGeneratorParameters
+      value: 
+      objectReference: {fileID: 11400000, guid: 9ad93f0dc7b3e4d09a60f834e77c8c86,
+        type: 2}
+    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
+        type: 3}
+      propertyPath: stageParameters.Array.data[1].mapGeneratorParameters
+      value: 
+      objectReference: {fileID: 11400000, guid: f78433d02159242fbb5f65422e5a66eb,
+        type: 2}
+    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
+        type: 3}
+      propertyPath: stageParameters.Array.data[2].mapGeneratorParameters
+      value: 
+      objectReference: {fileID: 11400000, guid: d1241168e2464475c8b0849e85c2dd43,
+        type: 2}
+    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
+        type: 3}
+      propertyPath: stageParameters.Array.data[3].mapGeneratorParameters
+      value: 
+      objectReference: {fileID: 11400000, guid: 910a39822642043f4988b8fbf9138c2a,
+        type: 2}
     - target: {fileID: 3434082560216437097, guid: 8677fea7f7372c640a9b5fd87163d4a1,
         type: 3}
       propertyPath: m_RootOrder

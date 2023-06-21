@@ -6,7 +6,14 @@ namespace Utility
 {
     public static class Utility
     {
-        public static int seed = 0;
+        public static int seed {
+            get { return _seed; }
+            set {
+                _seed = value;
+                random = new System.Random(seed);
+            }
+        }
+        private static int _seed;
         static System.Random random;
 
         public static int Random(int min, int max)
