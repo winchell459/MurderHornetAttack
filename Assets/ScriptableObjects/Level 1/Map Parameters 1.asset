@@ -17,4 +17,4 @@ MonoBehaviour:
   MapOrigin: {x: -70, y: -130}
   ChunkHeight: 18
   ChunkWidth: 12
-  ChunkRadius: 6
+  ChunkRadius: 5
