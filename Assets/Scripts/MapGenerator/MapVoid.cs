@@ -5,15 +5,12 @@ using UnityEngine;
 public abstract class MapVoid 
 {
     public abstract bool Check(MapHoneycomb honeycomb);
-    public virtual void Setup(/*ChamberTrigger triggerPrefab, GameObject otherPrefab*/) { }
+    public virtual void Setup() { }
 
     private const int locationDepthThreshold = 4;
     private List<MapHoneycomb> voidWalls = new List<MapHoneycomb>();
     public HoneycombTypes.Variety VoidType;
-    //public HoneycombTypes.Areas AreaType;
-
-    //public Vector2 Location;//{ public get; private set; }
-    //public bool Connected;
+   
 
     protected void CheckDepth(float distance, MapHoneycomb honeycomb, HoneycombTypes.Variety locationType)
     {

@@ -27559,6 +27559,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77e0abcd2d8ec44bebc917ace4db3d63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  exitLabeText: {fileID: 418094454}
   PlayerLoc: {fileID: 380125022}
   SpawnLoc: {fileID: 1123207075}
   EndLoc: {fileID: 249918801}

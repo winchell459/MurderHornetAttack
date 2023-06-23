@@ -18,7 +18,7 @@ public class ScoreHandler : LevelLoadUI
     {
         if (Input.GetMouseButtonDown(0))
         {
-
+            if (!preloadComplete) TouchToPlayText.text = "LOADING...";
             GameManager.singleton.LoadNextLevel();
         }
         if (preloadComplete) TouchToPlayText.text = "TOUCH TO CONTINUE";

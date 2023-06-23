@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class UIHandler : MonoBehaviour
 {
+    [SerializeField] private Text exitLabeText;
     [SerializeField] private Text PlayerLoc, SpawnLoc, EndLoc;
     [SerializeField] private Text BeesMurderedText, HornetMurderedText;
     [SerializeField] private Text eggCountText, flowerCountText, royalJellyCountText;
@@ -47,9 +48,9 @@ public class UIHandler : MonoBehaviour
 #if UNITY_IOS
         DisplayMobileTouchUI(true);
 
-#else 
+#else
         DisplayMobileTouchUI(false);
-
+        exitLabeText.text = "Exit (E)";
 #endif
         foreach (GameObject mainMenuUi in GameObject.FindGameObjectsWithTag("Main Menu"))
         {
