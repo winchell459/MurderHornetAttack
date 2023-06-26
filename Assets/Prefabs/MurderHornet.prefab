@@ -45,6 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6921ab38e1b431479e75062919ed5d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  elements: []
+  ready: {r: 0, g: 0, b: 1, a: 1}
+  empty: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &1308394195
 GameObject:
   m_ObjectHideFlags: 0
@@ -297,6 +300,7 @@ MonoBehaviour:
   Health: 50
   MaxHealth: 50
   CollisionForce: {x: 0, y: 0}
+  type: 0
   InsectPrefab: {fileID: 0}
   ForwardSpeed_Defualt: 4
   ForwardSpeed: 4
@@ -309,6 +313,8 @@ MonoBehaviour:
   MobileControls: 0
   ExitButtonPressed: 0
   retical: {fileID: 7385508688490734306}
+  velocityLag: 0.95
+  velocityLagThreshold: 0.1
   TakeHoneycombDamage: 1
   ImpulseCoefficient: 25
 --- !u!114 &815703513
