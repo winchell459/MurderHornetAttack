@@ -190,7 +190,11 @@ public class PillapillarController : Insect
     public Vector2 GetNextHeadTarget(int headIndex)
     {
         //Debug.Log($"headIndex {headIndex}");
-        if (!Head) return Path[headIndex];
+        if (!Head)
+        {
+            headIndex = Mathf.Min(headIndex, Path.Count - 1);
+            return Path[headIndex];
+        }
         else return Head.GetNextHeadTarget(headIndex);
     }
     private Vector2 getNewTarget()
@@ -198,11 +202,12 @@ public class PillapillarController : Insect
         headIndex += 1;
         if (!Head)
         {
+            HoneycombPos snakeHex = Utility.Honeycomb.WorldPointToHoneycombGrid(transform.position);
             GameObject player = LevelHandler.singleton.Player? LevelHandler.singleton.Player.gameObject : null;//GameObject.FindGameObjectWithTag("Player");
             if (player)
             {
                 HoneycombPos playerHex = Utility.Honeycomb.WorldPointToHoneycombGrid(player.transform.position);
-                HoneycombPos snakeHex = Utility.Honeycomb.WorldPointToHoneycombGrid(transform.position);
+                
 
                 //Debug.Log($"playerHex: {playerHex} {Map.StaticMap.GetHoneycomb((int)playerHex.x, (int)playerHex.y).LocationType.ToString()}");
 
@@ -214,9 +219,19 @@ public class PillapillarController : Insect
                     Vector2 playerGridPos = findPathToHoneycomb(startGridHex, playerGridHex);
                     return playerGridPos;
                 }
-                else return getRandomLoc();
+                //else return getRandomLoc();
             }
-            else return getRandomLoc();
+            //else return getRandomLoc();
+            EnemyPhysics[] bees = GetClosestBee();
+            
+            if (bees.Length >  0 )
+            {
+                HoneycombPos beeHex = Utility.Honeycomb.WorldPointToHoneycombGrid(bees[0].transform.position);
+                if(Utility.Honeycomb.DistanceBetweenHoneycomb(beeHex, snakeHex) < AttackRadius)
+                    return findPathToHoneycomb(snakeHex, beeHex);
+            }
+            
+            return getRandomLoc();
 
         }
         else
@@ -224,6 +239,11 @@ public class PillapillarController : Insect
             // headIndex += 1;
             return Head.GetNextHeadTarget(headIndex);
         }
+    }
+
+    void FindFood()
+    {
+
     }
 
     int pathAttempts = 0;

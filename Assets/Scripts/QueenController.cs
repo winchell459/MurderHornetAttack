@@ -119,24 +119,7 @@ public class QueenController : Insect
         return beeShield.Count;
     }
 
-    private HoneycombTower[] GetClosestTowers()
-    {
-        HoneycombTower[] towers = FindObjectsOfType<HoneycombTower>();
-        for(int i = 0; i < towers.Length; i++)
-        {
-            for(int j = 1; j < towers.Length; j++)
-            {
-                if(Vector2.Distance(transform.position, towers[j-1].transform.position) > Vector2.Distance(transform.position, towers[j].transform.position))
-                {
-                    HoneycombTower temp = towers[j];
-                    towers[j] = towers[j - 1];
-                    towers[j - 1] = temp;
-                }
-            }
-        }
-        return towers;
-
-    }
+    
 
     public override void TakeDamage(float Damage)
     {

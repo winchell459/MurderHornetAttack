@@ -113,9 +113,7 @@ public class HornetController : Insect
     }
     private Vector2 CollisionVelocity = Vector2.zero;
 
-    [Range(0,0.99f)]
-    public float velocityLag = 0.1f;
-    public float velocityLagThreshold = 0.1f;
+    
     public void MotionControl(float vertical, float horizontal)
     {
         if (hadCollision && collisionControlTime + collisionTime > Time.fixedTime)
@@ -129,9 +127,9 @@ public class HornetController : Insect
         }
         else
         {
-            if(rb.velocity.magnitude > velocityLagThreshold)
+            if(rb.velocity.magnitude > cp.velocityLagThreshold)
             {
-                rb.velocity = (1 - velocityLag) * ForwardSpeed * vertical * transform.up + (Vector3)(velocityLag * rb.velocity);
+                rb.velocity = (1 - cp.velocityLag) * ForwardSpeed * vertical * transform.up + (Vector3)(cp.velocityLag * rb.velocity);
             }
             else
             {

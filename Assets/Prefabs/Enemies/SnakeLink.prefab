@@ -139,6 +139,7 @@ MonoBehaviour:
   Health: 5
   MaxHealth: 5
   CollisionForce: {x: 0, y: 0}
+  type: 0
   InsectPrefab: {fileID: 0}
   Head: {fileID: 0}
   Tail: {fileID: 0}
@@ -151,7 +152,7 @@ MonoBehaviour:
   SnakeLinkPrefab: {fileID: 2010293437201622713}
   SpawnRate: 3
   SnakeSpacing: 1
-  AttackRadius: 15
+  AttackRadius: 7.5
   PathType: 0
   MyPath:
   - Distance: 9

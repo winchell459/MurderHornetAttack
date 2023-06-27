@@ -10,7 +10,12 @@ public class ControlParameters : MonoBehaviour
     public float JoystickSensitivity = 1;
     public float JoystickBoarderSize = 4.85f;
     public static ControlParameters StaticControlParams;
-    private string cameraSpeedTag = "CameraSpeedTag", flySensitivityTag = "FlySensitivity", turnSensitivityTag = "TurnSensitivity", joystickSensitivityTag = "JoystickSensitivity", joystickBoarderSizeTag = "JoystickBoarderSize", inverseReverseTag = "InverseReverse";
+
+    [Range(0, 0.99f)]
+    public float velocityLag = 0.1f;
+    public float velocityLagThreshold = 0.1f;
+
+    private const string cameraSpeedTag = "CameraSpeedTag", flySensitivityTag = "FlySensitivity", turnSensitivityTag = "TurnSensitivity", joystickSensitivityTag = "JoystickSensitivity", joystickBoarderSizeTag = "JoystickBoarderSize", inverseReverseTag = "InverseReverse";
 
     private void Awake()
     {
@@ -20,7 +25,8 @@ public class ControlParameters : MonoBehaviour
         FindObjectOfType<LevelHandler>().SetControlParameters(CameraSpeed, JoystickSensitivity,JoystickBoarderSize, FlySensitivity, TurnSensitivity, InverseReverse);
     }
 
-    public void SetControlParameters(float CameraTrackingSpeed, float JoystickSensitivity, float JoystickBoarderSize, float FlySensitivity, float TurnSensitivity, bool InverseReverse)
+    public void SetControlParameters(float CameraTrackingSpeed, float JoystickSensitivity, float JoystickBoarderSize, float FlySensitivity,
+        float TurnSensitivity, bool InverseReverse)
     {
         CameraSpeed = CameraTrackingSpeed;
         this.FlySensitivity = FlySensitivity;
@@ -28,8 +34,14 @@ public class ControlParameters : MonoBehaviour
         this.InverseReverse = InverseReverse;
         this.JoystickBoarderSize = JoystickBoarderSize;
         this.JoystickSensitivity = JoystickSensitivity;
+
         UpdateControllers();
         SaveControlParameters();
+    }
+
+    public void SetVelocityLag(float value)
+    {
+        velocityLag = value;
     }
 
     public void SaveControlParameters()
