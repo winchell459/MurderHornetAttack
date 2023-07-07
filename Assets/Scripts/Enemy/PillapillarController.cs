@@ -275,7 +275,7 @@ public class PillapillarController : Insect
         else
         {
             pathAttempts += 1;
-            if (pathAttempts > 6)
+            if (pathAttempts > 20)
             {
                 Debug.LogWarning($"Pillapillar {gameObject.name} could not find a newTarget");
                 return Vector2.zero;

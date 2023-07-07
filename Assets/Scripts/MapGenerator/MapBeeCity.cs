@@ -29,7 +29,9 @@ public class MapBeeCity : MapVoid
 
         if (queenChamber.Contains(honeycombPos))
         {
-            honeycomb.AreaType = HoneycombTypes.Areas.City;
+            Debug.Log($"MapBeeCity.Check: {honeycomb.AreaType}");
+            if(honeycomb.AreaType == HoneycombTypes.Areas.Connection)
+                honeycomb.AreaType = HoneycombTypes.Areas.City;
             honeycomb.isFloor = true;
         }
 

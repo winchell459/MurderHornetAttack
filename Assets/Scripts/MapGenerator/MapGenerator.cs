@@ -33,7 +33,7 @@ public class MapGenerator : MonoBehaviour
         }   
         else if(parameters.generationType == MapGeneratorParameters.GenerationTypes.perlinNoise)
         {
-            StartCoroutine(CreatePerlinNoiseMap( new PerlinNoise(perlinNoiseParameters), mapParameters));
+            StartCoroutine(CreatePerlinNoiseMap( new PerlinNoise(perlinNoiseParameters), mapParameters,parameters));
             do { yield return null; }
             while (perlinNoiseGenerating);
         }else if(parameters.generationType == MapGeneratorParameters.GenerationTypes.pillapillarPit)
@@ -42,8 +42,19 @@ public class MapGenerator : MonoBehaviour
         }else if(parameters.generationType == MapGeneratorParameters.GenerationTypes.beeCity)
         {
             Vector2 playerPos = new Vector3(65, 85);
+            List<MapVoid> beeCity = CreateBeeCity(playerPos, mapParameters);
 
-            mapVoids = CreateBeeCity(playerPos, mapParameters);
+            StartCoroutine(CreatePerlinNoiseMap(new PerlinNoise(perlinNoiseParameters), mapParameters, parameters));
+            do { yield return null; }
+            while (perlinNoiseGenerating);
+
+            
+
+            foreach(MapVoid mapVoid in beeCity)
+            {
+                mapVoids.Add(mapVoid);
+            }
+            //mapVoids = CreateBeeCity(playerPos, mapParameters);
 
             Debug.Log("createBeeCity Time: " + (Utility.Utility.GetTime() - start) + " seconds.");
 
@@ -148,7 +159,7 @@ public class MapGenerator : MonoBehaviour
         int mapHeight = (int)(mapParameters.MapHeight / mapParameters.VerticalSpacing) / 2;
         pregenerated = new PerlineNoiseVoid(perlinNoise, mapWidth, mapHeight);
     }
-    private IEnumerator CreatePerlinNoiseMap(/*Transform player*/PerlinNoise perlinNoise, MapParameters mapParameters)
+    private IEnumerator CreatePerlinNoiseMap(/*Transform player*/PerlinNoise perlinNoise, MapParameters mapParameters, MapGeneratorParameters parameters)
     {
         List<MapVoid> newVoids = new List<MapVoid>();
 
@@ -202,8 +213,9 @@ public class MapGenerator : MonoBehaviour
 
             // ---------------------- Place Flower Petals -----------------------------
             List<PerlinNoiseChamber> unusedChambers = perlineNoiseVoid.GetUnusedChambers();
-            int pedalCount = 5;
-            while(pedalCount > 0 && unusedChambers.Count > 0)
+            int petalCount = 5;
+            petalCount = parameters.antMoundCount;
+            while(petalCount > 0 && unusedChambers.Count > 0)
             {
                 PerlinNoiseChamber chamber = unusedChambers[0];
                 unusedChambers.RemoveAt(0);
@@ -213,7 +225,7 @@ public class MapGenerator : MonoBehaviour
                     //GetFlowerPetalDrop().transform.position = Utility.Honeycomb.HoneycombGridToWorldPostion(petalHex);
                     //MiniMap.singleton.SetFlower(petalHex, true);
                     newVoids.Add(new MapPedal(petalHex));
-                    pedalCount--;
+                    petalCount--;
                 }
             }
 

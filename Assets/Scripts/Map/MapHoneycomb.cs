@@ -178,7 +178,11 @@ public class MapHoneycomb
     private void setupEnemyTrigger(bool active)
     {
         //honeycomb.GetComponent<CircleCollider2D>().enabled = active;
-        honeycomb.GetComponent<HoneycombCell>().EnemyTrigger.enabled = active;
+        HoneycombCell hex = honeycomb.GetComponent<HoneycombCell>();
+        if (hex.EnemyTrigger)
+            hex.EnemyTrigger.enabled = active;
+        else
+            Debug.LogWarning($"MapHoneycomb.setupEnemyTrigger: EnemyTrigger missing");
     }
 
     public void DamageHoneycomb(int depth)

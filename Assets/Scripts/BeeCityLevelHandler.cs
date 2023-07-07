@@ -5,6 +5,7 @@ using UnityEngine;
 public class BeeCityLevelHandler : LevelHandler
 {
     public bool queenDead = false;
+    public bool honeycombTowerBeesAlwaysSpawn = false;
     public void QueenDeath()
     {
         princess.inLove = true;
@@ -25,7 +26,7 @@ public class BeeCityLevelHandler : LevelHandler
     public override bool HoneycombTowerSpawnEnemy(MapHoneycomb tower)
     {
 
-        return true;
+        return honeycombTowerBeesAlwaysSpawn || PlayerHandler.royalJellyCount > 5;
     }
 
     public override void HandleExit()
