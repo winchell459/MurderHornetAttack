@@ -42,6 +42,7 @@ public class HoneycombTower : Honeycomb
         if (enemyPrefab)
         {
             GameObject spawnedInsect = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
+            Map.StaticMap.AddEnemyToChunk(spawnedInsect.GetComponent<Insect>());
             
             Debug.Log("HoneycombTower Attacks");
             lastSpawn = Time.time;

@@ -165,12 +165,12 @@ public class Map : MonoBehaviour
             if (displayChunks[i])
             {
                 honeycombChunks[i].DisplayChunk();
-                
+                yield return null;
             }
             else honeycombChunks[i].DestroyChunk();
             
         }
-        yield return null;
+        
     }
 
     int mapWidth { get { return (int)(StaticMap.MapWidth / StaticMap.HorizontalSpacing); } }
@@ -417,4 +417,11 @@ public class Map : MonoBehaviour
     //{
 
     //}
+
+    public void AddEnemyToChunk(Insect enemy)
+    {
+        MapChunk chunk = Utility.Honeycomb.GetMapChunk(enemy.transform.position);
+        chunk.AddEnemyToChunk(enemy);
+        if (!chunk.Visible) enemy.gameObject.SetActive(false);
+    }
 }

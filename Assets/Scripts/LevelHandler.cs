@@ -52,6 +52,14 @@ public class LevelHandler : MonoBehaviour
     {
         generatorGenerating = false;
     }
+    bool pregenerationComplete = false;
+    void PreGenerationComplete(List<MapVoid> mapVoids)
+    {
+        MapGenerator.onGenerationPreloadComplete -= PreGenerationComplete;
+        LevelManager.levelMapVoids = mapVoids;
+        pregenerationComplete = true;
+        Debug.Log("Preloading Complete");
+    }
 
     IEnumerator SetupLevel()
     {
@@ -65,7 +73,14 @@ public class LevelHandler : MonoBehaviour
         }
         else
         {
-            StartCoroutine(generator.GenerateMap(/*Player*/LevelManager.mapGeneratorParameters, LevelManager.mapParameters, LevelManager.perlinNoiseParameters));
+            MapGenerator.onGenerationPreloadComplete += PreGenerationComplete;
+            Debug.Log("LevelHandler.SetupLevel GeneratingMap");
+            pregenerationComplete = false;
+            MapGenerator.GenerateMap(LevelManager.mapGeneratorParameters, LevelManager.mapParameters, LevelManager.perlinNoiseParameters);
+            do { yield return null; }
+            while (!pregenerationComplete);
+            generator.GenerateMap(LevelManager.levelMapVoids);
+            // StartCoroutine(generator.GenerateMap(/*Player*/LevelManager.mapGeneratorParameters, LevelManager.mapParameters, LevelManager.perlinNoiseParameters));
         }
 
         do { yield return null; }
@@ -108,7 +123,7 @@ public class LevelHandler : MonoBehaviour
             PauseToggle();
         }
         //infiniteLevel();
-        if (/*generator.*/Exit && /*generator.*/Exit.inChamber) {
+        if (Exit && Exit.inChamber) {
             HandleExit();
         }
         else
@@ -350,5 +365,15 @@ public class LevelHandler : MonoBehaviour
         }
 
         return length < PlayerHandler.eggCount + pillapillarLengthMin;
+    }
+
+    public virtual bool SpawnAntSqaud()
+    {
+        if(PlayerHandler.royalJellyCount > 0)
+        {
+            PlayerHandler.royalJellyCount--;
+            return true;
+        }
+        return false;
     }
 }

@@ -5,17 +5,19 @@ using UnityEngine;
 //-------------------------------------MapChunk------------------------------------------------------------------------
 public class MapChunk 
 {
-    public Vector2 mapOffset;
-    public Vector2 ChunkIndex;
+    
     private int width;
     private int height;
     private float verticalSpacing;
     private float horizontalSpacing;
     private List<MapHoneycomb> honeycombs = new List<MapHoneycomb>();
     private bool display = false;
-    //private List<GameObject> displayhoneycombs;
 
     private List<Insect> enemiesInChunk = new List<Insect>();
+
+    public Vector2 mapOffset;
+    public Vector2 ChunkIndex;
+    public bool Visible { get { return display; } }
 
     public MapChunk(Vector2 mapOffset, int width, int height, float verticalSpacing, float horizontalSpacing)
     {

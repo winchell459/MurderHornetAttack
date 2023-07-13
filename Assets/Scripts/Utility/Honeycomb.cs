@@ -171,6 +171,11 @@ namespace Utility
             return Vector2.Distance(HoneycombGridToWorldPostion(hexOne), HoneycombGridToWorldPostion(hexTwo));
         }
 
+        public static float DistanceBetweenHoneycomb(HoneycombPos hexOne, HoneycombPos hexTwo, MapParameters map)
+        {
+            return Vector2.Distance(HoneycombGridToWorldPostion(hexOne,map), HoneycombGridToWorldPostion(hexTwo,map));
+        }
+
         public static int GetHoneycombRadius(int size)
         {
             int ringSize = 0;

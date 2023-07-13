@@ -23,7 +23,7 @@ public class PerlineNoiseVoid : MapVoid
         public HoneycombPos hexPos;
     }
 
-    public PerlineNoiseVoid(PerlinNoise mapPerlinNoise, int width, int height)
+    public PerlineNoiseVoid(PerlinNoise mapPerlinNoise, int width, int height, bool useThread)
     {
         generating = true;
         this.mapPerlinNoise = mapPerlinNoise;
@@ -32,7 +32,7 @@ public class PerlineNoiseVoid : MapVoid
         
         depthMap = mapPerlinNoise.GenerateDepthMap(width + 1, height + 1);
         hexDepths = new HexDepth[depthMap.GetLength(0), depthMap.GetLength(1)];
-        FindChambers(depthMap);
+        FindChambers(depthMap,useThread);
         VoidType = HoneycombTypes.Variety.Path;
 
     }
@@ -187,7 +187,7 @@ public class PerlineNoiseVoid : MapVoid
         List<PerlinNoiseArea> chamberAreas = new List<PerlinNoiseArea>(chamber.GetChamberAreas());
         while (chamberAreas.Count > 0)
         {
-            int index = Random.Range(0, chamberAreas.Count);
+            int index = Utility.Utility.Random(0, chamberAreas.Count);
             PerlinNoiseArea parent = chamber.GetChamberArea(chamberAreas[index].pos).parentArea;
             if (!usedAreas.Contains(parent) && chamberAreas[index].parentArea.maxRadius >= minRadius && chamberAreas[index].parentArea.maxRadius <= minRadius + 4)
             {
@@ -204,11 +204,19 @@ public class PerlineNoiseVoid : MapVoid
 
     int[,] map;
     
-    void FindChambers(int[,] map)
+    void FindChambers(int[,] map, bool useThread)
     {
         this.map = map;
-        Thread findChamberThread = new Thread(FindChambersThread);
-        findChamberThread.Start();
+        if (useThread)
+        {
+            Thread findChamberThread = new Thread(FindChambersThread);
+            findChamberThread.Start();
+        }
+        else
+        {
+            FindChambersThread();
+        }
+        
     }
 
     //float threshold = 0.5f;
@@ -286,7 +294,7 @@ public class PerlineNoiseVoid : MapVoid
                     }
                     noiseChamber.SetNodes(ref hexDepths,nodes);
                     chamberID++;
-                    Debug.Log($"ChamberID: {chamberID - 1} size: {chamberSize}");
+                    //Debug.Log($"ChamberID: {chamberID - 1} size: {chamberSize}");
 
                 }
                 else if(!visited[x, y])

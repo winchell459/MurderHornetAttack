@@ -18,7 +18,8 @@ public class BeeCityLevelHandler : LevelHandler
         //Time.timeScale = 0;
         yield return new WaitForSeconds(1);
         uIHandler.LoadUI();
-        queen.gameObject.SetActive(true);
+        Map.StaticMap.AddEnemyToChunk(queen);
+        //queen.gameObject.SetActive(true);
         //Time.timeScale = 1;
 
     }

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8347474507411121978}
   - component: {fileID: 3225452940632950689}
   m_Layer: 0
-  m_Name: SnakeLink
+  m_Name: PillapillarLink
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -139,7 +139,7 @@ MonoBehaviour:
   Health: 5
   MaxHealth: 5
   CollisionForce: {x: 0, y: 0}
-  type: 0
+  type: 2
   InsectPrefab: {fileID: 0}
   Head: {fileID: 0}
   Tail: {fileID: 0}

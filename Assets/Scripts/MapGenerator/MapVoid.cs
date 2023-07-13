@@ -42,20 +42,12 @@ public abstract class MapVoid
     public List<MapHoneycomb> GetVoidWalls()
     {
         
-        //foreach(MapHoneycomb honeycomb in voidWalls)
-        //{
-        //    if (honeycomb.LocationType != VoidType)
-        //    {
-        //        Debug.Log("MapVoid.GetVoidWalls(): ");
-        //        voidWalls.Remove(honeycomb);
-        //    }
-        //}
         for(int i = voidWalls.Count - 1; i >= 0; i-=1)
         {
             MapHoneycomb honeycomb = voidWalls[i];
             if (honeycomb.LocationType != VoidType)
             {
-                Debug.Log("MapVoid.GetVoidWalls(): ");
+                //Debug.Log("MapVoid.GetVoidWalls(): ");
                 voidWalls.Remove(honeycomb);
             }
         }

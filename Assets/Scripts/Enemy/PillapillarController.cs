@@ -503,6 +503,8 @@ public class PillapillarController : Insect
         {
             FindObjectOfType<LevelHandler>().EnemyDeath(gameObject);
             egg.PillapillarKilled(this);
+            GameManager.PillapillarLinkKilled();
+            if (!Head && !Tail) GameManager.PillapillarKilled();
             DestroyLink();
         }
     }

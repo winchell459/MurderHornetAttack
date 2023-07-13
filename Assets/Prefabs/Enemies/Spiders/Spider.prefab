@@ -101,6 +101,7 @@ MonoBehaviour:
   Health: 15
   MaxHealth: 15
   CollisionForce: {x: 0, y: 0}
+  type: 1
   InsectPrefab: {fileID: 0}
   speed: 4
   attackRadius: 3

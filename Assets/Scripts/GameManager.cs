@@ -111,24 +111,14 @@ public class GameManager : MonoBehaviour
         LevelManager.perlinNoiseParameters = perlinNoiseParameters;
         LevelManager.mapParameters = mapParameters;
         LevelManager.mapGeneratorParameters = mapGeneratorParameters;
-        
-        if (mapGeneratorParameters.generationType == MapGeneratorParameters.GenerationTypes.perlinNoise)
-        {
-            MapGenerator.PregeneratePerlineNoiseVoid(new PerlinNoise(perlinNoiseParameters), mapParameters);
-            while (MapGenerator.pregenerated.generating) yield return null;
-            preloadComplete = true;
 
-        }
-        else
-        {
-            MapGenerator.onGenerationPreloadComplete += PreGenerationComplete;
+        MapGenerator.onGenerationPreloadComplete += PreGenerationComplete;
 
-            MapGenerator.GenerateMap(mapGeneratorParameters, mapParameters);
-            while (!preloadComplete) yield return null;
-
-        }
+        MapGenerator.GenerateMap(mapGeneratorParameters, mapParameters, perlinNoiseParameters);
+        while (!preloadComplete) yield return null;
         stage = Stage.loading;
         FindObjectOfType<LevelLoadUI>().PreGenerationComplete();
+
     }
 
     void PreGenerationComplete(List<MapVoid> mapVoids)
@@ -217,6 +207,11 @@ public class GameManager : MonoBehaviour
     {
         singleton.GetPlayerScore(singleton.level).spidersHit++;
     }
+    public static void SpiderKilled()
+    {
+        singleton.GetPlayerScore(singleton.level).spidersKilled++;
+        DisplayPlayerStats(singleton.level);
+    }
     public static void QueenHit()
     {
         singleton.GetPlayerScore(singleton.level).queenHits++;
@@ -224,6 +219,15 @@ public class GameManager : MonoBehaviour
     public static void PillapillarHit()
     {
         singleton.GetPlayerScore(singleton.level).pillapillarHit++;
+    }
+    public static void PillapillarLinkKilled()
+    {
+        singleton.GetPlayerScore(singleton.level).pillapillarLinksKilled++;
+        DisplayPlayerStats(singleton.level);
+    }
+    public static void PillapillarKilled()
+    {
+        singleton.GetPlayerScore(singleton.level).pillapillarsKilled++;
     }
     public static void AntsKilled()
     {
@@ -242,7 +246,7 @@ public class GameManager : MonoBehaviour
     public static void DisplayPlayerStats(int level)
     {
         PlayerScore ps = singleton.PlayerScores[level];
-        Debug.Log($"kiaBees: {ps.beesHit} kiaSiders: {ps.spidersKilled}/{ps.spidersHit} kiaPill: {ps.pillapillarLinksKilled}/{ps.pillapillarsKilled}/{ps.pillapillarHit} time: {ps.time} ");
+        Debug.Log($"kiaBees: {ps.beesHit} kiaSpiders: {ps.spidersKilled}/{ps.spidersHit} kiaPill: {ps.pillapillarLinksKilled}/{ps.pillapillarsKilled}/{ps.pillapillarHit} time: {ps.time} ");
 
     //public float time;
     //public int shotsFired;

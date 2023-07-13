@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: MapGeneratorBeeCity
   m_EditorClassIdentifier: 
   generationType: 3
+  seed: 0
   nestCount: 3
   gardenCount: 3
-  antMoundCount: 5
+  antMoundCount: 3
