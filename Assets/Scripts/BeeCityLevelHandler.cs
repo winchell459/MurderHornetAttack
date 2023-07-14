@@ -36,7 +36,16 @@ public class BeeCityLevelHandler : LevelHandler
         {
             //ExitPanel.SetActive(true);
             uIHandler.DisplayExitLabel(true);
-            if (Player.GetComponent<HornetController>().ExitButtonPressed && TasksComplete(LevelCompleteTasks)) LevelEndSequence();
+            if (Player.GetComponent<HornetController>().ExitButtonPressed)
+            {
+                bool levelComplete = TasksComplete(LevelCompleteTasks/*, ph, uIHandler*/);
+
+                if (levelComplete)
+                {
+                    uIHandler.DisplayDialoguePrompt(false, "");
+                    LevelEndSequence();
+                }
+            }
         }
     }
 

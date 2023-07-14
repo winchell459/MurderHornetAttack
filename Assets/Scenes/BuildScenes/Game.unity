@@ -28372,7 +28372,7 @@ MonoBehaviour:
   princessMarker: {fileID: 1373541815}
   flowerMarkerPrefab: {fileID: 537954653118117406, guid: 3ab411eff17064c4dbd0450cf3464fd7,
     type: 3}
-  debuggingMaps: 1
+  debuggingMaps: 0
   zoom: 1
   hexMapPanel: {fileID: 1964085682}
 --- !u!1 &5817613352722358310

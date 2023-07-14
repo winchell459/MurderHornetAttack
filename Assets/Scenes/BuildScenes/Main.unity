@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.4964124, b: 0.574817, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -231,11 +231,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
         type: 3}
-      propertyPath: stageParameters.Array.data[4].name
-      value: Perlin Noise
-      objectReference: {fileID: 0}
-    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
-        type: 3}
       propertyPath: stageParameters.Array.data[0].mapParameters
       value: 
       objectReference: {fileID: 11400000, guid: cd955af1f8fb24931bf1eaa849ff7aaa,
@@ -260,34 +255,12 @@ PrefabInstance:
         type: 2}
     - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
         type: 3}
-      propertyPath: stageParameters.Array.data[4].mapParameters
-      value: 
-      objectReference: {fileID: 11400000, guid: 14a525fec8f83469eb893a77125b6a76,
-        type: 2}
-    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
-        type: 3}
       propertyPath: stageParameters.Array.data[0].perlinNoiseParameters
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
         type: 3}
-      propertyPath: stageParameters.Array.data[1].perlinNoiseParameters
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
-        type: 3}
-      propertyPath: stageParameters.Array.data[2].perlinNoiseParameters
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
-        type: 3}
       propertyPath: stageParameters.Array.data[3].perlinNoiseParameters
-      value: 
-      objectReference: {fileID: 11400000, guid: cfcb69847ad4a0a49a5ea55030c0187e,
-        type: 2}
-    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
-        type: 3}
-      propertyPath: stageParameters.Array.data[4].perlinNoiseParameters
       value: 
       objectReference: {fileID: 11400000, guid: cfcb69847ad4a0a49a5ea55030c0187e,
         type: 2}
@@ -317,12 +290,6 @@ PrefabInstance:
         type: 2}
     - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
         type: 3}
-      propertyPath: stageParameters.Array.data[4].mapGeneratorParameters
-      value: 
-      objectReference: {fileID: 11400000, guid: 910a39822642043f4988b8fbf9138c2a,
-        type: 2}
-    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
-        type: 3}
       propertyPath: stageParameters.Array.data[0].levelCompleteParameters
       value: 
       objectReference: {fileID: 11400000, guid: bb03f1d10a15650439bd2990f2f214dd,
@@ -344,12 +311,6 @@ PrefabInstance:
       propertyPath: stageParameters.Array.data[3].levelCompleteParameters
       value: 
       objectReference: {fileID: 11400000, guid: 65e37f8351290d74c8dcb174b87f694c,
-        type: 2}
-    - target: {fileID: 1042779746624490175, guid: 8677fea7f7372c640a9b5fd87163d4a1,
-        type: 3}
-      propertyPath: stageParameters.Array.data[4].levelCompleteParameters
-      value: 
-      objectReference: {fileID: 11400000, guid: f26fec9043a6906448da60d647529f54,
         type: 2}
     - target: {fileID: 3434082560216437097, guid: 8677fea7f7372c640a9b5fd87163d4a1,
         type: 3}
