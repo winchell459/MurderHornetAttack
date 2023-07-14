@@ -24,7 +24,7 @@ public class MobileController : MonoBehaviour
             hornetController.FirePlasma();
         }
 
-        if(TCKInput.GetAction("tunnelBtn", EActionEvent.Press))
+        if(TCKInput.GetAction("tunnelBtn", EActionEvent.Down))
         {
             hornetController.ExitButtonPressed = true;
         }
