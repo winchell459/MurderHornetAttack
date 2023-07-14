@@ -13,7 +13,18 @@ public class MapNest : MapArea
         AreaSetup(HoneycombTypes.Areas.Nest);
     }
 
-    
+    public static MapNest CreateNest(Vector2 pos, float radius, MapParameters mapParameters)
+    {
+        MapNest nest = new MapNest(pos);
+        nest.locations.Add(pos);
+        nest.widths.Add(radius * 2);
+
+        nest.circles = new List<Circle>();
+        nest.circles.Add( new Circle(pos, radius));
+
+        SetupChambers(nest,radius,mapParameters);
+        return nest;
+    }
 
     public static MapNest CreateRandomNest(Vector2 pos, int nestCount, float radius, MapParameters mapParameters)
     {
@@ -45,9 +56,18 @@ public class MapNest : MapArea
             nest.circles.Add(circle);
         }
 
-        foreach(Circle circle in nest.circles)
+
+        SetupChambers(nest, radius, mapParameters);
+        
+
+        return nest;
+    }
+
+    private static void SetupChambers(MapNest nest, float radius, MapParameters mapParameters)
+    {
+        foreach (Circle circle in nest.circles)
         {
-           // GameObject.Instantiate(nestPrefab, circle.pos, Quaternion.identity);
+            // GameObject.Instantiate(nestPrefab, circle.pos, Quaternion.identity);
             //Map.GetSpiderHole().transform.position = circle.pos;
             //nest.locations.Add(loc);
 
@@ -56,12 +76,8 @@ public class MapNest : MapArea
 
             chamber.AddChamber(chamber.Location, radius);
             nest.chambers.Add(chamber);
-            nest.AltPoints.Add(Utility.Honeycomb.WorldPointToHoneycombGrid(circle.pos,mapParameters));
+            nest.AltPoints.Add(Utility.Honeycomb.WorldPointToHoneycombGrid(circle.pos, mapParameters));
         }
-
-        
-
-        return nest;
     }
 
     public override void Setup()
@@ -69,7 +85,7 @@ public class MapNest : MapArea
         GameObject nestPrefab = MapManager.singleton.SpiderHole;
         foreach (Circle circle in circles)
         {
-            GameObject.Instantiate(nestPrefab, circle.pos, Quaternion.identity);
+            Map.StaticMap.AddChunkObject(GameObject.Instantiate(nestPrefab, circle.pos, Quaternion.identity));
             
         }
     }

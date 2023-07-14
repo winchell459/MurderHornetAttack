@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
         public MapGeneratorParameters mapGeneratorParameters;
         public MapParameters mapParameters;
         public List<MapVoid> stageMapVoids;
+        public LevelCompleteParameters levelCompleteParameters;
     }
 
     List<PlayerScore> PlayerScores = new List<PlayerScore>();
@@ -105,12 +106,14 @@ public class GameManager : MonoBehaviour
         MapGeneratorParameters mapGeneratorParameters = stageParameters[level].mapGeneratorParameters;
         MapParameters mapParameters = stageParameters[level].mapParameters;
         PerlinNoiseScriptableObject perlinNoiseParameters = stageParameters[level].perlinNoiseParameters;
+        LevelTask[] levelTasks = stageParameters[level].levelCompleteParameters.levelTasks;
 
         if(perlinNoiseParameters) perlinNoiseParameters.parameters.seed = mapGeneratorParameters.seed;
 
         LevelManager.perlinNoiseParameters = perlinNoiseParameters;
         LevelManager.mapParameters = mapParameters;
         LevelManager.mapGeneratorParameters = mapGeneratorParameters;
+        LevelManager.levelTasks = levelTasks;
 
         MapGenerator.onGenerationPreloadComplete += PreGenerationComplete;
 

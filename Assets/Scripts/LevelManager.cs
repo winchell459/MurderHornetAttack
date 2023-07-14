@@ -7,6 +7,8 @@ public class LevelManager : MonoBehaviour
     public static PerlinNoiseScriptableObject perlinNoiseParameters;
     public static MapGeneratorParameters mapGeneratorParameters;
     public static MapParameters mapParameters;
+    public static LevelTask[] levelTasks;
+
     public static List<MapVoid> levelMapVoids;
 
     [SerializeField] private PerlinNoiseScriptableObject perlinNoiseParametersDebug;
@@ -43,6 +45,7 @@ public class LevelManager : MonoBehaviour
             SetupLevelHandler(mapGeneratorParametersDebug);
         }
 
+         
     }
 
     private void SetupLevelHandler(MapGeneratorParameters mapGeneratorParameters)
@@ -51,9 +54,11 @@ public class LevelManager : MonoBehaviour
         {
             case MapGeneratorParameters.GenerationTypes.beeCity:
                 beeCityLevelHandler.enabled = true;
+                if (levelTasks != null) beeCityLevelHandler.SetLevelTasks( levelTasks);
                 break;
             default:
                 randomLevelHandler.enabled = true;
+                if (levelTasks != null) randomLevelHandler.SetLevelTasks(levelTasks);
                 break;
         }
     }

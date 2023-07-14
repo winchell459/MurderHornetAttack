@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class UIHandler : MonoBehaviour
 {
+    [SerializeField] private DialoguePanel exitPromptText;
     [SerializeField] private Text exitLabeText;
     [SerializeField] private Text PlayerLoc, SpawnLoc, EndLoc;
     [SerializeField] private Text BeesMurderedText, HornetMurderedText;
@@ -178,5 +179,15 @@ public class UIHandler : MonoBehaviour
         y /= factor;
         text.text = x + " " + y;
 
+    }
+
+    public void DisplayExitLabel(bool display)
+    {
+        exitLabeText.transform.parent.gameObject.SetActive(display);
+    }
+    public void DisplayDialoguePrompt(bool display, string prompt)
+    {
+        exitPromptText.gameObject.SetActive(display);
+        if (display) exitPromptText.text = prompt;
     }
 }

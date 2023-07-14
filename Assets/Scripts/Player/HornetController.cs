@@ -101,7 +101,7 @@ public class HornetController : Insect
 
         if (!MobileControls)
         {
-            if (Input.GetKey(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E))
             {
                 ExitButtonPressed = true;
             }

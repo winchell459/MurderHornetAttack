@@ -32,10 +32,11 @@ public class BeeCityLevelHandler : LevelHandler
 
     public override void HandleExit()
     {
-        if (queenDead)
+        if (queenDead || true)
         {
-            ExitPanel.SetActive(true);
-            if (Player.GetComponent<HornetController>().ExitButtonPressed) LevelEndSequence();
+            //ExitPanel.SetActive(true);
+            uIHandler.DisplayExitLabel(true);
+            if (Player.GetComponent<HornetController>().ExitButtonPressed && TasksComplete(LevelCompleteTasks)) LevelEndSequence();
         }
     }
 

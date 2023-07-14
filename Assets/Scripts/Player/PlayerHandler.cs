@@ -8,7 +8,9 @@ public class PlayerHandler : MonoBehaviour
     public static int HornetMurderedCount;
 
     public static int eggCount = 0, flowerCount = 0, royalJellyCount = 0;
-    public int flowersFound = 0;
+    public int flowersFound = 0;//{ get; private set; }
+    public int eggsFound = 0;
+    public int royalJellyFound = 0;
 
     public int _maxHealth = 50;
     public int MaxHealth { get { return _maxHealth + eggCount * 5; } }
@@ -181,15 +183,24 @@ public class PlayerHandler : MonoBehaviour
     public void AddEggs(int count)
     {
         eggCount += count;
+        eggsFound += count;
     }
 
     public void AddFlowers(int count)
     {
         flowerCount += count;
+        flowersFound += count;
     }
     public void AddRoyalJelly(int count)
     {
         royalJellyCount += count;
+        royalJellyFound += count;
+    }
+
+    public void RemoveRoyalJelly(int count)
+    {
+        royalJellyCount -= count;
+        royalJellyFound -= count;
     }
 
     private void Update()

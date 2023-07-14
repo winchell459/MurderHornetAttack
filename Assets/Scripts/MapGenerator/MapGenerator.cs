@@ -245,7 +245,7 @@ public class MapGenerator : MonoBehaviour
         //add spider holes
         for(int i = 1; i < antMoundCount - 1; i++)
         {
-            newVoids.Add(MapNest.CreateRandomNest(voidLocations[i], 1, 10, mapParameters));
+            newVoids.Add(MapNest.CreateNest(voidLocations[i], 10, mapParameters));
 
         }
 

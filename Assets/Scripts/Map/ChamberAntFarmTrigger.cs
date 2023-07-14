@@ -12,6 +12,8 @@ public class ChamberAntFarmTrigger : ChamberTrigger
 
     private bool inTrigger = false;
 
+    [SerializeField] private GameObject spawnAntSquadButton;
+
     private void Update()
     {
         if (PreviousNode)
@@ -21,16 +23,21 @@ public class ChamberAntFarmTrigger : ChamberTrigger
 
             Debug.DrawLine(PreviousNode.transform.position, transform.position, lineColor);
 
-            if(inTrigger && Input.GetKeyDown(KeyCode.J))
+            if(inTrigger)
             {
-                if (LevelHandler.singleton.SpawnAntSqaud())
-                {
-                    StartMarch();
-                    inTrigger = false;
-                }
+                spawnAntSquadButton.SetActive(true);
+            }
+            else
+            {
+                spawnAntSquadButton.SetActive(false);
             }
         }
+        else
+        {
+            spawnAntSquadButton.SetActive(false);
+        }
     }
+
     protected override void OnExit(Collider2D collision)
     {
         if (collision.GetComponent<HornetController>())
@@ -62,7 +69,7 @@ public class ChamberAntFarmTrigger : ChamberTrigger
             if(Triggered && !antSquad)
             {
                 inTrigger = true;
-                Debug.Log($"Drop Royal Jelly?");
+                //Debug.Log($"Drop Royal Jelly?");
             }
         }
     }
@@ -88,5 +95,12 @@ public class ChamberAntFarmTrigger : ChamberTrigger
         return path;
     }
 
-    
+    public void SpawnAntSquadButton()
+    {
+        if (LevelHandler.singleton.SpawnAntSqaud())
+        {
+            StartMarch();
+            inTrigger = false;
+        }
+    }
 }

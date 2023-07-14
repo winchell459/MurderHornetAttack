@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   generationType: 0
   seed: 0
-  nestCount: 5
-  gardenCount: 0
+  nestCount: 2
+  gardenCount: 2
   antMoundCount: 0

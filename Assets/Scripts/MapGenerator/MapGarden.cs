@@ -30,5 +30,6 @@ public class MapGarden : MapArea
     {
         Transform newPit = GameObject.Instantiate(MapManager.singleton.SnakePit);
         newPit.transform.position = chambers[0].Location;
+        Map.StaticMap.AddChunkObject(newPit.gameObject);
     }
 }

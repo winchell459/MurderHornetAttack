@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChamberEnemyTrigger : ChamberTrigger
+public class ChamberEnemyTrigger : ChamberTrigger, IChunkObject
 {
     public GameObject EnemyPrefab;
     private bool triggered;
@@ -18,11 +18,11 @@ public class ChamberEnemyTrigger : ChamberTrigger
 
     protected override void OnStay(Collider2D collision)
     {
-        if (!triggered && (triggerType == TriggerType.spawnOnTrigger || (triggerType == TriggerType.triggerOnce && spawnCount < 1) || (triggerType == TriggerType.soloSpawn && TriggeredEnemy == null)))
+        if (respawned && !triggered && (triggerType == TriggerType.spawnOnTrigger || (triggerType == TriggerType.triggerOnce && spawnCount < 1) || (triggerType == TriggerType.soloSpawn && TriggeredEnemy == null)))
         {
             spawnCount++;
             TriggeredEnemy = Instantiate(EnemyPrefab, GetSpawnLocation(), Quaternion.identity);
-            
+            respawned = false;
         }
         triggered = true;
     }
@@ -33,11 +33,15 @@ public class ChamberEnemyTrigger : ChamberTrigger
         else return transform.position;
     }
 
-    //private void Update()
-    //{
-    //    foreach(Collider2D cc in GetComponents<Collider2D>())
-    //    {
-    //        Debug.Log(cc.c)
-    //    }
-    //}
+    bool respawned = false;
+    void IChunkObject.Activate()
+    {
+        gameObject.SetActive(true);
+        respawned = true;
+    }
+
+    void IChunkObject.Deactivate()
+    {
+        gameObject.SetActive(false);
+    }
 }

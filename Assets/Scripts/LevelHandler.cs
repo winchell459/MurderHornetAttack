@@ -34,12 +34,15 @@ public class LevelHandler : MonoBehaviour
     public PrincessController princess;
     public QueenController queen;
 
+    [SerializeField] protected LevelTask[] LevelCompleteTasks;
+
     // Start is called before the first frame update
     void Start()
     {
         singleton = this;
         MurderPanel.SetActive(false);
-        ExitPanel.SetActive(false);
+        //ExitPanel.SetActive(false);
+        uIHandler.DisplayExitLabel(false);
         UpdatePlayerStats();
         hc = Player.GetComponent<HornetController>();
         StartCoroutine(SetupLevel());
@@ -128,7 +131,9 @@ public class LevelHandler : MonoBehaviour
         }
         else
         {
-            ExitPanel.SetActive(false);
+            //ExitPanel.SetActive(false);
+            uIHandler.DisplayExitLabel(false);
+            uIHandler.DisplayDialoguePrompt(false, "");
         }
 
         if (Player)
@@ -177,17 +182,18 @@ public class LevelHandler : MonoBehaviour
     public bool infiniteLives = true;
     void HandlePlayerDeath()
     {
+        uIHandler.DisplayDialoguePrompt(false, "");
         playerDead = true;
         
         if(infiniteLives || PlayerHandler.eggCount > 0)
         {
             PlayerHandler.eggCount = Mathf.Clamp(PlayerHandler.eggCount - 1, 0, int.MaxValue);
-            FindObjectOfType<UIHandler>().DisplayMurderedPanel(true, "Murder Hornet is Murdered");
+            uIHandler.DisplayMurderedPanel(true, "Murder Hornet is Murdered");
         }
         else
         {
             gameOver = true;
-            FindObjectOfType<UIHandler>().DisplayMurderedPanel(true, "The Princess is in Another Hive");
+            uIHandler.DisplayMurderedPanel(true, "The Princess is in Another Hive");
         }
     }
 
@@ -199,9 +205,72 @@ public class LevelHandler : MonoBehaviour
 
     public virtual void HandleExit()
     {
-        ExitPanel.SetActive(true);
-        if (Player && Player.GetComponent<HornetController>().ExitButtonPressed && !levelEnding && ph.flowersFound >= 5) LevelEndSequence();
+        //ExitPanel.SetActive(true);
+        uIHandler.DisplayExitLabel(true);
+        if (Player && Player.GetComponent<HornetController>().ExitButtonPressed && !levelEnding)
+        {
+            bool levelComplete = TasksComplete(LevelCompleteTasks/*, ph, uIHandler*/);
+            
+            if (levelComplete)
+            {
+                uIHandler.DisplayDialoguePrompt(false, "");
+                LevelEndSequence();
+            }
+        }
     }
+
+    public void SetLevelTasks(LevelTask[] tasks)
+    {
+        LevelCompleteTasks = tasks;
+        foreach(LevelTask task in LevelCompleteTasks)
+        {
+            task.Completed = false;
+        }
+    }
+
+    protected bool TasksComplete(LevelTask[] tasks/*, PlayerHandler ph, UIHandler uIHandler*/)
+    {
+        bool levelComplete = true;
+        foreach (LevelTask task in tasks)
+        {
+            if (!task.Completed)
+            {
+                levelComplete = false;
+                bool taskComplete = true;
+                if (task.Requirements.PetalsCollect && ph.flowersFound < 5)
+                {
+                    taskComplete = false;
+                }
+                else if (task.Requirements.EggCount > 0 && ph.eggsFound < task.Requirements.EggCount)
+                {
+                    taskComplete = false;
+                }
+                else if(task.Requirements.AntMoundsTriggered && !AntMoundsTriggered())
+                {
+                    taskComplete = false;
+                }else if(task.Requirements.QueenDefeat && queen != null)
+                {
+                    taskComplete = false;
+                }
+
+
+                task.Completed = taskComplete;
+                if (task.Completed)
+                {
+                    uIHandler.DisplayDialoguePrompt(true, task.CompletionPrompt);
+                }
+                else
+                {
+                    uIHandler.DisplayDialoguePrompt(true, task.FailedPrompt);
+
+                }
+                break;
+            }
+
+        }
+        return levelComplete;
+    }
+
 
     public void EnemyDeath(GameObject enemy)
     {
@@ -294,25 +363,6 @@ public class LevelHandler : MonoBehaviour
         GameManager.singleton.LoadNextScene();
     }
 
-    //private void infiniteLevel()
-    //{
-    //    if (Player)
-    //    {
-    //        //if (Player.transform.position.y > honeycombToWorldPostion(new Vector2(0, honeycombHeight - ChunkHeight)).y)
-    //        //{
-    //        //    createChunk(new Vector2(0, honeycombHeight), ChunkWidth, ChunkHeight);
-    //        //    honeycombHeight += ChunkHeight;
-    //        //    float randX = Random.Range(-2.3f, 2.3f);
-    //        //    path = new MapPath(path.Start(0), new Vector2(randX, path.End(0).y + 16), 2);
-    //        //    honeycombChunks[honeycombChunks.Count - 1].AddVoid(path);
-    //        //    honeycombChunks[honeycombChunks.Count - 1].DisplayChunk();
-    //        //}
-    //    }
-    //    else
-    //    {
-    //        MurderPanel.SetActive(true);
-    //    }
-    //}
 
 
     public void UpdatePlayerStats()
@@ -351,7 +401,7 @@ public class LevelHandler : MonoBehaviour
 
     public virtual bool HoneycombTowerSpawnEnemy(MapHoneycomb tower) {
         
-        return PlayerHandler.eggCount > 4 || PlayerHandler.royalJellyCount > 5;
+        return PlayerHandler.eggCount > 4 || ph.royalJellyFound > 5;
     }
 
     int pillapillarLengthMin = 2;
@@ -376,4 +426,19 @@ public class LevelHandler : MonoBehaviour
         }
         return false;
     }
+
+    public virtual bool AntMoundsTriggered()
+    {
+        bool triggered = true;
+        foreach(ChamberAntFarmTrigger trigger in FindObjectsOfType<ChamberAntFarmTrigger>())
+        {
+            if (!trigger.Triggered)
+            {
+                triggered = false;
+                break;
+            }
+        }
+        return triggered;
+    }
 }
+

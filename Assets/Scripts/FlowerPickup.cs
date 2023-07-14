@@ -11,7 +11,7 @@ public class FlowerPickup : MonoBehaviour
         {
             FindObjectOfType<LevelHandler>().CollectionsUpdated(0, 1, 0);
             FindObjectOfType<UIHandler>().FlowerPickup(flowerID);
-            FindObjectOfType<PlayerHandler>().flowersFound += 1;
+            //FindObjectOfType<PlayerHandler>().flowersFound += 1;
             MiniMap.singleton.DisplayFlower(flowerID, false);
             Destroy(gameObject);
         }

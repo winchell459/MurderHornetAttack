@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpiderHole : MonoBehaviour
+public class SpiderHole : MonoBehaviour, IChunkObject
 {
     public GameObject SpiderPrefab;
     public float SpawnCoolDown = 5f;
@@ -28,5 +28,15 @@ public class SpiderHole : MonoBehaviour
            
 
         }
+    }
+
+    void IChunkObject.Activate()
+    {
+        gameObject.SetActive(true);
+    }
+
+    void IChunkObject.Deactivate()
+    {
+        gameObject.SetActive(false);
     }
 }

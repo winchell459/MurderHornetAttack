@@ -14,6 +14,7 @@ public class MapChunk
     private bool display = false;
 
     private List<Insect> enemiesInChunk = new List<Insect>();
+    private List<IChunkObject> chunkObjects = new List<IChunkObject>();
 
     public Vector2 mapOffset;
     public Vector2 ChunkIndex;
@@ -103,6 +104,10 @@ public class MapChunk
                 if (insect) insect.gameObject.SetActive(true);
             }
             
+            foreach(IChunkObject chunkObject in chunkObjects)
+            {
+                chunkObject.Activate();
+            }
         }
 
     }
@@ -137,7 +142,11 @@ public class MapChunk
                 }
 
             }
-            
+
+            foreach (IChunkObject chunkObject in chunkObjects)
+            {
+                chunkObject.Deactivate();
+            }
         }
         display = false;
 
@@ -159,6 +168,13 @@ public class MapChunk
     {
         if (!enemiesInChunk.Contains(insect)) enemiesInChunk.Add(insect);
         if (!display) insect.gameObject.SetActive(false);
+    }
+
+    public void AddChunkObject(IChunkObject chunkObject)
+    {
+        chunkObjects.Add(chunkObject);
+        if (Visible) chunkObject.Activate();
+        else chunkObject.Deactivate();
     }
 
     public MapHoneycomb GetMapHoneycomb(int col, int row)

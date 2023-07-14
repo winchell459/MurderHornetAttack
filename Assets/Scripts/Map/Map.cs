@@ -424,4 +424,11 @@ public class Map : MonoBehaviour
         chunk.AddEnemyToChunk(enemy);
         if (!chunk.Visible) enemy.gameObject.SetActive(false);
     }
+
+    public void AddChunkObject(GameObject chunkObject)
+    {
+        MapChunk chunk = Utility.Honeycomb.GetMapChunk(chunkObject.transform.position);
+        chunk.AddChunkObject(chunkObject.GetComponent<IChunkObject>());
+        //if (!chunk.Visible) chunkObject.SetActive(false);
+    }
 }

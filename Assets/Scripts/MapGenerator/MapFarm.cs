@@ -45,7 +45,7 @@ public class MapFarm : MapArea
 
         farm.maze = farm.connectNodes(new List<Vector2>(), farm.startPoint);
         //farm.maze.Add(endPoint);
-        farm.maze.Add(farm.endPoint);
+        //farm.maze.Add(farm.endPoint);
 
         //connect ant mounds
         List<MapPath> edges = farm.generateEdges(farm.maze);

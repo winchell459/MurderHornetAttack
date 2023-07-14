@@ -556,7 +556,7 @@ RectTransform:
   - {fileID: 1373541815}
   - {fileID: 1041403994}
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -871,7 +871,7 @@ RectTransform:
   - {fileID: 1766546381}
   - {fileID: 1513063681}
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -1257,7 +1257,7 @@ RectTransform:
   m_Children:
   - {fileID: 1754127899}
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 18
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1472,6 +1472,96 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 54
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &107415970
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 107415974}
+  - component: {fileID: 107415973}
+  - component: {fileID: 107415972}
+  - component: {fileID: 107415971}
+  m_Layer: 5
+  m_Name: DialoguePanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &107415971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 107415970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1feeceaf23db8294a9fbb6ced64d80c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueText: {fileID: 2030077753}
+--- !u!114 &107415972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 107415970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &107415973
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 107415970}
+  m_CullTransparentMesh: 0
+--- !u!224 &107415974
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 107415970}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 2030077755}
+  m_Father: {fileID: 1262532039}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 164.16, y: 94}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &112405834
 GameObject:
   m_ObjectHideFlags: 0
@@ -2565,7 +2655,7 @@ RectTransform:
   - {fileID: 1776813133}
   - {fileID: 2078073763}
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -3244,7 +3334,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 21
+  m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
@@ -5886,6 +5976,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flowersFound: 0
+  eggsFound: 0
+  royalJellyFound: 0
   _maxHealth: 50
   _maxShot: 5
   _plasmaChargeRate: 1
@@ -8674,7 +8766,7 @@ RectTransform:
   - {fileID: 1943889197}
   - {fileID: 1258147647}
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -9665,7 +9757,7 @@ RectTransform:
   - {fileID: 418094453}
   - {fileID: 1698714169}
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -10783,7 +10875,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -11822,7 +11914,7 @@ RectTransform:
   - {fileID: 1987010700}
   - {fileID: 1156648568}
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -12928,6 +13020,43 @@ MonoBehaviour:
   ExitTunnel: {fileID: 1940638273}
   princess: {fileID: 1038967403}
   queen: {fileID: 910695820}
+  LevelCompleteTasks:
+  - taskName: Find Ant Mounds
+    Requirements:
+      PrincessFind: 0
+      PetalsCollect: 0
+      EggCount: 0
+      AntMoundsTriggered: 1
+      QueenDefeat: 0
+      NestClear: 0
+      PitClear: 0
+    CompletionPrompt: All Ants Rescued
+    FailedPrompt: Rescue All Ants
+    Completed: 0
+  - taskName: Find 5 Eggs
+    Requirements:
+      PrincessFind: 0
+      PetalsCollect: 0
+      EggCount: 5
+      AntMoundsTriggered: 0
+      QueenDefeat: 0
+      NestClear: 0
+      PitClear: 0
+    CompletionPrompt: 5 Eggs Found
+    FailedPrompt: Need 5 Eggs
+    Completed: 0
+  - taskName: Find Petals
+    Requirements:
+      PrincessFind: 0
+      PetalsCollect: 1
+      EggCount: 0
+      AntMoundsTriggered: 0
+      QueenDefeat: 0
+      NestClear: 0
+      PitClear: 0
+    CompletionPrompt: '*khap*'
+    FailedPrompt: '*ou-ah*'
+    Completed: 0
   infiniteLives: 1
   towerDropPrefab: {fileID: 1174156814334646262, guid: 2c2238df2713196459b3d66d8a7a2d57,
     type: 3}
@@ -12969,6 +13098,7 @@ MonoBehaviour:
   ExitTunnel: {fileID: 1940638273}
   princess: {fileID: 1038967403}
   queen: {fileID: 910695820}
+  LevelCompleteTasks: []
   infiniteLives: 1
   towerDropPrefab: {fileID: 1174156814334646262, guid: 2c2238df2713196459b3d66d8a7a2d57,
     type: 3}
@@ -13257,7 +13387,7 @@ RectTransform:
   m_Children:
   - {fileID: 181756067}
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 19
+  m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -14466,7 +14596,7 @@ RectTransform:
   - {fileID: 680366104}
   - {fileID: 254352446}
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -15061,6 +15191,7 @@ RectTransform:
   m_Children:
   - {fileID: 6700277224677304388}
   - {fileID: 8127228774045440713}
+  - {fileID: 107415974}
   - {fileID: 810185335}
   - {fileID: 40941763}
   - {fileID: 1964085682}
@@ -15286,7 +15417,7 @@ RectTransform:
   - {fileID: 340600323}
   - {fileID: 591324015}
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -16382,7 +16513,7 @@ RectTransform:
   - {fileID: 9294480}
   - {fileID: 2581554}
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -17423,7 +17554,7 @@ RectTransform:
   m_Children:
   - {fileID: 2006080458}
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 17
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -19087,7 +19218,7 @@ RectTransform:
   m_Children:
   - {fileID: 2141973683}
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 14
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -19263,7 +19394,7 @@ RectTransform:
   m_Children:
   - {fileID: 532272106}
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 22
+  m_RootOrder: 23
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
@@ -20627,7 +20758,7 @@ RectTransform:
   - {fileID: 1408056557}
   - {fileID: 793044817}
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -22070,7 +22201,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -22164,7 +22295,7 @@ RectTransform:
   - {fileID: 82708611}
   - {fileID: 802185536}
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 20
+  m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -22968,6 +23099,85 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &2030077752
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2030077755}
+  - component: {fileID: 2030077754}
+  - component: {fileID: 2030077753}
+  m_Layer: 5
+  m_Name: Text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2030077753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2030077752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 20
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 2
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: Murder Hornet was Murdered
+--- !u!222 &2030077754
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2030077752}
+  m_CullTransparentMesh: 0
+--- !u!224 &2030077755
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2030077752}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 107415974}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 10.5}
+  m_SizeDelta: {x: 119.8, y: 48.3}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2031536605
 GameObject:
   m_ObjectHideFlags: 0
@@ -23154,7 +23364,7 @@ RectTransform:
   m_Children:
   - {fileID: 1935173045}
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 16
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -28075,6 +28285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77e0abcd2d8ec44bebc917ace4db3d63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  exitPromptText: {fileID: 107415971}
   exitLabeText: {fileID: 418094454}
   PlayerLoc: {fileID: 380125022}
   SpawnLoc: {fileID: 1123207075}
@@ -28924,7 +29135,7 @@ RectTransform:
   m_Children:
   - {fileID: 1764644753591330006}
   m_Father: {fileID: 1262532039}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
