@@ -37,7 +37,11 @@ public class ChamberEnemyTrigger : ChamberTrigger, IChunkObject
     void IChunkObject.Activate()
     {
         gameObject.SetActive(true);
-        respawned = true;
+        if (!TriggeredEnemy)
+        {
+           respawned = true;
+        }
+       
     }
 
     void IChunkObject.Deactivate()

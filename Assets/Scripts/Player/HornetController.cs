@@ -299,6 +299,7 @@ public class HornetController : Insect
     private void hornetMurdered()
     {
         FindObjectOfType<LevelHandler>().UpdatePlayerStats(0, 1);
+        FindObjectOfType<LevelHandler>().DropPlayerBuffs(transform.position);
         Destroy(gameObject);
     }
 }

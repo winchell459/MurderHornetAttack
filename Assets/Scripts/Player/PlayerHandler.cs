@@ -64,6 +64,31 @@ public class PlayerHandler : MonoBehaviour
     {
         return MaxHealth;
     }
+
+    //public ItemPickup.Buff DropBuff(ref float power, ref float buffTime, System.Action getBuffTime)
+    //{
+    //    ItemPickup.Buff buff = new ItemPickup.Buff();
+    //    buff.Power = power;
+    //    buff.Duration = getBuffTime();
+
+    //    power = 0;
+    //    buffTime = 0;
+
+    //    return buff;
+    //}
+
+    // --------------------------- shot count ---------------------------
+    public ItemPickup.Buff DropShotBuff()
+    {
+        ItemPickup.Buff buff = new ItemPickup.Buff();
+        buff.Power = maxShotBuff;
+        buff.Duration = GetMaxShotBuffTime();
+        
+        maxShotBuff = 0;
+        maxShotBuffTime = 0;
+        
+        return buff;
+    }
     public int GetMaxShot()
     {
         if (maxShotBuffStart + maxShotBuffTime > Time.fixedTime) return maxShotBuff + MaxShot;
@@ -86,6 +111,19 @@ public class PlayerHandler : MonoBehaviour
     {
         float remainder = maxShotBuffStart + maxShotBuffTime - Time.fixedTime;
         return Mathf.Clamp(remainder, 0, remainder);
+    }
+
+    // ------- Charge --------------------
+    public ItemPickup.Buff DropChargeBuff()
+    {
+        ItemPickup.Buff buff = new ItemPickup.Buff();
+        buff.Power = plasmaChargeRateBuff;
+        buff.Duration = GetPlasmaChargeRateBuffTime();
+
+        plasmaChargeRateBuff = 0;
+        plasmaChargeRateBuffTime = 0;
+
+        return buff;
     }
     public float GetPlasmaChargeRate()
     {
@@ -111,6 +149,18 @@ public class PlayerHandler : MonoBehaviour
         return Mathf.Clamp(remainder, 0, remainder);
     }
 
+    // ------- Plasma Power --------------------
+    public ItemPickup.Buff DropPowerBuff()
+    {
+        ItemPickup.Buff buff = new ItemPickup.Buff();
+        buff.Power = plasmaDamageBuff;
+        buff.Duration = GetPlasmaPowerBuffTime();
+
+        plasmaDamageBuff = 0;
+        plasmaDamageBuffTime = 0;
+
+        return buff;
+    }
     public float GetPlasmaPower()
     {
         if (plasmaDamageBuffStart + plasmaDamageBuffTime > Time.fixedTime) return plasmaDamageBuff + plasmaDamage;
@@ -131,6 +181,13 @@ public class PlayerHandler : MonoBehaviour
 
         return true;
     }
+    public float GetPlasmaPowerBuffTime()
+    {
+        float remainder = plasmaDamageBuffStart + plasmaDamageBuffTime - Time.fixedTime;
+        return Mathf.Clamp(remainder, 0, remainder);
+    }
+
+
     private void CompareBuffs(ref float newBuff, ref float newBuffTime, float currentBuff, float currentBuffRemaining)
     {
         if (newBuff > 1 && currentBuff < newBuff) //replace currentBuff
@@ -157,11 +214,7 @@ public class PlayerHandler : MonoBehaviour
             newBuff = currentBuff;
         }
     }
-    public float GetPlasmaPowerBuffTime()
-    {
-        float remainder = plasmaDamageBuffStart + plasmaDamageBuffTime - Time.fixedTime;
-        return Mathf.Clamp(remainder, 0, remainder);
-    }
+    
 
     public static void ResetBeesMurderedCount()
     {

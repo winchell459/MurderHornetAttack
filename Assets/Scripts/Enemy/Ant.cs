@@ -22,6 +22,11 @@ public class Ant : Insect
     private Vector2 vector;
     private Vector2 position;
 
+    [SerializeField] bool playerDamage = false;
+
+    [SerializeField] bool digging;
+    List<HoneycombPos> visitedHoneycomb = new List<HoneycombPos>();
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -80,6 +85,19 @@ public class Ant : Insect
         //    angle = Mathf.Atan2(relative.x, relative.y) * Mathf.Rad2Deg;
         //    transform.Rotate(0, 0, -angle);
         //}
+        if (digging)
+        {
+            HoneycombPos pos = Utility.Honeycomb.WorldPointToHoneycombGrid(transform.position);
+            if (!visitedHoneycomb.Contains(pos))
+            {
+                MapHoneycomb honeycomb = Map.StaticMap.GetHoneycomb(pos);
+                if(honeycomb.display && !honeycomb.isFloor)
+                {
+                    DamageHoneycomb(honeycomb.honeycomb.GetComponent<Honeycomb>());
+                }
+                visitedHoneycomb.Add(pos);
+            }
+        }
     }
 
     public void March(float MarchDelay)
@@ -102,15 +120,20 @@ public class Ant : Insect
     private void OnTriggerEnter2D(Collider2D collision)
     {
         string tag = collision.tag;
-        if (tag.Equals("Honeycomb"))
+        if (/*!digging && */tag.Equals("Honeycomb"))
         {
-            collision.GetComponent<Honeycomb>().DamageHoneycomb(float.PositiveInfinity);
+            DamageHoneycomb(collision.GetComponent<Honeycomb>());
         }
-        else if (tag.Equals("Player"))
+        else if (playerDamage && tag.Equals("Player"))
         {
             collision.GetComponent<HornetController>().TakeDamage(PlayerDamage);
         }
 
+    }
+
+    private void DamageHoneycomb(Honeycomb honeycomb)
+    {
+        honeycomb.DamageHoneycomb(float.PositiveInfinity);
     }
     public override void TakeDamage(float damage)
     {

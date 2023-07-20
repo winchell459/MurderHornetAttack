@@ -189,6 +189,8 @@ public class LevelHandler : MonoBehaviour
         {
             PlayerHandler.eggCount = Mathf.Clamp(PlayerHandler.eggCount - 1, 0, int.MaxValue);
             uIHandler.DisplayMurderedPanel(true, "Murder Hornet is Murdered");
+
+            
         }
         else
         {
@@ -310,8 +312,10 @@ public class LevelHandler : MonoBehaviour
                 else if (dropItem < 4) drop.PickupType = ItemPickup.PickupTypes.Power;
                 else if (dropItem < 7) drop.PickupType = ItemPickup.PickupTypes.Storage;
                 else if (dropItem < 10) drop.PickupType = ItemPickup.PickupTypes.Rapid;
-                drop.Power = power;
-                drop.Duration = duration;
+                ItemPickup.Buff buff = new ItemPickup.Buff();
+                buff.Power = power;
+                buff.Duration = duration;
+                drop.buff = buff;
                 drop.SetupLetters();
             }
             
@@ -376,6 +380,38 @@ public class LevelHandler : MonoBehaviour
                 PlayerHandler.eggCount, PlayerHandler.flowerCount, PlayerHandler.royalJellyCount);
         }
         
+    }
+
+    public void DropPlayerBuffs(Vector2 pos)
+    {
+        float range = 1f;
+        ItemPickup.Buff shotBuff = ph.DropShotBuff();
+        if (shotBuff.Power > 0)
+        {
+            Vector2 randomOffset = new Vector2(Random.Range(-range, range), Random.Range(-range, range));
+            DropBuff(shotBuff, ItemPickup.PickupTypes.Storage, pos + randomOffset);
+        }
+
+        shotBuff = ph.DropPowerBuff();
+        if(shotBuff.Power > 0)
+        {
+            Vector2 randomOffset = new Vector2(Random.Range(-range, range), Random.Range(-range, range));
+            DropBuff(shotBuff, ItemPickup.PickupTypes.Power, pos + randomOffset);
+        }
+
+        shotBuff = ph.DropChargeBuff();
+        if (shotBuff.Power > 0)
+        {
+            Vector2 randomOffset = new Vector2(Random.Range(-range, range), Random.Range(-range, range));
+            DropBuff(shotBuff, ItemPickup.PickupTypes.Rapid, pos + randomOffset);
+        }
+    }
+    void DropBuff(ItemPickup.Buff buff, ItemPickup.PickupTypes buffType, Vector2 pos)
+    {
+        ItemPickup drop = Instantiate(EnemyDropPrefab, pos, Quaternion.identity).GetComponent<ItemPickup>();
+        drop.PickupType = buffType;
+        drop.buff = buff;
+        drop.SetupLetters();
     }
 
     public void UpdatePlayerStats(int BeesDied, int HornetDied)

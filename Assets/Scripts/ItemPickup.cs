@@ -17,8 +17,13 @@ public class ItemPickup : MonoBehaviour
 
     public PickupTypes PickupType;
 
-    public float Power;
-    public float Duration;
+    public Buff buff;
+
+    public struct Buff
+    {
+        public float Power;
+        public float Duration;
+    }
 
     private void Awake()
     {
@@ -32,18 +37,18 @@ public class ItemPickup : MonoBehaviour
             bool destroy = false;
             if(PickupType == PickupTypes.Health)
             {
-                destroy = FindObjectOfType<PlayerHandler>().AddHealth(Power);
+                destroy = FindObjectOfType<PlayerHandler>().AddHealth(buff.Power);
             }else if(PickupType == PickupTypes.Power)
             {
-                destroy = FindObjectOfType<PlayerHandler>().SetPlasmaPowerBuff(Power, Duration);
+                destroy = FindObjectOfType<PlayerHandler>().SetPlasmaPowerBuff(buff.Power, buff.Duration);
             }
             else if (PickupType == PickupTypes.Rapid)
             {
-                destroy = FindObjectOfType<PlayerHandler>().SetPlasmaChargeRateBuff(Power, Duration);
+                destroy = FindObjectOfType<PlayerHandler>().SetPlasmaChargeRateBuff(buff.Power, buff.Duration);
             }
             else if (PickupType == PickupTypes.Storage)
             {
-                destroy = FindObjectOfType<PlayerHandler>().SetMaxShotBuff((int)Power, Duration);
+                destroy = FindObjectOfType<PlayerHandler>().SetMaxShotBuff((int)buff.Power, buff.Duration);
             }
             if(destroy) Destroy(gameObject);
         }
@@ -56,7 +61,7 @@ public class ItemPickup : MonoBehaviour
         else if (PickupType == PickupTypes.Power) P.SetActive(true);
         else if (PickupType == PickupTypes.Rapid) R.SetActive(true);
         else if (PickupType == PickupTypes.Storage) S.SetActive(true);
-        ValueText.text = Utility.Utility.FormatFloat(Power, 2);
+        ValueText.text = Utility.Utility.FormatFloat(buff.Power, 2);
     }
 
     private void hideLetters()
