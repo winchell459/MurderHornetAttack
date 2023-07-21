@@ -9,7 +9,7 @@ public class HoneycombEnemyTrigger : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            Insect insect = Instantiate(transform.parent.GetComponent<HoneycombCell>().honeyGrid.GetEnemyPrefab(), transform.position, Quaternion.identity).GetComponent<Insect>();
+            Insect insect = Instantiate(transform.parent.GetComponent<HoneycombCell>().mapHoneycomb.GetEnemyPrefab(), transform.position, Quaternion.identity).GetComponent<Insect>();
 
             //set enemy in chunk for despawning when player leaves chunk
             //MapChunk chunk = Utility.Honeycomb.GetMapChunk(insect.transform.position);
@@ -18,7 +18,7 @@ public class HoneycombEnemyTrigger : MonoBehaviour
 
             Map.StaticMap.AddEnemyToChunk(insect);
 
-            transform.parent.GetComponent<HoneycombCell>().honeyGrid.DestroyHoneycomb();
+            transform.parent.GetComponent<HoneycombCell>().mapHoneycomb.DestroyHoneycomb();
         }
     }
 }

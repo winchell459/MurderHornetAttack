@@ -386,21 +386,21 @@ public class LevelHandler : MonoBehaviour
     {
         float range = 1f;
         ItemPickup.Buff shotBuff = ph.DropShotBuff();
-        if (shotBuff.Power > 0)
+        if (shotBuff.Duration > 0)
         {
             Vector2 randomOffset = new Vector2(Random.Range(-range, range), Random.Range(-range, range));
             DropBuff(shotBuff, ItemPickup.PickupTypes.Storage, pos + randomOffset);
         }
 
         shotBuff = ph.DropPowerBuff();
-        if(shotBuff.Power > 0)
+        if(shotBuff.Duration > 0)
         {
             Vector2 randomOffset = new Vector2(Random.Range(-range, range), Random.Range(-range, range));
             DropBuff(shotBuff, ItemPickup.PickupTypes.Power, pos + randomOffset);
         }
 
         shotBuff = ph.DropChargeBuff();
-        if (shotBuff.Power > 0)
+        if (shotBuff.Duration > 0)
         {
             Vector2 randomOffset = new Vector2(Random.Range(-range, range), Random.Range(-range, range));
             DropBuff(shotBuff, ItemPickup.PickupTypes.Rapid, pos + randomOffset);

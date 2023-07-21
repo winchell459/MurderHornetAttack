@@ -19,17 +19,10 @@ public class HornetPlasm : MonoBehaviour
             }
             else
             {
-                HoneycombPos hexPos = Utility.Honeycomb.WorldPointToHoneycombGrid(collision.GetComponent<Honeycomb>().honeyGrid.position);
+                //HoneycombPos hexPos = Utility.Honeycomb.WorldPointToHoneycombGrid(collision.GetComponent<Honeycomb>().mapHoneycomb.position);
+                Debug.Log($"plasm hit: {collision.name}");
                 collision.GetComponent<Honeycomb>().DamageHoneycomb(Damage);
-                if (false) //for testing HoneycombPos.GetAdjecentHoneycomb()
-                {
-                    Map.StaticMap.GetHoneycomb(hexPos.GetAdjecentHoneycomb(0, 1)).honeycomb.GetComponent<Honeycomb>().DamageHoneycomb(10);
-                    Map.StaticMap.GetHoneycomb(hexPos.GetAdjecentHoneycomb(1, 1)).honeycomb.GetComponent<Honeycomb>().DamageHoneycomb(10);
-                    Map.StaticMap.GetHoneycomb(hexPos.GetAdjecentHoneycomb(1, -1)).honeycomb.GetComponent<Honeycomb>().DamageHoneycomb(10);
-                    Map.StaticMap.GetHoneycomb(hexPos.GetAdjecentHoneycomb(0, -1)).honeycomb.GetComponent<Honeycomb>().DamageHoneycomb(10);
-                    Map.StaticMap.GetHoneycomb(hexPos.GetAdjecentHoneycomb(-1, -1)).honeycomb.GetComponent<Honeycomb>().DamageHoneycomb(10);
-                    Map.StaticMap.GetHoneycomb(hexPos.GetAdjecentHoneycomb(-1, 1)).honeycomb.GetComponent<Honeycomb>().DamageHoneycomb(10);
-                }
+
                 GameManager.TerrainHit();
                 Destroy(gameObject);
             }

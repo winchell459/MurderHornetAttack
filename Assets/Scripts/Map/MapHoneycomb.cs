@@ -10,20 +10,24 @@ public class MapHoneycomb
     public bool display;
     public Vector2 position;
     public GameObject honeycomb;
+
     private bool hasEnemy = false;
 
     public Color color = new Color(74/256, 156 / 256, 101 / 256);
 
-    //private List<Transform> honeycombChildren = new List<Transform>();
-    private bool capped = true;
+    
     private int depth = int.MaxValue; //roughly the number of honeycombs away from a void
-    private bool beeuilding;
+
     public bool isLargeLoc = false;
+
     private bool isLargeHoneycomb;
+    private bool beeuilding;
+    private bool capped = true;
     public bool isFloor;
 
     public float health = 10;
-    public float beeuildingHealth = 30;
+    private float beeuildingHealth = 30;
+
     public HoneycombTypes.Variety LocationType;
     public HoneycombTypes.Areas AreaType = HoneycombTypes.Areas.Connection;
 
@@ -34,8 +38,17 @@ public class MapHoneycomb
         this.position = position;
         this.capped = capped;
         this.isLargeLoc = isLargeLoc;
-        int rand = Random.Range(0, 100);
-        if (rand < 5 && isLargeLoc) beeuilding = true;
+        if (isLargeLoc)
+        {
+            int rand = Random.Range(0, 100);
+            if (rand < 5)
+            {
+                beeuilding = true;
+                health = beeuildingHealth;
+                Debug.Log("beeuilding!");
+            }
+        }
+        
     }
     public MapHoneycomb(bool display, Vector2 position, bool capped)
     {
@@ -51,6 +64,7 @@ public class MapHoneycomb
     }
 
     public void SetCapped(bool capped) { this.capped = capped; }
+    public bool GetCapped() { return capped; }
 
     public void SetDepth(int depth)
     {
@@ -67,8 +81,8 @@ public class MapHoneycomb
             
             if (isFloor)
             {
-                if(Map.StaticMap.DisplayFloor)honeycomb = Map.GetHoneycombChamberFloor(AreaType);
-                //honeycomb.GetComponent<HoneycombCell>().SetCapColor(color);
+                if(Map.StaticMap.DisplayFloor)
+                    honeycomb = Map.GetHoneycombChamberFloor(AreaType);
             }
             else if((depth < 5 || depth < 7 &&  !isLargeLoc ) || ignoreLarge && !beeuilding)
             {
@@ -80,7 +94,7 @@ public class MapHoneycomb
             }
             else if (beeuilding)
             {
-                health = beeuildingHealth;
+                //health = beeuildingHealth;
                 honeycomb = Map.GetBeeCity();
             }
             else if (isLargeLoc)
@@ -93,9 +107,9 @@ public class MapHoneycomb
             {
                 visible = true;
                 honeycomb.transform.position = position;
-                honeycomb.GetComponent<Honeycomb>().honeyGrid = this;
+                honeycomb.GetComponent<Honeycomb>().mapHoneycomb = this;
                 honeycomb.SetActive(true);
-                honeycomb.GetComponent<Honeycomb>().LocationType = LocationType;
+                //honeycomb.GetComponent<Honeycomb>().LocationType = LocationType;
                 if (depth <= 2) capped = false;
                 if (isFloor) capped = true;
                 else
@@ -104,22 +118,7 @@ public class MapHoneycomb
                     //else honeycomb.GetComponent<Collider2D>().enabled = false;
                 }
 
-                
-
-                if (beeuilding && !isLargeHoneycomb && !isFloor) honeycomb.GetComponent<HoneycombTower>().SetupBeeTower();
-                else 
-                {
-                    honeycomb.GetComponent<HoneycombCell>().SetCapped(capped);
-                    //if (depth <= 3 && !isFloor)
-                    //{
-                    //    honeycomb.GetComponent<HoneycombCell>().HoneycombBase.SetActive(true);
-                    //    honeycomb.GetComponent<HoneycombCell>().HoneycombBase.transform.parent = Map.StaticMap.HoneycombLayers[0];
-                        
-                    //}
-                    //honeycomb.transform.parent = Map.StaticMap.HoneycombLayers[1];
-                    //honeycomb.transform.localPosition = honeycomb.transform.localPosition * Map.StaticMap.HoneycombLayers[1].localScale.x;
-
-                }
+                honeycomb.GetComponent<Honeycomb>().SetupHoneycomb();
             }
 
         }
@@ -185,17 +184,51 @@ public class MapHoneycomb
             Debug.LogWarning($"MapHoneycomb.setupEnemyTrigger: EnemyTrigger missing");
     }
 
+    //public void DamageHoneycomb(int depth, HoneycombTypes.Areas newArea, HoneycombTypes.Variety newVariety)
+    //{
+    //    if (!beeuilding && display && depth < this.depth)
+    //    {
+    //        HideHoneycomb();
+    //        SetDepth(depth);
+
+    //        if (visible)
+    //        {
+    //            //LocationType = newVariety;
+    //            //isFloor = true;
+    //            //AreaType = newArea;
+    //            //display = true;
+
+    //            DisplayHoneycomb();
+    //        }
+    //        if ((depth <= Map.StaticMap.TunnelDestructionDepth || (isLargeLoc || beeuilding)) && honeycomb)
+    //            DamageAdjecentHoneycomb(depth + 1, newArea, newVariety);
+    //    }
+
+    //}
+
     public void DamageHoneycomb(int depth)
     {
         if (!beeuilding && display && depth < this.depth)
         {
             HideHoneycomb();
             SetDepth(depth);
-            
-            if(visible) DisplayHoneycomb();
+
+            if (visible) DisplayHoneycomb();
             if ((depth <= Map.StaticMap.TunnelDestructionDepth || (isLargeLoc || beeuilding)) && honeycomb)
-                honeycomb.GetComponent<Honeycomb>().DamageAdjecentHoneycomb(depth + 1); 
+                DamageAdjecentHoneycomb(depth + 1);
         }
-        
+
     }
+
+    public void DamageAdjecentHoneycomb(int depth)
+    {
+        HoneycombPos hexPos = Utility.Honeycomb.WorldPointToHoneycombGrid(position);
+        Map.StaticMap.GetHoneycomb(hexPos.GetAdjecentHoneycomb(0, 1)).DamageHoneycomb(depth);
+        Map.StaticMap.GetHoneycomb(hexPos.GetAdjecentHoneycomb(1, 1)).DamageHoneycomb(depth);
+        Map.StaticMap.GetHoneycomb(hexPos.GetAdjecentHoneycomb(1, -1)).DamageHoneycomb(depth);
+        Map.StaticMap.GetHoneycomb(hexPos.GetAdjecentHoneycomb(0, -1)).DamageHoneycomb(depth);
+        Map.StaticMap.GetHoneycomb(hexPos.GetAdjecentHoneycomb(-1, -1)).DamageHoneycomb(depth);
+        Map.StaticMap.GetHoneycomb(hexPos.GetAdjecentHoneycomb(-1, 1)).DamageHoneycomb(depth);
+    }
+
 }

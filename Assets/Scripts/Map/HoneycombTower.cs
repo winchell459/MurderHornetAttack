@@ -18,7 +18,7 @@ public class HoneycombTower : Honeycomb
     private void Start()
     {
         lastSpawn = Time.time;
-        if (HiveCastle) SetupBeeTower();
+        if (HiveCastle) SetupHoneycomb();
 
     }
 
@@ -29,7 +29,7 @@ public class HoneycombTower : Honeycomb
         if (!player) player = LevelHandler.singleton.Player ? LevelHandler.singleton.Player.gameObject.GetComponent<HornetController>() : null;
         if (lastSpawn + spawnRate < Time.time && player && Vector2.Distance(player.transform.position, transform.position) <= spawnDistance)
         {
-            if (lh.HoneycombTowerSpawnEnemy(honeyGrid))
+            if (lh.HoneycombTowerSpawnEnemy(mapHoneycomb))
             {
                 SpawnBee(player.gameObject);
             }
@@ -53,13 +53,15 @@ public class HoneycombTower : Honeycomb
     }
     public override void DamageHoneycomb(float damage)
     {
-        if (honeyGrid.health <= 0) return;
-        honeyGrid.health -= damage;
-        if(honeyGrid.health <= 0)
+        if (mapHoneycomb.health <= 0) return;
+        mapHoneycomb.health -= damage;
+        Debug.Log($"beeuildingHealth: {mapHoneycomb.health}");
+        if(mapHoneycomb.health <= 0)
         {
             FindObjectOfType<LevelHandler>().BeeuildingDestroyed(transform.position);
-            honeyGrid.HideHoneycomb();
-            honeyGrid.SetDepth(0);
+            mapHoneycomb.HideHoneycomb();
+            mapHoneycomb.SetDepth(0);
+            mapHoneycomb.display = false;
         }
     }
 
@@ -77,7 +79,8 @@ public class HoneycombTower : Honeycomb
         }
     }
 
-    public void SetupBeeTower()
+    //public void SetupBeeTower()
+    public override void SetupHoneycomb()
     {
         if(layers == null) layers = Map.StaticMap.HoneycombLayers;
         if(HiveCastle)

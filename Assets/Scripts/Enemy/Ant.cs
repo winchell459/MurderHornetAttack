@@ -133,7 +133,7 @@ public class Ant : Insect
 
     private void DamageHoneycomb(Honeycomb honeycomb)
     {
-        honeycomb.DamageHoneycomb(float.PositiveInfinity);
+        honeycomb.DamageHoneycomb(float.PositiveInfinity, HoneycombTypes.Areas.Farm, HoneycombTypes.Variety.Path);
     }
     public override void TakeDamage(float damage)
     {

@@ -8,19 +8,20 @@ public class HoneycombCell : Honeycomb
     public GameObject CapRing;
     public Collider2D EnemyTrigger;
     
-    private bool capped = true;
+    //private bool capped = true;
 
     public GameObject HoneycombBase;
 
     public override void DestroyHoneycomb()
     {
-        honeyGrid.DestroyHoneycomb();
+        mapHoneycomb.DestroyHoneycomb();
 
     }
-    public void SetCapped(bool capped)
+    //public void SetCapped(bool capped)
+    public override void SetupHoneycomb()
     {
-        this.capped = capped;
-        if (capped && Cap)
+        //this.capped = capped;
+        if (mapHoneycomb.GetCapped() && Cap)
         {
             Cap.SetActive(true);
             
@@ -36,20 +37,22 @@ public class HoneycombCell : Honeycomb
 
     public override void DamageHoneycomb(float damage)
     {
-        int depth = honeyGrid.GetDepth();
-        if (!capped) DestroyHoneycomb();
-        else if(damage > depth)
+        int depth = mapHoneycomb.GetDepth();
+        if (!mapHoneycomb.GetCapped()) DestroyHoneycomb();
+        else if (damage > depth)
         {
             //depth -= 1;
             //honeyGrid.SetDepth(depth);
             //if (depth < 4) SetCapped(capped = false);
-            if(depth > 2)
+            if (depth > 2)
             {
-                DamageAdjecentHoneycomb(1);
+                mapHoneycomb.DamageAdjecentHoneycomb(1);
             }
             DestroyHoneycomb();
         }
     }
+
+
 
     public void SetCapColor(Color color)
     {

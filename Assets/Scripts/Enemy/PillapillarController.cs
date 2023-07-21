@@ -68,7 +68,8 @@ public class PillapillarController : Insect
                 if (PathType == PathTypes.Random)
                 {
                     newTarget = getNewTarget();
-                    Path.Add(newTarget);
+                    if(newTarget != Vector2.zero)
+                        Path.Add(newTarget);
                 }
                 else
                 {
@@ -179,7 +180,7 @@ public class PillapillarController : Insect
         if (!Head)
         {
             List<Vector2> path = new List<Vector2>();
-            for(int i = 0; i <= startIndex; i+= 1)
+            for(int i = 0; i <= startIndex && i < Path.Count; i+= 1)
             {
                 path.Add(Path[i]);
             }
@@ -203,7 +204,7 @@ public class PillapillarController : Insect
         if (!Head)
         {
             HoneycombPos snakeHex = Utility.Honeycomb.WorldPointToHoneycombGrid(transform.position);
-            GameObject player = LevelHandler.singleton.Player? LevelHandler.singleton.Player.gameObject : null;//GameObject.FindGameObjectWithTag("Player");
+            GameObject player = LevelHandler.singleton.Player? LevelHandler.singleton.Player.gameObject : null;
             if (player)
             {
                 HoneycombPos playerHex = Utility.Honeycomb.WorldPointToHoneycombGrid(player.transform.position);
@@ -214,8 +215,8 @@ public class PillapillarController : Insect
 
                 if (true && player && Utility.Honeycomb.DistanceBetweenHoneycomb(playerHex, snakeHex) < AttackRadius && Map.StaticMap.GetHoneycomb((int)playerHex.x, (int)playerHex.y).LocationType == HoneycombTypes.Variety.Chamber)
                 {
-                    HoneycombPos playerGridHex = playerHex;// Utility.WorldPointToHoneycombGrid(player.transform.position);
-                    HoneycombPos startGridHex = snakeHex; // Utility.WorldPointToHoneycombGrid(transform.position);
+                    HoneycombPos playerGridHex = playerHex;
+                    HoneycombPos startGridHex = snakeHex; 
                     Vector2 playerGridPos = findPathToHoneycomb(startGridHex, playerGridHex);
                     return playerGridPos;
                 }
@@ -492,6 +493,9 @@ public class PillapillarController : Insect
                 TakeDamage(1);
             }
             Destroy(collision.gameObject);
+        }else if (collision.CompareTag("Honeycomb"))
+        {
+            collision.GetComponent<Honeycomb>().DamageHoneycomb(float.PositiveInfinity, HoneycombTypes.Areas.Garden, HoneycombTypes.Variety.Chamber);
         }
     }
 
