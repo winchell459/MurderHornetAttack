@@ -18,7 +18,7 @@ public class MapHoneycomb
     
     private int depth = int.MaxValue; //roughly the number of honeycombs away from a void
 
-    public bool isLargeLoc = false;
+    private bool isLargeLoc = false;
 
     private bool isLargeHoneycomb;
     private bool beeuilding;
@@ -66,13 +66,11 @@ public class MapHoneycomb
     public void SetCapped(bool capped) { this.capped = capped; }
     public bool GetCapped() { return capped; }
 
-    public void SetDepth(int depth)
-    {
-        this.depth = depth;
-    }
+    public void SetDepth(int depth){ this.depth = depth; }
     public int GetDepth() { return depth; }
 
     bool ignoreLarge = false; //---------------------------------------------------------------ignoreLarge---------------------------------------------------------------
+
     public void DisplayHoneycomb()
     {
         visited = true;

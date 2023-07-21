@@ -20,7 +20,7 @@ public class HornetPlasm : MonoBehaviour
             else
             {
                 //HoneycombPos hexPos = Utility.Honeycomb.WorldPointToHoneycombGrid(collision.GetComponent<Honeycomb>().mapHoneycomb.position);
-                Debug.Log($"plasm hit: {collision.name}");
+                //Debug.Log($"plasm hit: {collision.name}");
                 collision.GetComponent<Honeycomb>().DamageHoneycomb(Damage);
 
                 GameManager.TerrainHit();

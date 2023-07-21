@@ -134,7 +134,7 @@ namespace Utility
         /// </summary>
         /// <param name="start"></param>
         /// <param name="dir"></param>
-        /// <param name="honeyDistance"></param>
+        /// <param name="honeyDistance">random distance to travel</param>
         /// <returns></returns>
         public static HoneycombPos GetHoneycombDirection(HoneycombPos start, HoneycombDir dir, int honeyDistance)
         {
@@ -142,7 +142,7 @@ namespace Utility
             HoneycombPos end = start;
             end.x += dir.x * honeyDistance;
             if (dir.x == 0) end.y += dir.y * honeyDistance;
-            else if (start.x % 2 == 0 && dir.y > 0 || start.x % 2 != 0 && dir.y < 0)
+            else if (start.x % 2 == 0 && dir.y > 0 || start.x % 2 != 0 && dir.y < 0) //moving right
             {
                 //end.y += Mathf.Sign(dir.y) * Mathf.Ceil((float)honeyDistance / 2);
                 end.y += (int)(Mathf.Sign(dir.y) * Mathf.Ceil((float)honeyDistance / 2));
@@ -160,7 +160,7 @@ namespace Utility
         {
             HoneycombDir honeyDir = new HoneycombDir();
             if (worldDir.x > 0) honeyDir.x = 1;
-            else if (worldDir.x < 0) honeyDir.x = 1;
+            else if (worldDir.x < 0) honeyDir.x = -1;
             if (worldDir.y > 0) honeyDir.y = 1;
             else if (worldDir.y < 0) honeyDir.y = -1;
             return honeyDir;

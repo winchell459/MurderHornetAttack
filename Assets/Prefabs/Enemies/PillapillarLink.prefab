@@ -148,6 +148,9 @@ MonoBehaviour:
   Path: []
   TargetThreshold: 0.01
   Velocity: 4
+  Direction:
+    x: -1
+    y: 1
   headIndex: 0
   SnakeLinkPrefab: {fileID: 2010293437201622713}
   SpawnRate: 3
@@ -155,9 +158,28 @@ MonoBehaviour:
   AttackRadius: 7.5
   PathType: 0
   MyPath:
-  - Distance: 9
-  - Distance: 9
-  - Distance: 9
-  - Distance: 9
-  - Distance: 9
-  - Distance: 9
+  - Direction:
+      x: 0
+      y: 0
+    Distance: 9
+  - Direction:
+      x: 0
+      y: 0
+    Distance: 9
+  - Direction:
+      x: 0
+      y: 0
+    Distance: 9
+  - Direction:
+      x: 0
+      y: 0
+    Distance: 9
+  - Direction:
+      x: 0
+      y: 0
+    Distance: 9
+  - Direction:
+      x: 0
+      y: 0
+    Distance: 9
+  paused: 0

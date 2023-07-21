@@ -11,7 +11,14 @@ public class PillapillarController : Insect
     public float TargetThreshold = 0.01f;
     public float Velocity = 5;
     public HoneycombDir Direction = new HoneycombDir(-1,1);
-    private HoneycombDir[] Directions = { new HoneycombDir(-1, -1), new HoneycombDir(0, -1), new HoneycombDir(1, 1), new HoneycombDir(1,-1), new HoneycombDir(0,1), new HoneycombDir(-1,1)};
+    private HoneycombDir[] Directions = {
+        new HoneycombDir(0, 1),
+        new HoneycombDir(1, 1),
+        new HoneycombDir(1, -1),
+        new HoneycombDir(0, -1),
+        new HoneycombDir(-1, -1),
+        new HoneycombDir(-1, 1)
+    };
 
     public int headIndex = 0;
     public GameObject SnakeLinkPrefab;
@@ -26,7 +33,8 @@ public class PillapillarController : Insect
     public enum PathTypes
     {
         Random,
-        Pattern
+        Pattern,
+        Debug
     }
     public PathTypes PathType;
 
@@ -35,12 +43,12 @@ public class PillapillarController : Insect
     void Start()
     {
         
-        if (PathType == PathTypes.Random)
+        if (PathType == PathTypes.Random || PathType == PathTypes.Debug)
         {
             Target = Utility.Honeycomb.HoneycombGridToWorldPostion((Utility.Honeycomb.WorldPointToHoneycombGrid(transform.position)));
             Path.Add(Target);
         }
-        else
+        else 
         {
             setPath(MyPath);
         }
@@ -50,12 +58,14 @@ public class PillapillarController : Insect
         //Debug.Log(Target);
     }
 
+    [SerializeField]bool paused = false;
     // Update is called once per frame
     void Update()
     {
 
-        if (!Head) // -> is Head
+        if (!Head && !paused) // -> is Head
         {
+            
             if (Vector2.Distance(transform.position, Target) > Velocity * Time.deltaTime)
             {
                 transform.position = Vector2.MoveTowards(transform.position, Target, Velocity * Time.deltaTime);
@@ -69,18 +79,43 @@ public class PillapillarController : Insect
                 {
                     newTarget = getNewTarget();
                     if(newTarget != Vector2.zero)
+                    {
                         Path.Add(newTarget);
+                    }
+                    else
+                    {
+                        //pause pillapillar
+                        paused = true;
+                    }
                 }
-                else
+                else if (PathType == PathTypes.Pattern)
                 {
                     headIndex = (headIndex + 1) % Path.Count;
                     newTarget = Path[headIndex];
+                }
+                else
+                {
+                    if(headIndex == Path.Count - 1)
+                    {
+                        paused = true;
+                        return;
+                    }
+                    else
+                    {
+                        headIndex++;
+                        paused = false;
+                    }
+                    
+                    newTarget = Path[headIndex];
+                    
                 }
                     
                 
 
                 transform.position = secondDistance * (newTarget - Target).normalized + Target;
                 Target = newTarget;
+
+                Direction = Utility.Honeycomb.WorldDirToHoneycombDir((Path[headIndex] - (Vector2)transform.position).normalized);
 
                 pointSnake();
                 
@@ -89,17 +124,43 @@ public class PillapillarController : Insect
                 testingSpawnTail();
 
             }
+            SetTailPosition();
 
             for (int i = 1; i < Path.Count; i++)
             {
                 Debug.DrawLine(Path[i - 1], Path[i], Color.red);
             }
 
-            SetTailPosition();
+            
+        }
+        else if (!Head && paused && PathType == PathTypes.Debug)
+        {
+            GetNextDebugTarget();
+            //headIndex = Path.Count - 1;
         }
 
-        
-        
+
+
+    }
+
+    private Vector2 GetNextDebugTarget()
+    {
+        Vector2 target = transform.position;
+        if (Input.GetMouseButtonDown(0))
+        {
+            target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            HoneycombPos clickHex = Utility.Honeycomb.WorldPointToHoneycombGrid(target);
+            HoneycombPos snakeHex = Utility.Honeycomb.WorldPointToHoneycombGrid(transform.position);
+            target = findPathToHoneycomb(snakeHex, clickHex);
+
+            Path.Add(target);
+            paused = false;
+        }
+        else
+        {
+            paused = true;
+        }
+        return target;
     }
     private void pointSnake()
     {
@@ -306,6 +367,7 @@ public class PillapillarController : Insect
             {
                 break;
             }
+            if (index == Directions.Length - 1) Debug.LogWarning("Error finding new direction");
         }
         if (turns > 0) index = (index + 1) % Directions.Length;
         else
@@ -313,11 +375,16 @@ public class PillapillarController : Insect
             index -= 1;
             if (index < 0) index = Directions.Length - 1;
         }
+        
         newDir = Directions[index];
 
-        turns = turns - (int)Mathf.Sign(turns) *1;
+        turns = turns - (int)Mathf.Sign(turns);
         if (turns != 0) return GetNewDirection(newDir, turns);
-        else return newDir;
+        else
+        {
+            Debug.Log($"current: {current} newDir: {newDir}");
+            return newDir;
+        }
     }
 
     private Vector2 findPathToHoneycomb(HoneycombPos startHoneycomb, HoneycombPos targetHoneycomb)
@@ -369,12 +436,14 @@ public class PillapillarController : Insect
             HoneycombDir dirTwo = new HoneycombDir(-1, -1);
             closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb);
         }
+        //directly up
         else if (startHoneycomb.x == targetHoneycomb.x && startHoneycomb.y < targetHoneycomb.y)
         {
             // (0,1)
             HoneycombPos hexOne = FindShortestPath(startHoneycomb, new HoneycombDir(0,1), targetHoneycomb);
             if (Utility.Honeycomb.DistanceBetweenHoneycomb(closestHex, targetHoneycomb) > Utility.Honeycomb.DistanceBetweenHoneycomb(hexOne, targetHoneycomb)) closestHex = hexOne;
         }
+        //directly below
         else if (startHoneycomb.x == targetHoneycomb.x && startHoneycomb.y > targetHoneycomb.y)
         {
             // (0,-1)
@@ -468,6 +537,7 @@ public class PillapillarController : Insect
 
     private void OnTriggerStay2D(Collider2D collision)
     {
+        //if (paused) return;
         if (collision.GetComponent<PillapillarController>())
         {
             PillapillarController link = collision.GetComponent<PillapillarController>();

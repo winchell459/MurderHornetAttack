@@ -2,8 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class HoneycombDir 
 {
+    public override string ToString()
+    {
+        return $"({x},{y})";
+    }
     public int x;
     public int y;
     public Vector2 vector2 { get { return new Vector2(x, y); } }

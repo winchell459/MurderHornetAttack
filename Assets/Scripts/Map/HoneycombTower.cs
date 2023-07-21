@@ -53,12 +53,12 @@ public class HoneycombTower : Honeycomb
     }
     public override void DamageHoneycomb(float damage)
     {
-        if (mapHoneycomb.health <= 0) return;
+        //if (mapHoneycomb.health <= 0) return;
         mapHoneycomb.health -= damage;
         Debug.Log($"beeuildingHealth: {mapHoneycomb.health}");
         if(mapHoneycomb.health <= 0)
         {
-            FindObjectOfType<LevelHandler>().BeeuildingDestroyed(transform.position);
+            LevelHandler.singleton.BeeuildingDestroyed(transform.position);
             mapHoneycomb.HideHoneycomb();
             mapHoneycomb.SetDepth(0);
             mapHoneycomb.display = false;
@@ -67,7 +67,7 @@ public class HoneycombTower : Honeycomb
 
     public override void DestroyHoneycomb()
     {
-        throw new System.NotImplementedException();
+        SpawnBee(player.gameObject);
     }
 
     public override void HideHoneycomb()
