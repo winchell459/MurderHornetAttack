@@ -75,7 +75,7 @@ public class PillapillarController : Insect, IChunkObject
             }
             SetTailPosition();
         }
-        else if (!Head && paused && PathType == PathTypes.Debug)
+        else if (!Head /*&& paused*/ && PathType == PathTypes.Debug)
         {
             GetNextDebugTarget();
         }
@@ -170,24 +170,56 @@ public class PillapillarController : Insect, IChunkObject
         pointSnake();
     }
 
+    Vector2 debugTarget = Vector2.zero;
+    Transform debugTargetTransform = null;
     private Vector2 GetNextDebugTarget()
     {
-        Vector2 target = transform.position;
+        Vector3 target = transform.position;
         if (Input.GetMouseButton(0))
         {
             target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            HoneycombPos clickHex = Utility.Honeycomb.WorldPointToHoneycombGrid(target);
-            HoneycombPos snakeHex = Utility.Honeycomb.WorldPointToHoneycombGrid(transform.position);
-            target = Utility.HoneycombPathfinding.FindPathToHoneycomb(snakeHex, clickHex, GetPillapillarsPos());
-            Debug.Log($"startHex:{snakeHex} clickHex{clickHex} targetHex:{Utility.Honeycomb.WorldPointToHoneycombGrid(target)}");
+            debugTarget = target;
 
-            Path.Add(target);
-            paused = false;
+            RaycastHit2D hit = Physics2D.Raycast(target, Vector2.zero);
+            if (hit && hit.transform.GetComponent<Insect>())
+            {
+                debugTargetTransform = hit.transform;
+            }
+
+            target = SetDebugTarget(target);
+
+            
+        }
+        else if (debugTargetTransform)
+        {
+            target = SetDebugTarget(debugTargetTransform.position);
+        }
+        else if (debugTarget != Vector2.zero)
+        {
+            if(Vector2.Distance(transform.position, debugTarget) > 1)
+            {
+                target = SetDebugTarget(debugTarget);
+            }
+            else
+            {
+                debugTarget = Vector2.zero;
+            }
         }
         else
         {
             paused = true;
         }
+        return target;
+    }
+    private Vector2 SetDebugTarget(Vector2 debugTarget)
+    {
+        HoneycombPos clickHex = Utility.Honeycomb.WorldPointToHoneycombGrid(debugTarget);
+        HoneycombPos snakeHex = Utility.Honeycomb.WorldPointToHoneycombGrid(transform.position);
+        Vector2 target = Utility.HoneycombPathfinding.FindPathToHoneycomb(snakeHex, clickHex, GetPillapillarsPos());
+        Debug.Log($"startHex:{snakeHex} clickHex{clickHex} targetHex:{Utility.Honeycomb.WorldPointToHoneycombGrid(target)}");
+
+        Path.Add(target);
+        paused = false;
         return target;
     }
     private void pointSnake()
@@ -463,14 +495,16 @@ public class PillapillarController : Insect, IChunkObject
         {
             PillapillarController tail = Tail.Tail;
             egg.PillapillarSuicide(Tail);
-            Destroy(Tail.gameObject);
+            Tail.HandleLinkDeath();
+            //Destroy(Tail.gameObject);
             Tail = tail;
         }
         while (Head)
         {
             PillapillarController head = Head.Head;
             egg.PillapillarSuicide(Head);
-            Destroy(Head.gameObject);
+            Head.HandleLinkDeath();
+            //Destroy(Head.gameObject);
             Head = head;
         }
         Debug.Log("Destroy Snake");
