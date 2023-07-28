@@ -408,7 +408,7 @@ public class MapGenerator : MonoBehaviour
                 {
                     if (Utility.Utility.Random(0, 10) < 1)
                     {
-                        mhc.AddEnemy(true);
+                        mhc.SetHasEnemy(true);
                         //Debug.Log("Enemy Added");
                     }
                 }

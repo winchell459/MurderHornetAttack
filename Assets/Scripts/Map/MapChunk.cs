@@ -15,6 +15,7 @@ public class MapChunk
 
     private List<Insect> enemiesInChunk = new List<Insect>();
     private List<IChunkObject> chunkObjects = new List<IChunkObject>();
+    private List<IChunkObject> transientChunkObjects = new List<IChunkObject>();
 
     public Vector2 mapOffset;
     public Vector2 ChunkIndex;
@@ -108,6 +109,24 @@ public class MapChunk
             {
                 chunkObject.Activate();
             }
+
+            for (int i = transientChunkObjects.Count - 1; i >= 0; i -= 1)
+            {
+                IChunkObject tco = transientChunkObjects[i];
+                if (tco != null)
+                {
+                    MapChunk chunk = Utility.Honeycomb.GetMapChunk(tco.GameObject().transform.position);
+                    if (chunk == this)
+                    {
+                        tco.Activate();
+                    }
+                    else
+                    {
+                        chunk.AddTransientChunkObject(tco);
+                        transientChunkObjects.RemoveAt(i);
+                    }
+                }
+            }
         }
 
     }
@@ -139,8 +158,26 @@ public class MapChunk
                         chunk.AddEnemyToChunk(enemiesInChunk[i]);
                         enemiesInChunk.RemoveAt(i);
                     }
-                }
+                }else enemiesInChunk.RemoveAt(i);
 
+            }
+
+            for(int i = transientChunkObjects.Count - 1; i >= 0; i -= 1)
+            {
+                IChunkObject tco = transientChunkObjects[i];
+                if (tco.GameObject())
+                {
+                    MapChunk chunk = Utility.Honeycomb.GetMapChunk(tco.GameObject().transform.position);
+                    if (chunk == this)
+                    {
+                        tco.Deactivate();
+                    }
+                    else
+                    {
+                        chunk.AddTransientChunkObject(tco);
+                        transientChunkObjects.RemoveAt(i);
+                    }
+                }
             }
 
             foreach (IChunkObject chunkObject in chunkObjects)
@@ -175,6 +212,19 @@ public class MapChunk
         chunkObjects.Add(chunkObject);
         if (Visible) chunkObject.Activate();
         else chunkObject.Deactivate();
+    }
+
+    public void AddTransientChunkObject(IChunkObject chunkObject)
+    {
+        transientChunkObjects.Add(chunkObject);
+        chunkObject.SetMyChunk(this);
+        if (Visible) chunkObject.Activate();
+        else chunkObject.Deactivate();
+    }
+
+    public void RemoveTransientChunkObject(IChunkObject chunkObject)
+    {
+        transientChunkObjects.Remove(chunkObject);
     }
 
     public MapHoneycomb GetMapHoneycomb(int col, int row)

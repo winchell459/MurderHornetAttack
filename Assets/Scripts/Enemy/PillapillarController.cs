@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PillapillarController : Insect
+public class PillapillarController : Insect, IChunkObject
 {
     public PillapillarController Head, Tail;
     public PillapillarEgg egg;
@@ -11,14 +11,7 @@ public class PillapillarController : Insect
     public float TargetThreshold = 0.01f;
     public float Velocity = 5;
     public HoneycombDir Direction = new HoneycombDir(-1,1);
-    private HoneycombDir[] Directions = {
-        new HoneycombDir(0, 1),
-        new HoneycombDir(1, 1),
-        new HoneycombDir(1, -1),
-        new HoneycombDir(0, -1),
-        new HoneycombDir(-1, -1),
-        new HoneycombDir(-1, 1)
-    };
+    
 
     public int headIndex = 0;
     public GameObject SnakeLinkPrefab;
@@ -29,6 +22,7 @@ public class PillapillarController : Insect
     public float SnakeSpacing = 1f;
 
     public float AttackRadius = 5f;
+    public float roamingRadius = 10f;
 
     public enum PathTypes
     {
@@ -64,94 +58,128 @@ public class PillapillarController : Insect
     {
 
         if (!Head && !paused) // -> is Head
-        {
-            
+        {  
             if (Vector2.Distance(transform.position, Target) > Velocity * Time.deltaTime)
             {
                 transform.position = Vector2.MoveTowards(transform.position, Target, Velocity * Time.deltaTime);
             }
+            else if (headIndex <= Path.Count - 2)
+            {
+                headIndex = (headIndex + 1);
+                HandleNewTarget(Path[headIndex]);
+            }
             else
             {
-                float secondDistance = Velocity * Time.deltaTime - Vector2.Distance(transform.position, Target);
-
-                Vector2 newTarget;
-                if (PathType == PathTypes.Random)
-                {
-                    newTarget = getNewTarget();
-                    if(newTarget != Vector2.zero)
-                    {
-                        Path.Add(newTarget);
-                    }
-                    else
-                    {
-                        //pause pillapillar
-                        paused = true;
-                    }
-                }
-                else if (PathType == PathTypes.Pattern)
-                {
-                    headIndex = (headIndex + 1) % Path.Count;
-                    newTarget = Path[headIndex];
-                }
-                else
-                {
-                    if(headIndex == Path.Count - 1)
-                    {
-                        paused = true;
-                        return;
-                    }
-                    else
-                    {
-                        headIndex++;
-                        paused = false;
-                    }
-                    
-                    newTarget = Path[headIndex];
-                    
-                }
-                    
-                
-
-                transform.position = secondDistance * (newTarget - Target).normalized + Target;
-                Target = newTarget;
-
-                Direction = Utility.Honeycomb.WorldDirToHoneycombDir((Path[headIndex] - (Vector2)transform.position).normalized);
-
-                pointSnake();
-                
-
-                //Testing Spawn Tail
+                HandleGetNewTarget();
                 testingSpawnTail();
-
             }
             SetTailPosition();
-
-            for (int i = 1; i < Path.Count; i++)
-            {
-                Debug.DrawLine(Path[i - 1], Path[i], Color.red);
-            }
-
-            
         }
         else if (!Head && paused && PathType == PathTypes.Debug)
         {
             GetNextDebugTarget();
-            //headIndex = Path.Count - 1;
         }
 
+        //debug display path in scene view
+        if (!Head)
+        {
+            int lineCount = Mathf.Min(Path.Count, 50);
+            for (int i = 1 + Path.Count - lineCount; i < Path.Count; i++)
+            {
+                Debug.DrawLine(Path[i - 1], Path[i], Color.red);
+            }
+        }
 
+    }
+    private void HandleGetNewTarget()
+    {
+        Vector2 newTarget;
+        if (PathType == PathTypes.Random)
+        {
+            newTarget = getNewTarget();
+            if (newTarget != Vector2.zero)
+            {
+                Path.Add(newTarget);
+                headIndex += 1;
+            }
+            else
+            {
+                //pause pillapillar
+                paused = true;
 
+                HoneycombPos snakeHex = Utility.Honeycomb.WorldPointToHoneycombGrid(transform.position);
+                newTarget = Utility.HoneycombPathfinding.GetHoneycombInDirection(snakeHex, Direction, 1).worldPos;
+                Debug.LogWarning("Pillapillar is Trapped!");
+
+                Path.Add(newTarget);
+                headIndex += 1;
+            }
+        }
+        else if (PathType == PathTypes.Pattern)
+        {
+            headIndex = (headIndex + 1) % Path.Count;
+            newTarget = Path[headIndex];
+        }
+        else
+        {
+            if (headIndex == Path.Count - 1)
+            {
+                paused = true;
+                return;
+            }
+            else
+            {
+                headIndex++;
+                paused = false;
+            }
+
+            newTarget = Path[headIndex];
+
+        }
+
+        HandleNewTarget(newTarget);
+    }
+    private void HandleNewTarget(Vector2 newTarget)
+    {
+        float remainingDistance = Velocity * Time.deltaTime - Vector2.Distance(transform.position, Target);
+        Vector2 newPos = remainingDistance * (newTarget - Target).normalized + Target;
+
+        if (headIndex >= Path.Count || headIndex < 0) Debug.LogWarning($"headIndex/Path.Count: {headIndex}/{Path.Count}");
+
+        HoneycombDir newDirection = Utility.Honeycomb.WorldDirToHoneycombDir((Path[headIndex] - newPos).normalized);
+        if (Utility.HoneycombPathfinding.CheckReverseDirection(newDirection,Direction))
+        {
+            Debug.LogWarning("Reversed Direction");
+            newTarget = getRandomLoc();
+            if(newTarget == Vector2.zero)
+            {
+                //move foward one hex
+                HoneycombPos snakeHex = Utility.Honeycomb.WorldPointToHoneycombGrid(transform.position);
+                newTarget = Utility.HoneycombPathfinding.GetHoneycombInDirection(snakeHex, Direction, 1).worldPos;
+                Debug.LogWarning("Pillapillar is Trapped!");
+            }
+            Path[Path.Count - 1] = newTarget;
+            newPos = remainingDistance * (newTarget - Target).normalized + Target;
+            newDirection = Utility.Honeycomb.WorldDirToHoneycombDir((Path[headIndex] - newPos).normalized);
+        }
+
+        transform.position = newPos;
+        Target = newTarget;
+        Direction = newDirection;
+
+        pointSnake();
     }
 
     private Vector2 GetNextDebugTarget()
     {
         Vector2 target = transform.position;
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
             target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             HoneycombPos clickHex = Utility.Honeycomb.WorldPointToHoneycombGrid(target);
             HoneycombPos snakeHex = Utility.Honeycomb.WorldPointToHoneycombGrid(transform.position);
-            target = findPathToHoneycomb(snakeHex, clickHex);
+            target = Utility.HoneycombPathfinding.FindPathToHoneycomb(snakeHex, clickHex, GetPillapillarsPos());
+            Debug.Log($"startHex:{snakeHex} clickHex{clickHex} targetHex:{Utility.Honeycomb.WorldPointToHoneycombGrid(target)}");
 
             Path.Add(target);
             paused = false;
@@ -175,15 +203,20 @@ public class PillapillarController : Insect
             if(LevelHandler.singleton.PillapillerSpawnTail(this))spawnTail();
         }
     }
+    public static PillapillarController SpawnPillipallar(PillapillarEgg egg, Vector2 pos, Transform parent)
+    {
+        PillapillarController pillapillarLink = Instantiate(MapManager.singleton.SnakePrefab, pos, Quaternion.identity).GetComponent<PillapillarController>();
+        egg.PillapillarBornt(pillapillarLink);
+        pillapillarLink.transform.parent = parent;
+        Map.StaticMap.AddTransientChunkObject(pillapillarLink);
+        return pillapillarLink;
+    }
     private void spawnTail()
     {
         if (Tail) Tail.spawnTail();
         else
         {
-            PillapillarController tail = Instantiate(MapManager.singleton.SnakePrefab, transform.position - (-transform.right.normalized)*Time.deltaTime, Quaternion.identity).GetComponent<PillapillarController>();
-
-            egg.PillapillarBornt(tail);
-            
+            PillapillarController tail = SpawnPillipallar(egg, transform.position - (-transform.right.normalized)*Time.deltaTime, transform.parent);
 
             Tail = tail;
             tail.Head = this;
@@ -223,11 +256,11 @@ public class PillapillarController : Insect
     {
         Path.Clear();
         //Path.Add(Utility.HoneycombGridToWorldPostion((Utility.WorldToHoneycomb(transform.position))));
-        Target = Utility.Honeycomb.HoneycombGridToWorldPostion(Utility.Honeycomb.GetHoneycombDirection(Utility.Honeycomb.WorldPointToHoneycombGrid(transform.position), path[0].Direction, path[0].Distance));
+        Target = Utility.Honeycomb.HoneycombGridToWorldPostion(Utility.HoneycombPathfinding.GetHoneycombInDirection(Utility.Honeycomb.WorldPointToHoneycombGrid(transform.position), path[0].Direction, path[0].Distance));
         Path.Add(Target);
         for(int i = 1; i < path.Count; i += 1)
         {
-            Path.Add(Utility.Honeycomb.HoneycombGridToWorldPostion(Utility.Honeycomb.GetHoneycombDirection(Utility.Honeycomb.WorldPointToHoneycombGrid(Path[i-1]), path[i].Direction, path[i].Distance)));
+            Path.Add(Utility.Honeycomb.HoneycombGridToWorldPostion(Utility.HoneycombPathfinding.GetHoneycombInDirection(Utility.Honeycomb.WorldPointToHoneycombGrid(Path[i-1]), path[i].Direction, path[i].Distance)));
         }
         pointSnake();
     }
@@ -259,93 +292,142 @@ public class PillapillarController : Insect
         }
         else return Head.GetNextHeadTarget(headIndex);
     }
-    private Vector2 getNewTarget()
-    {
-        headIndex += 1;
-        if (!Head)
-        {
-            HoneycombPos snakeHex = Utility.Honeycomb.WorldPointToHoneycombGrid(transform.position);
-            GameObject player = LevelHandler.singleton.Player? LevelHandler.singleton.Player.gameObject : null;
-            if (player)
-            {
-                HoneycombPos playerHex = Utility.Honeycomb.WorldPointToHoneycombGrid(player.transform.position);
-                
-
-                //Debug.Log($"playerHex: {playerHex} {Map.StaticMap.GetHoneycomb((int)playerHex.x, (int)playerHex.y).LocationType.ToString()}");
-
-
-                if (true && player && Utility.Honeycomb.DistanceBetweenHoneycomb(playerHex, snakeHex) < AttackRadius && Map.StaticMap.GetHoneycomb((int)playerHex.x, (int)playerHex.y).LocationType == HoneycombTypes.Variety.Chamber)
-                {
-                    HoneycombPos playerGridHex = playerHex;
-                    HoneycombPos startGridHex = snakeHex; 
-                    Vector2 playerGridPos = findPathToHoneycomb(startGridHex, playerGridHex);
-                    return playerGridPos;
-                }
-                //else return getRandomLoc();
-            }
-            //else return getRandomLoc();
-            EnemyPhysics[] bees = GetClosestBee();
-            
-            if (bees.Length >  0 )
-            {
-                HoneycombPos beeHex = Utility.Honeycomb.WorldPointToHoneycombGrid(bees[0].transform.position);
-                if(Utility.Honeycomb.DistanceBetweenHoneycomb(beeHex, snakeHex) < AttackRadius)
-                    return findPathToHoneycomb(snakeHex, beeHex);
-            }
-            
-            return getRandomLoc();
-
-        }
-        else
-        {
-            // headIndex += 1;
-            return Head.GetNextHeadTarget(headIndex);
-        }
-    }
+    
 
     void FindFood()
     {
 
     }
 
-    int pathAttempts = 0;
+    private Vector2 getNewTarget()
+    {
+
+        if (!Head)
+        {
+            List<HoneycombPos> otherPos = GetPillapillarsPos();
+            HoneycombPos snakeHex = Utility.Honeycomb.WorldPointToHoneycombGrid(transform.position);
+            GameObject player = LevelHandler.singleton.Player ? LevelHandler.singleton.Player.gameObject : null;
+            if (player)
+            {
+                HoneycombPos playerHex = Utility.Honeycomb.WorldPointToHoneycombGrid(player.transform.position);
+                if (true && player && Utility.Honeycomb.DistanceBetweenHoneycomb(playerHex, snakeHex) < AttackRadius && Map.StaticMap.GetHoneycomb((int)playerHex.x, (int)playerHex.y).LocationType == HoneycombTypes.Variety.Chamber)
+                {
+                    HoneycombPos playerGridHex = playerHex;
+                    HoneycombPos startGridHex = snakeHex;
+                    Vector2 playerGridPos = Utility.HoneycombPathfinding.FindPathToHoneycomb(startGridHex, playerGridHex, otherPos);
+                    if (Utility.HoneycombPathfinding.CheckValidNewTarget(snakeHex.worldPos, playerGridPos, Direction))
+                    {
+                        Debug.Log("-------------- player target -----------------");
+                        return playerGridPos;
+                    }
+                    
+                }
+                
+            }
+            
+            EnemyPhysics[] bees = GetClosestBee();
+
+            if (bees.Length > 0)
+            {
+                foreach(EnemyPhysics bee in bees)
+                {
+                    HoneycombPos beeHex = Utility.Honeycomb.WorldPointToHoneycombGrid(bee.transform.position);
+                    if (Utility.Honeycomb.DistanceBetweenHoneycomb(beeHex, snakeHex) < AttackRadius * 2)
+                    {
+                        Vector2 beePos = Utility.HoneycombPathfinding.FindPathToHoneycomb(snakeHex, beeHex, otherPos);
+                        if (Utility.HoneycombPathfinding.CheckValidNewTarget(snakeHex.worldPos, beePos, Direction))
+                        {
+                            Debug.Log("-------------- bee target -----------------");
+                            return beePos;
+                        }
+                        
+                    }
+                }
+                
+
+            }
+
+            // ----------------------------- Return to Egg Radius or Trapped || Random ---------------------------------------
+            HoneycombPos eggHex = Utility.Honeycomb.WorldPointToHoneycombGrid(egg.transform.position);
+            Vector2 newTarget = getRandomLoc();
+            if (Utility.Honeycomb.DistanceBetweenHoneycomb(snakeHex, eggHex) > roamingRadius)
+            {
+                Debug.Log("-------------- return to egg -----------------");
+                newTarget = Utility.HoneycombPathfinding.FindPathToHoneycomb(snakeHex, eggHex, otherPos);
+            }
+            else
+            {
+                Debug.Log("-------------- random location target -----------------");
+                
+                if (newTarget == Vector2.zero)
+                {
+                    Debug.Log("-------------- return to egg -----------------");
+
+                    newTarget = Utility.HoneycombPathfinding.FindPathToHoneycomb(snakeHex, eggHex, otherPos);
+
+                }
+            }
+            return newTarget;
+
+        }
+        else
+        {
+            return Head.GetNextHeadTarget(headIndex);
+        }
+    }
+
     private Vector2 getRandomLoc()
     {
         Debug.Log("getRandomLoc");
-        int randDist = Random.Range(1, 4) * 3;
+        
         int ranDir = Random.Range(0, 2);
-        
-        if (ranDir == 0) Direction = GetNewDirection(Direction, 1);
-        else Direction = GetNewDirection(Direction, -1);
-        //Debug.Log("HoneyDir: " + Direction + " HoneyDist: " + randDist + " HoneyPos: " + Utility.WorldToHoneycomb(Target));
-        //Debug.Log("--------------------------- new Path Start----------------------------");
-        //List<MapHoneycomb> path = Utility.GetHoneycombPath(Utility.WorldPointToHoneycombGrid(Target), Direction, randDist);
-        //Debug.Log("path length: " + path.Count);
-        //Debug.Log("--------------------------- new Path Honeycombs----------------------------");
-        
-        MapHoneycomb newTarget = Utility.Honeycomb.GetHoneycombFreePath(Utility.Honeycomb.WorldPointToHoneycombGrid(Target), Direction, randDist, GetPillapillarsPos());
+        int otherDir = 0;
 
-        
+        MapHoneycomb newTarget;
+        List<HoneycombPos> otherPos = GetPillapillarsPos();
 
-        //Debug.Log("--------------------------- new Path End----------------------------");
-        //return Utility.HoneycombGridToWorldPostion( Utility.GetHoneycombDirection(Utility.WorldToHoneycomb(Target), Direction, randDist));
+        if(ranDir == 0)
+        {
+            otherDir = 1;
+            newTarget = GetRandomLoc(-1, otherPos);
+        }
+        else
+        {
+            otherDir = -1;
+            newTarget = GetRandomLoc(1, otherPos);
+        }
+
         if (newTarget != null)
         {
-            pathAttempts = 0;
             return newTarget.position;
         }
         else
         {
-            pathAttempts += 1;
-            if (pathAttempts > 20)
+            Debug.Log("getRandomLoc with otherDir");
+            newTarget = GetRandomLoc(otherDir, otherPos);
+            if (newTarget != null)
             {
-                Debug.LogWarning($"Pillapillar {gameObject.name} could not find a newTarget");
+                return newTarget.position;
+            }
+            else
+            {
+                Debug.LogWarning($"Pillapillar {gameObject.name} could not find a newTarget, returning {Vector2.negativeInfinity}");
                 return Vector2.zero;
             }
-            return getRandomLoc();
         }
         
     }
+
+    private MapHoneycomb GetRandomLoc(int turn, List<HoneycombPos> otherPos)
+    {
+        int randDist = Random.Range(1, 4) * 3;
+        HoneycombDir newDirection;
+        newDirection = Utility.HoneycombPathfinding.GetNewDirection(Direction, turn);
+        
+        return Utility.HoneycombPathfinding.GetHoneycombFreePath(Utility.Honeycomb.WorldPointToHoneycombGrid(Target), newDirection, randDist, otherPos);
+    }
+
+    //------------------------ 
 
     private List<HoneycombPos> GetPillapillarsPos()
     {
@@ -354,141 +436,12 @@ public class PillapillarController : Insect
         {
             pillapillarPos.Add(Utility.Honeycomb.WorldPointToHoneycombGrid(pillapillar.transform.position));
         }
+        if (PathType == PathTypes.Debug && LevelHandler.singleton.Player) pillapillarPos.Add(Utility.Honeycomb.WorldPointToHoneycombGrid(LevelHandler.singleton.Player.transform.position));
         return pillapillarPos;
     }
 
-    private HoneycombDir GetNewDirection(HoneycombDir current, int turns) //turns + for counter clockwise
-    {
-        HoneycombDir newDir = new HoneycombDir(0, 0);
-        int index = 0;
-        for(index = 0; index < Directions.Length; index += 1)
-        {
-            if(current.x == Directions[index].x && current.y == Directions[index].y)
-            {
-                break;
-            }
-            if (index == Directions.Length - 1) Debug.LogWarning("Error finding new direction");
-        }
-        if (turns > 0) index = (index + 1) % Directions.Length;
-        else
-        {
-            index -= 1;
-            if (index < 0) index = Directions.Length - 1;
-        }
-        
-        newDir = Directions[index];
 
-        turns = turns - (int)Mathf.Sign(turns);
-        if (turns != 0) return GetNewDirection(newDir, turns);
-        else
-        {
-            Debug.Log($"current: {current} newDir: {newDir}");
-            return newDir;
-        }
-    }
 
-    private Vector2 findPathToHoneycomb(HoneycombPos startHoneycomb, HoneycombPos targetHoneycomb)
-    {
-        //Vector2 targetPos = Utility.HoneycombGridToWorldPostion(targetHoneycomb);
-        //Vector2 startPos = Utility.HoneycombGridToWorldPostion(startHoneycomb);
-        HoneycombPos closestHex = startHoneycomb;
-
-        if (startHoneycomb.x < targetHoneycomb.x && startHoneycomb.y > targetHoneycomb.y)
-        {
-            //(1,-1) || (0,-1)
-            HoneycombDir dirOne = new HoneycombDir(1, -1);
-            HoneycombDir dirTwo = new HoneycombDir(0, -1);
-            closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb);
-        }
-        else if(startHoneycomb.x < targetHoneycomb.x && startHoneycomb.y < targetHoneycomb.y)
-        {
-            //(1,1) || (0,1)
-            HoneycombDir dirOne = new HoneycombDir(1, 1);
-            HoneycombDir dirTwo = new HoneycombDir(0, 1);
-            closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb);
-
-        }
-        else if (startHoneycomb.x < targetHoneycomb.x && startHoneycomb.y == targetHoneycomb.y)
-        {
-            //(1,1) || (1,-1)
-            HoneycombDir dirOne = new HoneycombDir(1, 1);
-            HoneycombDir dirTwo = new HoneycombDir(1, -1);
-            closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb);
-        }
-        else if (startHoneycomb.x > targetHoneycomb.x && startHoneycomb.y > targetHoneycomb.y)
-        {
-            //(-1,-1) || (0,-1)
-            HoneycombDir dirOne = new HoneycombDir(-1, -1);
-            HoneycombDir dirTwo = new HoneycombDir(0, -1);
-            closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb);
-        }
-        else if (startHoneycomb.x > targetHoneycomb.x && startHoneycomb.y < targetHoneycomb.y)
-        {
-            //(-1,1) || (0,1)
-            HoneycombDir dirOne = new HoneycombDir(-1, 1);
-            HoneycombDir dirTwo = new HoneycombDir(0, 1);
-            closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb);
-        }
-        else if (startHoneycomb.x > targetHoneycomb.x && startHoneycomb.y == targetHoneycomb.y)
-        {
-            //(-1,1) || (-1,-1)
-            HoneycombDir dirOne = new HoneycombDir(-1, 1);
-            HoneycombDir dirTwo = new HoneycombDir(-1, -1);
-            closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb);
-        }
-        //directly up
-        else if (startHoneycomb.x == targetHoneycomb.x && startHoneycomb.y < targetHoneycomb.y)
-        {
-            // (0,1)
-            HoneycombPos hexOne = FindShortestPath(startHoneycomb, new HoneycombDir(0,1), targetHoneycomb);
-            if (Utility.Honeycomb.DistanceBetweenHoneycomb(closestHex, targetHoneycomb) > Utility.Honeycomb.DistanceBetweenHoneycomb(hexOne, targetHoneycomb)) closestHex = hexOne;
-        }
-        //directly below
-        else if (startHoneycomb.x == targetHoneycomb.x && startHoneycomb.y > targetHoneycomb.y)
-        {
-            // (0,-1)
-            HoneycombPos hexOne = FindShortestPath(startHoneycomb, new HoneycombDir(0, -1), targetHoneycomb);
-            if (Utility.Honeycomb.DistanceBetweenHoneycomb(closestHex, targetHoneycomb) > Utility.Honeycomb.DistanceBetweenHoneycomb(hexOne, targetHoneycomb)) closestHex = hexOne;
-        }
-        else
-        {
-            //(0,0)
-            Debug.Log("Snake Follow Player Error");
-        }
-        if (closestHex.isNull) return Utility.Honeycomb.HoneycombGridToWorldPostion(startHoneycomb);
-        return Utility.Honeycomb.HoneycombGridToWorldPostion( closestHex);
-    }
-
-    private HoneycombPos compareShortestPaths(HoneycombDir dirOne, HoneycombDir dirTwo, HoneycombPos startHoneycomb, HoneycombPos targetHoneycomb)
-    {
-        //Vector2 targetPos = Utility.HoneycombGridToWorldPostion(targetHoneycomb);
-        //Vector2 startPos = Utility.HoneycombGridToWorldPostion(startHoneycomb);
-        HoneycombPos closestHex = startHoneycomb;
-
-        HoneycombPos hexOne = FindShortestPath(startHoneycomb, dirOne, targetHoneycomb);
-        HoneycombPos hexTwo = FindShortestPath(startHoneycomb, dirTwo, targetHoneycomb);
-
-        if (!hexOne.isNull && Utility.Honeycomb.DistanceBetweenHoneycomb(closestHex, targetHoneycomb) > Utility.Honeycomb.DistanceBetweenHoneycomb(hexOne, targetHoneycomb)) closestHex = hexOne;
-        if (!hexTwo.isNull && Utility.Honeycomb.DistanceBetweenHoneycomb(closestHex, targetHoneycomb) > Utility.Honeycomb.DistanceBetweenHoneycomb(hexTwo, targetHoneycomb)) closestHex = hexTwo;
-        return closestHex;
-    }
-
-    private HoneycombPos FindShortestPath(HoneycombPos startHex, HoneycombDir hexDir, HoneycombPos targetHex)
-    {
-        int distance = 1;
-        HoneycombPos pathHex = startHex;
-        MapHoneycomb newTarget = Utility.Honeycomb.GetHoneycombFreePath(startHex, hexDir, distance, GetPillapillarsPos());
-        MapHoneycomb nextTarget = Utility.Honeycomb.GetHoneycombFreePath(startHex, hexDir, distance + 1, GetPillapillarsPos());
-        while(newTarget != null && nextTarget != null && Utility.Honeycomb.DistanceBetweenHoneycomb(Utility.Honeycomb.WorldPointToHoneycombGrid(newTarget.position), targetHex) > Utility.Honeycomb.DistanceBetweenHoneycomb(Utility.Honeycomb.WorldPointToHoneycombGrid(nextTarget.position), targetHex))
-        {
-            newTarget = nextTarget;
-            distance += 1;
-            nextTarget = Utility.Honeycomb.GetHoneycombFreePath(startHex, hexDir, distance + 1, GetPillapillarsPos());
-        }
-        //Debug.Log("Closets HexPos: " + Utility.WorldPointToHoneycombGrid(newTarget.position));
-        if (newTarget == null) return HoneycombPos.nullHex;
-        return Utility.Honeycomb.WorldPointToHoneycombGrid(newTarget.position);
-    }
 
     public void DestroyLink()
     {
@@ -500,7 +453,7 @@ public class PillapillarController : Insect
             Tail.Direction = Utility.Honeycomb.WorldDirToHoneycombDir((Tail.Path[Tail.headIndex] - (Vector2)Tail.transform.position).normalized); // Tail.Path[Tail.headIndex - 1]).normalized;
         }
 
-        Destroy(gameObject);
+        HandleLinkDeath();
     }
 
     public void DestroySnake()
@@ -522,27 +475,24 @@ public class PillapillarController : Insect
         }
         Debug.Log("Destroy Snake");
         egg.PillapillarSuicide(this);
+        HandleLinkDeath();
+    }
+
+    private void HandleLinkDeath()
+    {
+        myChunk.RemoveTransientChunkObject(this);
         Destroy(gameObject);
     }
 
-    //private void OnCollisionEnter2D(Collision2D collision)
-    //{
-    //    if (collision.transform.GetComponent<SnakeController>())
-    //    {
-    //        SnakeController link = collision.transform.GetComponent<SnakeController>();
-    //        if (!link.Head) link.DestroySnake();
-    //        else DestroyLink();
-    //    }
-    //}
-
-    private void OnTriggerStay2D(Collider2D collision)
+    
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        //if (paused) return;
-        if (collision.GetComponent<PillapillarController>())
+        //Debug.Log(collision.gameObject.name);
+        if (collision.gameObject.GetComponent<PillapillarController>())
         {
-            PillapillarController link = collision.GetComponent<PillapillarController>();
+            PillapillarController link = collision.gameObject.GetComponent<PillapillarController>();
 
-            if(link != Head && link != Tail && Utility.Honeycomb.WorldPointToHoneycombGrid(collision.transform.position) == Utility.Honeycomb.WorldPointToHoneycombGrid(transform.position))
+            if (link != Head && link != Tail)
             {
                 if (!link.Head) link.DestroySnake();
                 else
@@ -551,8 +501,15 @@ public class PillapillarController : Insect
                     DestroyLink();
                 }
             }
-                //DestroySnake();
-        }else if (collision.GetComponent<EnemyPhysics>())//bee collision
+            //DestroySnake();
+        }
+        
+    }
+    public bool digging = false;
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        //if (paused) return;
+        if (collision.GetComponent<EnemyPhysics>())//bee collision
         {
             if(Head == null)
             {
@@ -565,7 +522,15 @@ public class PillapillarController : Insect
             Destroy(collision.gameObject);
         }else if (collision.CompareTag("Honeycomb"))
         {
-            collision.GetComponent<Honeycomb>().DamageHoneycomb(float.PositiveInfinity, HoneycombTypes.Areas.Garden, HoneycombTypes.Variety.Chamber);
+            if (digging)
+            {
+                collision.GetComponent<Honeycomb>().DamageHoneycomb(float.PositiveInfinity, HoneycombTypes.Areas.Garden, HoneycombTypes.Variety.Chamber);
+            }
+            else
+            {
+                collision.GetComponent<Honeycomb>().DamageHoneycomb(float.PositiveInfinity, HoneycombTypes.Areas.Connection, HoneycombTypes.Variety.Embedded);
+            }
+            
         }
     }
 
@@ -588,6 +553,86 @@ public class PillapillarController : Insect
         SpriteRenderer sprite = GetComponent<SpriteRenderer>();
         float colorPercent =  Health / MaxHealth;
         sprite.color = new Color(1, colorPercent, colorPercent);
+    }
+
+    public void Activate()
+    {
+        RespawnHead();
+        RespawnTail();
+    }
+
+    public void Deactivate()
+    {
+        if(CheckDespawnHead() && CheckDespawnTail())
+        {
+            DespawnHead();
+            DespawnTail();
+        }
+        
+    }
+
+    public bool CheckDespawnHead()
+    {
+        if (!Utility.Honeycomb.GetActiveMapChunk(transform.position))
+        {
+            if (!Head)
+            {
+                return true;
+            }
+            else return Head.CheckDespawnHead();
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool CheckDespawnTail()
+    {
+        if (!Utility.Honeycomb.GetActiveMapChunk(transform.position))
+        {
+            if (!Tail) return true;
+            else return Tail.CheckDespawnTail();
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void DespawnHead()
+    {
+        gameObject.SetActive(false);
+        if (Head) Head.DespawnHead();
+    }
+
+    public void DespawnTail()
+    {
+        gameObject.SetActive(false);
+        if (Tail) Tail.DespawnTail();
+    }
+
+    public void RespawnHead()
+    {
+        gameObject.SetActive(true);
+        if (Head) Head.RespawnHead();
+    }
+
+    public void RespawnTail()
+    {
+        gameObject.SetActive(true);
+        if (Tail) Tail.RespawnTail();
+    }
+
+    GameObject IChunkObject.GameObject()
+    {
+        return gameObject;
+    }
+
+    MapChunk myChunk;
+    void IChunkObject.SetMyChunk(MapChunk myChunk)
+    {
+        this.myChunk = myChunk;
     }
 }
 [System.Serializable]

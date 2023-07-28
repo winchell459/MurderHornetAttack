@@ -128,6 +128,7 @@ public class Map : MonoBehaviour
                         }
                     }
                 }
+                this.displayChunks = displayChunks;
                 if (!UseCoroutine)
                 {
                     for (int i = 0; i < honeycombChunks.Count; i += 1)
@@ -207,12 +208,27 @@ public class Map : MonoBehaviour
         return honeycombMap;
     }
     
+    public bool GetIsvisibleChunk(int col, int row)
+    {
+        int chunkCols = (int)Mathf.Ceil((MapWidth / HorizontalSpacing) / (ChunkWidth));
+        return displayChunks[row * chunkCols + col];
+    }
 
     public MapChunk GetChunk(int col, int row)
     {
         int chunkCols = (int)Mathf.Ceil((MapWidth / HorizontalSpacing) / (ChunkWidth));
-        return honeycombChunks[row * chunkCols + col];
+        try
+        {
+            return honeycombChunks[row * chunkCols + col];
+        }
+        catch (System.ArgumentOutOfRangeException ex)
+        {
+            Debug.Log($"row: {row} col: {col} chunkCols: {chunkCols} honeycombChunks.Count: {honeycombChunks.Count} honeycombChunks[{row*chunkCols + col}]");
+            Debug.LogWarning(ex);
+        }
+        return null;
     }
+
     public Vector2 GetChunkIndex(MapChunk chunk)
     {
         int chunkCols = (int)Mathf.Ceil((MapWidth / HorizontalSpacing) / (ChunkWidth));
@@ -430,5 +446,11 @@ public class Map : MonoBehaviour
         MapChunk chunk = Utility.Honeycomb.GetMapChunk(chunkObject.transform.position);
         chunk.AddChunkObject(chunkObject.GetComponent<IChunkObject>());
         //if (!chunk.Visible) chunkObject.SetActive(false);
+    }
+
+    public void AddTransientChunkObject(IChunkObject chunkObject)
+    {
+        MapChunk chunk = Utility.Honeycomb.GetMapChunk(chunkObject.GameObject().transform.position);
+        chunk.AddTransientChunkObject(chunkObject);
     }
 }

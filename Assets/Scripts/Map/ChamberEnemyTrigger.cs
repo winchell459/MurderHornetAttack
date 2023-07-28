@@ -48,4 +48,14 @@ public class ChamberEnemyTrigger : ChamberTrigger, IChunkObject
     {
         gameObject.SetActive(false);
     }
+
+    GameObject IChunkObject.GameObject()
+    {
+        return gameObject;
+    }
+
+    void IChunkObject.SetMyChunk(MapChunk myChunk)
+    {
+
+    }
 }

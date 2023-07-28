@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HoneycombTower : Honeycomb
 {
@@ -14,6 +15,8 @@ public class HoneycombTower : Honeycomb
 
     private HornetController player;
     private LevelHandler lh;
+
+    [SerializeField] Text healthText;
 
     private void Start()
     {
@@ -56,7 +59,9 @@ public class HoneycombTower : Honeycomb
         //if (mapHoneycomb.health <= 0) return;
         mapHoneycomb.health -= damage;
         Debug.Log($"beeuildingHealth: {mapHoneycomb.health}");
-        if(mapHoneycomb.health <= 0)
+        healthText.gameObject.SetActive(true);
+        healthText.text = mapHoneycomb.health.ToString();
+        if (mapHoneycomb.health <= 0)
         {
             LevelHandler.singleton.BeeuildingDestroyed(transform.position);
             mapHoneycomb.HideHoneycomb();
@@ -90,6 +95,7 @@ public class HoneycombTower : Honeycomb
         }
         else
         {
+            healthText.gameObject.SetActive(false);
             for (int i = 0; i < TowerLayers.Length; i += 1)
             {
                 TowerLayers[i].parent = layers[i];

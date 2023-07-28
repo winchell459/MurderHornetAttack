@@ -15,7 +15,7 @@ public class HoneycombCell : Honeycomb
     public override void DestroyHoneycomb()
     {
         mapHoneycomb.DestroyHoneycomb();
-
+        mapHoneycomb.SetHasEnemy(false);
     }
     //public void SetCapped(bool capped)
     public override void SetupHoneycomb()

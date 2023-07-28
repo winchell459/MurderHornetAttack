@@ -11,13 +11,15 @@ public abstract class Honeycomb : MonoBehaviour
     public virtual void DamageHoneycomb(float damage, HoneycombTypes.Areas newArea, HoneycombTypes.Variety newVariety)
     {
         DamageHoneycomb(damage);
-        Debug.Log($"New Honeycomb depth {mapHoneycomb.GetDepth()}");
+        //Debug.Log($"New Honeycomb depth {mapHoneycomb.GetDepth()}");
         if (mapHoneycomb.GetDepth() <= Map.StaticMap.TunnelDestructionDepth)
         {
             mapHoneycomb.LocationType = newVariety;
             mapHoneycomb.isFloor = true;
             mapHoneycomb.AreaType = newArea;
             mapHoneycomb.display = true;
+
+            mapHoneycomb.SetHasEnemy(false);
 
             mapHoneycomb.DisplayHoneycomb();
         }

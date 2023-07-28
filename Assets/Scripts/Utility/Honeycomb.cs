@@ -83,78 +83,29 @@ namespace Utility
             return new HoneycombPos(x, y);
         }
 
-
-        public static MapChunk GetMapChunk(Vector2 worldPos/*, MapParameters map*/)
+        public static Vector2Int GetMapChunkID(Vector2 worldPos)
         {
             HoneycombPos honeyIndex = WorldPointToHoneycombGrid(worldPos);
             Map map = Map.StaticMap;
             int xChunk = (int)honeyIndex.x / map.ChunkWidth;
             int yChunk = (int)honeyIndex.y / (map.ChunkHeight / 2);
-            //int chunkIndex = xChunk * yChunk + xChunk;
-            return map.GetChunk(xChunk, yChunk);
+            return new Vector2Int(xChunk, yChunk);
         }
-        public static List<MapHoneycomb> GetHoneycombPath(HoneycombPos start, HoneycombDir dir, int honeyDistance)
+
+        public static MapChunk GetMapChunk(Vector2 worldPos/*, MapParameters map*/)
         {
-            List<MapHoneycomb> path = new List<MapHoneycomb>();
-            //start = WorldToHoneycomb(start);
-            for (int i = 1; i <= honeyDistance; i += 1)
-            {
-                HoneycombPos honeyCell = GetHoneycombDirection(start, dir, i);
-                //Debug.Log(honeyCell);
-                path.Add(Map.StaticMap.GetHoneycomb((int)honeyCell.x, (int)honeyCell.y));
-            }
-            return path;
+            Vector2Int chunkID = GetMapChunkID(worldPos);
+            Map map = Map.StaticMap;
+            return map.GetChunk(chunkID.x, chunkID.y);
         }
-       
 
-        public static MapHoneycomb GetHoneycombFreePath(HoneycombPos startHex, HoneycombDir hexDir, int hexDistance, List<HoneycombPos> obstructions)
+        public static bool GetActiveMapChunk(Vector2 worldPos)
         {
-            List<MapHoneycomb> path = GetHoneycombPath(startHex, hexDir, hexDistance);
-            MapHoneycomb newTarget = null;
-            foreach (MapHoneycomb honeycomb in path)
-            {
-                //Debug.Log(honeycomb.position);
-                if ((!honeycomb.display || honeycomb.isFloor) && honeycomb.LocationType == HoneycombTypes.Variety.Chamber && !obstructions.Contains(WorldPointToHoneycombGrid(honeycomb.position)))
-                {
-                    newTarget = honeycomb;
-
-                }
-                else
-                {
-                    if (obstructions.Contains(WorldPointToHoneycombGrid(honeycomb.position))) Debug.Log("Collision with pillapillar avoided");
-                    //Debug.Log(honeycomb.LocationType);
-                    break;
-                }
-            }
-            return newTarget;
+            Vector2Int chunkID = GetMapChunkID(worldPos);
+            Map map = Map.StaticMap;
+            return map.GetIsvisibleChunk(chunkID.x, chunkID.y);
         }
 
-        /// <summary>
-        /// Returns the coordinates of a target honeycomb starting from the coordinates of a honeycomb in a honeycomb vector (honeycomb direction and distance)
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="dir"></param>
-        /// <param name="honeyDistance">random distance to travel</param>
-        /// <returns></returns>
-        public static HoneycombPos GetHoneycombDirection(HoneycombPos start, HoneycombDir dir, int honeyDistance)
-        {
-            //start = Utility.WorldPointToHoneycombGrid(start);
-            HoneycombPos end = start;
-            end.x += dir.x * honeyDistance;
-            if (dir.x == 0) end.y += dir.y * honeyDistance;
-            else if (start.x % 2 == 0 && dir.y > 0 || start.x % 2 != 0 && dir.y < 0) //moving right
-            {
-                //end.y += Mathf.Sign(dir.y) * Mathf.Ceil((float)honeyDistance / 2);
-                end.y += (int)(Mathf.Sign(dir.y) * Mathf.Ceil((float)honeyDistance / 2));
-            }
-            else
-            {
-                //end.y += Mathf.Sign(dir.y) * Mathf.Ceil(((float)honeyDistance - 1) / 2);
-                end.y += (int)(Mathf.Sign(dir.y) * Mathf.Ceil(((float)honeyDistance - 1) / 2));
-            }
-
-            return end;
-        }
 
         public static HoneycombDir WorldDirToHoneycombDir(Vector2 worldDir)
         {
@@ -197,5 +148,7 @@ namespace Utility
             return radius - 1;
         }
     }
+
+    
 }
 

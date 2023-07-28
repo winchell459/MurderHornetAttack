@@ -45,7 +45,7 @@ public class MapHoneycomb
             {
                 beeuilding = true;
                 health = beeuildingHealth;
-                Debug.Log("beeuilding!");
+                //Debug.Log("beeuilding!");
             }
         }
         
@@ -161,7 +161,7 @@ public class MapHoneycomb
         display = false;
     }
 
-    public void AddEnemy(bool hasEnemy)
+    public void SetHasEnemy(bool hasEnemy)
     {
         this.hasEnemy = hasEnemy;
         //honeycomb.GetComponent<Collider2D>().enabled = true;

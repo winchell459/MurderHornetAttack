@@ -39,4 +39,14 @@ public class SpiderHole : MonoBehaviour, IChunkObject
     {
         gameObject.SetActive(false);
     }
+
+    GameObject IChunkObject.GameObject()
+    {
+        return gameObject;
+    }
+    
+    void IChunkObject.SetMyChunk(MapChunk myChunk)
+    {
+
+    }
 }
