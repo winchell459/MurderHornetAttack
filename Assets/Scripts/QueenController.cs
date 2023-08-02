@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class QueenController : Insect
+public class QueenController : InsectSolo
 {
     private HornetController player;
     public Transform body;
@@ -127,6 +127,7 @@ public class QueenController : Insect
         if (Health <= 0)
         {
             FindObjectOfType<BeeCityLevelHandler>().QueenDeath();
+            HandleInsectSoloDeath();
             Destroy(gameObject);
         }
 
@@ -142,5 +143,5 @@ public class QueenController : Insect
         
     }
 
-
+    
 }

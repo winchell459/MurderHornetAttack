@@ -16,6 +16,8 @@ namespace Utility
         new HoneycombDir(-1, 1)
     };
 
+        public static Vector2 invalidPos = Vector2.zero;
+
         public static List<MapHoneycomb> GetHoneycombPath(HoneycombPos start, HoneycombDir dir, int honeyDistance)
         {
             List<MapHoneycomb> path = new List<MapHoneycomb>();
@@ -30,14 +32,15 @@ namespace Utility
         }
 
 
-        public static MapHoneycomb GetHoneycombFreePath(HoneycombPos startHex, HoneycombDir hexDir, int hexDistance, List<HoneycombPos> obstructions)
+        public static MapHoneycomb GetHoneycombFreePath(HoneycombPos startHex, HoneycombDir hexDir, int hexDistance, List<HoneycombPos> obstructions, List<HoneycombTypes.Variety> invalidVarieties)
         {
             List<MapHoneycomb> path = GetHoneycombPath(startHex, hexDir, hexDistance);
             MapHoneycomb newTarget = null;
             foreach (MapHoneycomb honeycomb in path)
             {
                 //Debug.Log(honeycomb.position);
-                if ((!honeycomb.display || honeycomb.isFloor) && honeycomb.LocationType == HoneycombTypes.Variety.Chamber && !obstructions.Contains(Honeycomb.WorldPointToHoneycombGrid(honeycomb.position)))
+                if ((!honeycomb.display || honeycomb.isFloor) && /*honeycomb.LocationType == HoneycombTypes.Variety.Chamber */ !invalidVarieties.Contains(honeycomb.LocationType)
+                    && !obstructions.Contains(Honeycomb.WorldPointToHoneycombGrid(honeycomb.position)))
                 {
                     newTarget = honeycomb;
 
@@ -81,7 +84,7 @@ namespace Utility
 
         public static bool CheckValidNewTarget(Vector2 start, Vector2 end, HoneycombDir Direction)
         {
-            if (end != Vector2.zero)
+            if (end != invalidPos)
             {
                 HoneycombDir newDirection = Honeycomb.WorldDirToHoneycombDir((end - start).normalized);
                 return !CheckReverseDirection(newDirection, Direction);
@@ -134,10 +137,8 @@ namespace Utility
             }
         }
 
-        public static Vector2 FindPathToHoneycomb(HoneycombPos startHoneycomb, HoneycombPos targetHoneycomb, List<HoneycombPos> otherPos)
+        public static Vector2 FindPathToHoneycomb(HoneycombPos startHoneycomb, HoneycombPos targetHoneycomb, List<HoneycombPos> otherPos, List<HoneycombTypes.Variety> invalidVarieties)
         {
-            //Vector2 targetPos = Utility.HoneycombGridToWorldPostion(targetHoneycomb);
-            //Vector2 startPos = Utility.HoneycombGridToWorldPostion(startHoneycomb);
             HoneycombPos closestHex = new HoneycombPos(startHoneycomb.x, startHoneycomb.y);
 
             if (startHoneycomb.x < targetHoneycomb.x && startHoneycomb.y > targetHoneycomb.y) //down and right
@@ -145,14 +146,14 @@ namespace Utility
                 //(1,-1) || (0,-1)
                 HoneycombDir dirOne = new HoneycombDir(1, 1);
                 HoneycombDir dirTwo = new HoneycombDir(0, -1);
-                closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb, otherPos);
+                closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb, otherPos, invalidVarieties);
             }
             else if (startHoneycomb.x < targetHoneycomb.x && startHoneycomb.y < targetHoneycomb.y) //right and up
             {
                 //(1,1) || (0,1)
                 HoneycombDir dirOne = new HoneycombDir(1, -1);
                 HoneycombDir dirTwo = new HoneycombDir(0, 1);
-                closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb, otherPos);
+                closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb, otherPos, invalidVarieties);
 
             }
 
@@ -161,41 +162,41 @@ namespace Utility
                 //(-1,-1) || (0,-1)
                 HoneycombDir dirOne = new HoneycombDir(-1, 1);
                 HoneycombDir dirTwo = new HoneycombDir(0, -1);
-                closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb, otherPos);
+                closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb, otherPos, invalidVarieties);
             }
             else if (startHoneycomb.x > targetHoneycomb.x && startHoneycomb.y < targetHoneycomb.y) // left and up
             {
                 //(-1,1) || (0,1)
                 HoneycombDir dirOne = new HoneycombDir(-1, -1);
                 HoneycombDir dirTwo = new HoneycombDir(0, 1);
-                closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb, otherPos);
+                closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb, otherPos, invalidVarieties);
             }
             else if (startHoneycomb.x < targetHoneycomb.x && startHoneycomb.y == targetHoneycomb.y) //right and ( up 1 (x%2==0) or down 1 )
             {
                 //(1,1) || (1,-1)
                 HoneycombDir dirOne = new HoneycombDir(1, 1);
                 HoneycombDir dirTwo = new HoneycombDir(1, -1);
-                closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb, otherPos);
+                closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb, otherPos, invalidVarieties);
             }
             else if (startHoneycomb.x > targetHoneycomb.x && startHoneycomb.y == targetHoneycomb.y) // left and (down 1 x%2==0 or up 1)
             {
                 //(-1,1) || (-1,-1)
                 HoneycombDir dirOne = new HoneycombDir(-1, 1);
                 HoneycombDir dirTwo = new HoneycombDir(-1, -1);
-                closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb, otherPos);
+                closestHex = compareShortestPaths(dirOne, dirTwo, startHoneycomb, targetHoneycomb, otherPos, invalidVarieties);
             }
             //directly up
             else if (startHoneycomb.x == targetHoneycomb.x && startHoneycomb.y < targetHoneycomb.y) // up
             {
                 // (0,1)
-                HoneycombPos hexOne = FindShortestPath(startHoneycomb, new HoneycombDir(0, 1), targetHoneycomb, otherPos);
+                HoneycombPos hexOne = FindShortestPath(startHoneycomb, new HoneycombDir(0, 1), targetHoneycomb, otherPos, invalidVarieties);
                 if (Honeycomb.DistanceBetweenHoneycomb(closestHex, targetHoneycomb) > Honeycomb.DistanceBetweenHoneycomb(hexOne, targetHoneycomb)) closestHex = hexOne;
             }
             //directly below
             else if (startHoneycomb.x == targetHoneycomb.x && startHoneycomb.y > targetHoneycomb.y) // down
             {
                 // (0,-1)
-                HoneycombPos hexOne = FindShortestPath(startHoneycomb, new HoneycombDir(0, -1), targetHoneycomb, otherPos);
+                HoneycombPos hexOne = FindShortestPath(startHoneycomb, new HoneycombDir(0, -1), targetHoneycomb, otherPos, invalidVarieties);
                 if (Honeycomb.DistanceBetweenHoneycomb(closestHex, targetHoneycomb) > Honeycomb.DistanceBetweenHoneycomb(hexOne, targetHoneycomb)) closestHex = hexOne;
             }
             else
@@ -207,34 +208,34 @@ namespace Utility
             return Honeycomb.HoneycombGridToWorldPostion(closestHex);
         }
 
-        private static HoneycombPos compareShortestPaths(HoneycombDir dirOne, HoneycombDir dirTwo, HoneycombPos startHoneycomb, HoneycombPos targetHoneycomb, List<HoneycombPos> otherPos)
+        private static HoneycombPos compareShortestPaths(HoneycombDir dirOne, HoneycombDir dirTwo, HoneycombPos startHoneycomb, HoneycombPos targetHoneycomb, List<HoneycombPos> otherPos, List<HoneycombTypes.Variety> invalidVarieties)
         {
             //Vector2 targetPos = Utility.HoneycombGridToWorldPostion(targetHoneycomb);
             //Vector2 startPos = Utility.HoneycombGridToWorldPostion(startHoneycomb);
             HoneycombPos closestHex = startHoneycomb;
 
-            HoneycombPos hexOne = FindShortestPath(startHoneycomb, dirOne, targetHoneycomb, otherPos);
-            HoneycombPos hexTwo = FindShortestPath(startHoneycomb, dirTwo, targetHoneycomb, otherPos);
+            HoneycombPos hexOne = FindShortestPath(startHoneycomb, dirOne, targetHoneycomb, otherPos, invalidVarieties);
+            HoneycombPos hexTwo = FindShortestPath(startHoneycomb, dirTwo, targetHoneycomb, otherPos, invalidVarieties);
 
             if (!hexOne.isNull && Honeycomb.DistanceBetweenHoneycomb(closestHex, targetHoneycomb) > Honeycomb.DistanceBetweenHoneycomb(hexOne, targetHoneycomb)) closestHex = hexOne;
             if (!hexTwo.isNull && Honeycomb.DistanceBetweenHoneycomb(closestHex, targetHoneycomb) > Honeycomb.DistanceBetweenHoneycomb(hexTwo, targetHoneycomb)) closestHex = hexTwo;
             return closestHex;
         }
 
-        private static HoneycombPos FindShortestPath(HoneycombPos startHex, HoneycombDir hexDir, HoneycombPos targetHex, List<HoneycombPos> otherPos)
+        private static HoneycombPos FindShortestPath(HoneycombPos startHex, HoneycombDir hexDir, HoneycombPos targetHex, List<HoneycombPos> otherPos, List<HoneycombTypes.Variety> invalidVarieties)
         {
             int distance = 1;
             HoneycombPos pathHex = startHex;
             //List<HoneycombPos> otherPos = GetPillapillarsPos();
-            MapHoneycomb newTarget = GetHoneycombFreePath(startHex, hexDir, distance, otherPos);
-            MapHoneycomb nextTarget = GetHoneycombFreePath(startHex, hexDir, distance + 1, otherPos);
+            MapHoneycomb newTarget = GetHoneycombFreePath(startHex, hexDir, distance, otherPos, invalidVarieties);
+            MapHoneycomb nextTarget = GetHoneycombFreePath(startHex, hexDir, distance + 1, otherPos, invalidVarieties);
             while (newTarget != null && nextTarget != null &&
                 Honeycomb.DistanceBetweenHoneycomb(Honeycomb.WorldPointToHoneycombGrid(newTarget.position), targetHex)
                 > Honeycomb.DistanceBetweenHoneycomb(Honeycomb.WorldPointToHoneycombGrid(nextTarget.position), targetHex))
             {
                 newTarget = nextTarget;
                 distance += 1;
-                nextTarget = GetHoneycombFreePath(startHex, hexDir, distance + 1, otherPos);
+                nextTarget = GetHoneycombFreePath(startHex, hexDir, distance + 1, otherPos, invalidVarieties);
             }
             //Debug.Log("Closets HexPos: " + Utility.WorldPointToHoneycombGrid(newTarget.position));
             if (newTarget == null) return HoneycombPos.nullHex;

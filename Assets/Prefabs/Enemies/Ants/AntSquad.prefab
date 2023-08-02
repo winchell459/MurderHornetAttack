@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AntNum: 5
-  speed: 5
+  speed: 3
   MarchDelay: 0.5
   Squad: []
   AntPrefab: {fileID: 6899312501256822504, guid: ec71871fb1cd348ef8b27ff65ffc3647,
@@ -52,3 +52,4 @@ MonoBehaviour:
   Radius: 15
   NumPoints: 5
   MarchingPoints: []
+  RandomMarch: 0

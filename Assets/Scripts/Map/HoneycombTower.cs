@@ -30,6 +30,7 @@ public class HoneycombTower : Honeycomb
         
         if (!lh) lh = LevelHandler.singleton;
         if (!player) player = LevelHandler.singleton.Player ? LevelHandler.singleton.Player.gameObject.GetComponent<HornetController>() : null;
+
         if (lastSpawn + spawnRate < Time.time && player && Vector2.Distance(player.transform.position, transform.position) <= spawnDistance)
         {
             if (lh.HoneycombTowerSpawnEnemy(mapHoneycomb))
@@ -38,6 +39,15 @@ public class HoneycombTower : Honeycomb
             }
             
         }
+
+        if(lastSpawn + spawnRate < Time.time)
+        {
+            Ant ant = FindObjectOfType<Ant>();
+            if(ant && Vector2.Distance(ant.transform.position, transform.position) <= 5)
+            {
+                SpawnBee(ant.gameObject);
+            }
+        }
     }
     public EnemyPhysics SpawnBee(GameObject target)
     {
@@ -45,7 +55,7 @@ public class HoneycombTower : Honeycomb
         if (enemyPrefab)
         {
             GameObject spawnedInsect = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
-            Map.StaticMap.AddEnemyToChunk(spawnedInsect.GetComponent<Insect>());
+            Map.StaticMap.AddTransientChunkObject(spawnedInsect.GetComponent<IChunkObject>());
             
             Debug.Log("HoneycombTower Attacks");
             lastSpawn = Time.time;

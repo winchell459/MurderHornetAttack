@@ -142,6 +142,7 @@ public class Map : MonoBehaviour
                 {
                     StartCoroutine(handldeChunkDisplay(displayChunks));
                 }
+
                 
                 //
             }
@@ -155,7 +156,7 @@ public class Map : MonoBehaviour
                 chunk.DestroyChunk();
             }
         }
-        
+        HandleTransientChunkObjects(displayChunks);
     }
 
     IEnumerator handldeChunkDisplay(List<bool> displayChunks)
@@ -434,12 +435,12 @@ public class Map : MonoBehaviour
 
     //}
 
-    public void AddEnemyToChunk(Insect enemy)
-    {
-        MapChunk chunk = Utility.Honeycomb.GetMapChunk(enemy.transform.position);
-        chunk.AddEnemyToChunk(enemy);
-        if (!chunk.Visible) enemy.gameObject.SetActive(false);
-    }
+    //public void AddEnemyToChunk(Insect enemy)
+    //{
+    //    MapChunk chunk = Utility.Honeycomb.GetMapChunk(enemy.transform.position);
+    //    chunk.AddEnemyToChunk(enemy);
+    //    if (!chunk.Visible) enemy.gameObject.SetActive(false);
+    //}
 
     public void AddChunkObject(GameObject chunkObject)
     {
@@ -450,7 +451,24 @@ public class Map : MonoBehaviour
 
     public void AddTransientChunkObject(IChunkObject chunkObject)
     {
-        MapChunk chunk = Utility.Honeycomb.GetMapChunk(chunkObject.GameObject().transform.position);
-        chunk.AddTransientChunkObject(chunkObject);
+        //MapChunk chunk = Utility.Honeycomb.GetMapChunk(chunkObject.GameObject().transform.position);
+        //chunk.AddTransientChunkObject(chunkObject);
+        transientChunkObjects.Add(chunkObject);
+    }
+
+    private List<IChunkObject> transientChunkObjects = new List<IChunkObject>();
+    private void HandleTransientChunkObjects(List<bool> displayChunks)
+    {
+        foreach(IChunkObject chunkObject in transientChunkObjects)
+        {
+            bool display = displayChunks[honeycombChunks.IndexOf(Utility.Honeycomb.GetMapChunk(chunkObject.GameObject().transform.position))];
+            if (display && !chunkObject.GameObject().activeSelf) chunkObject.Activate();
+            else if (!display && chunkObject.GameObject().activeSelf) chunkObject.Deactivate();
+        }
+    }
+
+    public void HandleChunkObjectDeath(IChunkObject chunkObject)
+    {
+        transientChunkObjects.Remove(chunkObject);
     }
 }

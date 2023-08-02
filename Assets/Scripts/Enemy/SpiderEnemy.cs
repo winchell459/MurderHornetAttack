@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class SpiderEnemy : Insect
+public class SpiderEnemy : InsectSolo
 {
     public float speed = 1f;
     public float attackRadius = 2.0f;
@@ -204,8 +204,9 @@ public class SpiderEnemy : Insect
         Health -= Damage;
         if (Health <= 0)
         {
-            FindObjectOfType<LevelHandler>().EnemyDeath(gameObject);
+            LevelHandler.singleton.EnemyDeath(gameObject);
             GameManager.SpiderKilled();
+            HandleInsectSoloDeath();
             Destroy(gameObject);
         }
     }

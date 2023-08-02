@@ -8,7 +8,7 @@ public class AntSquad : MonoBehaviour
     public float speed = 5f;
     public float MarchDelay = 0.1f;
 
-    public GameObject[] Squad;
+    public Ant[] Squad;
 
     public GameObject AntPrefab;
 
@@ -66,10 +66,10 @@ public class AntSquad : MonoBehaviour
     public void StartMarch() 
     {
         marchStarted = true;
-        Squad = new GameObject[AntNum];
+        Squad = new Ant[AntNum];
         for (int i = 0; i < AntNum; i++)
         {
-            Squad[i] = Instantiate(AntPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            Squad[i] = Instantiate(AntPrefab, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<Ant>();
             Squad[i].transform.parent = this.transform;
             Ant ant = Squad[i].GetComponent<Ant>();
             ant.transform.position = MarchingPoints[0];
@@ -77,6 +77,12 @@ public class AntSquad : MonoBehaviour
             ant.March(MarchDelay * i);
             ant.speed = speed;
 
+            Squad[i]/*.GetComponent<Ant>()*/.mySquad = this;
+        }
+
+        for (int i = 0; i < AntNum; i++)
+        {
+            Map.StaticMap.AddTransientChunkObject(Squad[i]/*.GetComponent<Ant>()*/);
         }
     }
 
@@ -110,11 +116,11 @@ public class AntSquad : MonoBehaviour
         }
 
         MarchingPoints = newMarchingPoints;
-        foreach (GameObject antObj in Squad)
+        foreach (Ant ant in Squad)
         {
-            if (antObj)
+            if (ant)
             {
-                Ant ant = antObj.GetComponent<Ant>();
+                //Ant ant = antObj.GetComponent<Ant>();
                 ant.March(1);
                 ant.MarchingPoints = MarchingPoints;
                 ant.CurrentPointIndex = ant.CurrentPointIndex + newPoints.Length;
@@ -124,7 +130,37 @@ public class AntSquad : MonoBehaviour
 
     public bool Alive()
     {
-        foreach (GameObject ant in Squad) if (ant) return true;
+        foreach (Ant ant in Squad) if (ant) return true;
         return false;
+    }
+
+    public bool CheckDespawn()
+    {
+        foreach(Ant ant in Squad)
+        {
+            if (ant && (!ant.homerunComplete || Utility.Honeycomb.GetActiveMapChunk(ant.transform.position)))
+            {
+                //Debug.LogWarning("AntSquad still active");
+                return false;
+                
+            }
+        }
+        //Debug.LogWarning("deactivate AntSquad");
+        return true;
+    }
+
+    public void Respawn()
+    {
+        foreach (Ant ant in Squad)
+        {
+            if(ant)ant.gameObject.SetActive(true);
+        }
+    }
+    public void Despawn()
+    {
+        foreach (Ant ant in Squad)
+        {
+            if (ant) ant.gameObject.SetActive(false);
+        }
     }
 }

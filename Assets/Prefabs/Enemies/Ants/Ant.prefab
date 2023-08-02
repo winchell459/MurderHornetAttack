@@ -135,8 +135,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CollisionDamage: 0
-  Health: 1
-  MaxHealth: 1
+  Health: 15
+  MaxHealth: 15
   CollisionForce: {x: 0, y: 0}
   type: 4
   InsectPrefab: {fileID: 0}
@@ -148,3 +148,4 @@ MonoBehaviour:
   CurrentPointIndex: 0
   playerDamage: 0
   digging: 0
+  homerunComplete: 0

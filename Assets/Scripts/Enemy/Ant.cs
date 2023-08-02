@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ant : Insect
+public class Ant : InsectGroup
 {
     public bool Marching = false;
     public float speed = 5f;
@@ -27,12 +27,16 @@ public class Ant : Insect
     [SerializeField] bool digging;
     List<HoneycombPos> visitedHoneycomb = new List<HoneycombPos>();
 
+    private AntSquad _mySquad;
+    public AntSquad mySquad { set { _mySquad = value; } }
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         position = new Vector2(transform.position.x, transform.position.y);
     }
 
+    public bool homerunComplete = false;
     void FixedUpdate()
     {
         position.x = transform.position.x;
@@ -55,11 +59,13 @@ public class Ant : Insect
                 {
                     CurrentPointIndex = 0;
                     forwardMarch = true;
+                    homerunComplete = true;
                 }
                 else if (CurrentPointIndex >= MarchingPoints.Length)
                 {
                     CurrentPointIndex = MarchingPoints.Length - 1;
                     forwardMarch = false;
+                    homerunComplete = true;
                 }
 
                 float angle = 0;
@@ -127,6 +133,13 @@ public class Ant : Insect
         else if (playerDamage && tag.Equals("Player"))
         {
             collision.GetComponent<HornetController>().TakeDamage(PlayerDamage);
+        }else if (tag.Equals("Enemy") && collision.transform.GetComponent<Insect>())
+        {
+            Insect insect = collision.transform.GetComponent<Insect>();
+            Vector2 velocity = rb.velocity;
+            Vector2 collisionVelocity = insect.GetCollisionVelocity(transform, velocity);
+            TakeDamage(insect.CollisionDamage, collisionVelocity);
+            insect.TakeDamage(PlayerDamage);
         }
 
     }
@@ -140,7 +153,24 @@ public class Ant : Insect
         Health -= damage;
         if (Health <= 0)
         {
+            HandleInsectGroupDeath();
             Destroy(gameObject);
         }
+    }
+
+    
+    protected override bool CheckDespawn()
+    {
+        return _mySquad.CheckDespawn();
+    }
+
+    public override void Respawn()
+    {
+        _mySquad.Respawn();
+    }
+
+    public override void Despawn()
+    {
+        _mySquad.Despawn();
     }
 }

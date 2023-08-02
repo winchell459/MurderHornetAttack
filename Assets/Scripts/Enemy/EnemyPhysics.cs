@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class EnemyPhysics : Insect
+public class EnemyPhysics : InsectSolo
 {
     public float speed = 1f;
     public float attackSpeed = 1.0f;
@@ -213,9 +213,15 @@ public class EnemyPhysics : Insect
         Health -= Damage;
         if(Health <= 0)
         {
-            FindObjectOfType<LevelHandler>().EnemyDeath(gameObject);
-            Destroy(gameObject);
+            LevelHandler.singleton.EnemyDeath(gameObject);
+            HandleDeath();
         }
+    }
+
+    public void HandleDeath()
+    {
+        HandleInsectSoloDeath();
+        Destroy(gameObject);
     }
 
     public override Vector2 GetCollisionVelocity(Transform collidingObject, Vector2 collidingVelocity)

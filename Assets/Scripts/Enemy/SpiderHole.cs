@@ -16,12 +16,8 @@ public class SpiderHole : MonoBehaviour, IChunkObject
                 Insect spider = Instantiate(SpiderPrefab, transform.position, Quaternion.identity).GetComponent<Insect>();
                 spider.transform.up = transform.position - collision.transform.position;
 
-                //set enemy in chunk for despawning when player leaves chunk
-                //MapChunk chunk = Utility.Honeycomb.GetMapChunk(spider.transform.position);
-                //chunk.AddEnemyToChunk(spider);
-                //spider.InsectPrefab = transform.parent.GetComponent<HoneycombCell>().honeyGrid.GetEnemyPrefab();
-
-                Map.StaticMap.AddEnemyToChunk(spider);
+                //Map.StaticMap.AddEnemyToChunk(spider);
+                Map.StaticMap.AddTransientChunkObject(spider.GetComponent<IChunkObject>());
 
                 lastSpawnTime = Time.fixedTime;
             } 
