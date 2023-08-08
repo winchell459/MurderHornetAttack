@@ -6,13 +6,14 @@ public class ChamberAntFarmTrigger : ChamberTrigger
 {
     public AntSquad antSquadPrefab;
     private AntSquad antSquad;
-    public ChamberAntFarmTrigger PreviousNode;
+    public ChamberAntFarmTrigger PreviousNode, NextNode;
     public bool Triggered = false;
     public MapPath AntPath;
 
     private bool inTrigger = false;
 
     [SerializeField] private GameObject spawnAntSquadButton;
+
 
     private void Update()
     {
@@ -80,9 +81,32 @@ public class ChamberAntFarmTrigger : ChamberTrigger
         {
             antSquad = Instantiate(antSquadPrefab, transform.position, Quaternion.identity);
             antSquad.SetMarchingPoints(getPathForSquad());
+            antSquad.startMound = this;
         }
 
         antSquad.StartMarch();
+    }
+
+    public int GetMoundID()
+    {
+        return CountMound(0);
+    }
+    public int CountMound(int count)
+    {
+        if (!PreviousNode) return count;
+        else return PreviousNode.CountMound(count + 1);
+    }
+
+    public AntSquad GetNextAntSquad(AntSquad current)
+    {
+        if (antSquad && antSquad != current) return antSquad;
+        else if (!antSquad || !NextNode) return null;
+        else return NextNode.GetNextAntSquad(current);
+    }
+
+    public void SetAntSquad(AntSquad antSquad)
+    {
+        this.antSquad = antSquad;
     }
 
     private Vector2[] getPathForSquad()

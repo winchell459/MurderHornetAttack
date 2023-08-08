@@ -121,8 +121,19 @@ public class MapFarm : MapArea
         //connect chamber ant farm triggers
         for (int i = 0; i < triggers.Count; i += 1)
         {
-            if (i > 0) triggers[i].PreviousNode = triggers[i - 1];
-            if (i < triggers.Count - 1) triggers[i].AntPath = edges[i];
+            if (i > 0)
+            {
+                triggers[i].PreviousNode = triggers[i - 1];
+            }
+            //if(i < triggers.Count)
+            //{
+            //    triggers[i].NextNode = triggers[i + 1];
+            //}
+            if (i < triggers.Count - 1)
+            {
+                triggers[i].AntPath = edges[i];
+                triggers[i].NextNode = triggers[i + 1];
+            }
         }
     }
 

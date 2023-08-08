@@ -28,7 +28,7 @@ public class Ant : InsectGroup
     List<HoneycombPos> visitedHoneycomb = new List<HoneycombPos>();
 
     private AntSquad _mySquad;
-    public AntSquad mySquad { set { _mySquad = value; } }
+    public AntSquad mySquad { get { return _mySquad; } set { _mySquad = value; } }
 
     private void Start()
     {
@@ -57,15 +57,25 @@ public class Ant : InsectGroup
 
                 if (CurrentPointIndex < 0)
                 {
-                    CurrentPointIndex = 0;
-                    forwardMarch = true;
-                    homerunComplete = true;
+                    if (mySquad.CheckCompletedSegments())
+                    {
+                        Debug.Log("-------------New segments added!---------------");
+                    }
+                    else
+                    {
+                        CurrentPointIndex = 0;
+                        forwardMarch = true;
+                        homerunComplete = true;
+                    }
+                    
                 }
                 else if (CurrentPointIndex >= MarchingPoints.Length)
                 {
+                    
                     CurrentPointIndex = MarchingPoints.Length - 1;
                     forwardMarch = false;
                     homerunComplete = true;
+
                 }
 
                 float angle = 0;
@@ -123,27 +133,30 @@ public class Ant : InsectGroup
         this.MarchingPoints = MarchingPoints;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void UpdateCurrentPointIndex()
     {
-        string tag = collision.tag;
-        if (/*!digging && */tag.Equals("Honeycomb"))
-        {
-            DamageHoneycomb(collision.GetComponent<Honeycomb>());
-        }
-        else if (playerDamage && tag.Equals("Player"))
-        {
-            collision.GetComponent<HornetController>().TakeDamage(PlayerDamage);
-        }else if (tag.Equals("Enemy") && collision.transform.GetComponent<Insect>())
-        {
-            Insect insect = collision.transform.GetComponent<Insect>();
-            Vector2 velocity = rb.velocity;
-            Vector2 collisionVelocity = insect.GetCollisionVelocity(transform, velocity);
-            TakeDamage(insect.CollisionDamage, collisionVelocity);
-            insect.TakeDamage(PlayerDamage);
-        }
-
+        int currentSegment = GetCurrentSegment(transform.position);
+        CurrentPointIndex = forwardMarch ? currentSegment - 1 : currentSegment;
     }
 
+    private int GetCurrentSegment(Vector2 currentPos)
+    {
+        
+        for(int i = 1; i < MarchingPoints.Length; i++)
+        {
+            Vector2 inverseX = transform.InverseTransformPoint(MarchingPoints[i - 1]);
+            Vector2 inverseY = transform.InverseTransformPoint(MarchingPoints[i]);
+            float segmantDistance = Vector2.Distance(inverseX, inverseY);
+            float xDistance = Vector2.Distance(inverseX, transform.InverseTransformPoint(transform.position));
+            float yDistance = Vector2.Distance(inverseY, transform.InverseTransformPoint(transform.position));
+            if (xDistance <= segmantDistance && yDistance <= segmantDistance) return i - 1;
+        }
+
+        Debug.LogWarning("Segment not found error.");
+        return -1;
+    }
+
+   
     private void DamageHoneycomb(Honeycomb honeycomb)
     {
         honeycomb.DamageHoneycomb(float.PositiveInfinity, HoneycombTypes.Areas.Farm, HoneycombTypes.Variety.Path);
@@ -172,5 +185,41 @@ public class Ant : InsectGroup
     public override void Despawn()
     {
         _mySquad.Despawn();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        string tag = collision.tag;
+        if (/*!digging && */tag.Equals("Honeycomb"))
+        {
+            DamageHoneycomb(collision.GetComponent<Honeycomb>());
+        }
+        else if (playerDamage && tag.Equals("Player"))
+        {
+            collision.GetComponent<HornetController>().TakeDamage(PlayerDamage);
+        }
+        else if (tag.Equals("Enemy") && collision.transform.GetComponent<Insect>())
+        {
+            Insect insect = collision.transform.GetComponent<Insect>();
+            Vector2 velocity = rb.velocity;
+            Vector2 collisionVelocity = insect.GetCollisionVelocity(transform, velocity);
+            TakeDamage(insect.CollisionDamage, collisionVelocity);
+            insect.TakeDamage(PlayerDamage);
+        }
+
+        //detect other ant squad and combine
+        if (collision.GetComponent<Ant>())
+        {
+            Ant otherAnt = collision.GetComponent<Ant>();
+            if (otherAnt.mySquad == mySquad) //check if squad had seperated
+            {
+
+            }
+            else //combine ant squad
+            {
+
+            }
+        }
+
     }
 }
