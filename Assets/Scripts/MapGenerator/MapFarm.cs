@@ -92,7 +92,7 @@ public class MapFarm : MapArea
         foreach (Vector2 node in farm.maze)
         {
             MapChamber chamber = new MapChamber(node);
-            Debug.Log("node.pos " + node);
+            //Debug.Log("node.pos " + node);
             chamber.VoidType = HoneycombTypes.Variety.Chamber;
             chamber.AddChamber(chamber.Location, 5);
             //ChamberAntFarmTrigger trigger = (ChamberAntFarmTrigger)ChamberTrigger.SetupChamberTrigger(AntSquadTriggerPrefab, chamber, Color.black);

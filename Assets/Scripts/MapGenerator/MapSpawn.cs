@@ -13,6 +13,6 @@ public class MapSpawn : MapChamber
     {
         Portal PlayerSpawn = (Portal)ChamberTrigger.SetupChamberTrigger(MapManager.singleton.PortalPrefab, this, Color.clear);
         LevelHandler.singleton.PlayerSpawn = PlayerSpawn;
-        Debug.Log("Player Spawn set");
+       // Debug.Log("Player Spawn set");
     }
 }

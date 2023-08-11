@@ -471,4 +471,16 @@ public class Map : MonoBehaviour
     {
         transientChunkObjects.Remove(chunkObject);
     }
+
+    public T GetTransientObject<T>() where T : Insect
+    {
+        foreach(IChunkObject chunkObject in transientChunkObjects)
+        {
+            if (chunkObject.GameObject().activeSelf && chunkObject.GameObject().GetComponent<T>())
+            {
+                return chunkObject.GameObject().GetComponent<T>();
+            }
+        }
+        return null;
+    }
 }

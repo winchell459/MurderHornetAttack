@@ -30,6 +30,9 @@ public class Ant : InsectGroup
     private AntSquad _mySquad;
     public AntSquad mySquad { get { return _mySquad; } set { _mySquad = value; } }
 
+    public enum States { arriving, marching, dying, exiting}
+    public States myState;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -42,51 +45,18 @@ public class Ant : InsectGroup
         position.x = transform.position.x;
         position.y = transform.position.y;
 
-        if (Marching)
+        if (myState == States.marching)
         {
-            if (Vector2.Distance(transform.position, MarchingPoints[CurrentPointIndex]) <= epsilon)
-            {
-                if (forwardMarch)
-                {
-                    CurrentPointIndex++;
-                }
-                else
-                {
-                    CurrentPointIndex--;
-                }
-
-                if (CurrentPointIndex < 0)
-                {
-                    if (mySquad.CheckCompletedSegments())
-                    {
-                        Debug.Log("-------------New segments added!---------------");
-                    }
-                    else
-                    {
-                        CurrentPointIndex = 0;
-                        forwardMarch = true;
-                        homerunComplete = true;
-                    }
-                    
-                }
-                else if (CurrentPointIndex >= MarchingPoints.Length)
-                {
-                    
-                    CurrentPointIndex = MarchingPoints.Length - 1;
-                    forwardMarch = false;
-                    homerunComplete = true;
-
-                }
-
-                float angle = 0;
-
-                Vector3 relative = transform.InverseTransformPoint(MarchingPoints[CurrentPointIndex]);
-                angle = Mathf.Atan2(relative.x, relative.y) * Mathf.Rad2Deg;
-                transform.Rotate(0, 0, -angle);
-
-            }
-            vector = (MarchingPoints[CurrentPointIndex] - position).normalized;
-            rb.MovePosition(rb.position + vector * speed * Time.fixedDeltaTime);
+            HandleMarching();
+        }else if(myState == States.dying)
+        {
+            HandleDestroy();
+        }
+        else if(myState == States.exiting)
+        {
+            Debug.Log("Ant Saved!");
+            GameManager.AntsSaved();
+            HandleDestroy();
         }
     }
 
@@ -126,6 +96,54 @@ public class Ant : InsectGroup
         // Delay before first damage
         yield return new WaitForSeconds(MarchDelay);
         Marching = true;
+        myState = States.marching;
+    }
+
+    private void HandleMarching()
+    {
+        if (Vector2.Distance(transform.position, MarchingPoints[CurrentPointIndex]) <= epsilon)
+        {
+            if (forwardMarch)
+            {
+                CurrentPointIndex++;
+            }
+            else
+            {
+                CurrentPointIndex--;
+            }
+
+            if (CurrentPointIndex < 0)
+            {
+                if (mySquad.CheckCompletedSegments(this))
+                {
+                    Debug.Log("-------------New segments added!---------------");
+                }
+                else
+                {
+                    CurrentPointIndex = 0;
+                    forwardMarch = true;
+                    homerunComplete = true;
+                }
+
+            }
+            else if (CurrentPointIndex >= MarchingPoints.Length)
+            {
+
+                CurrentPointIndex = MarchingPoints.Length - 1;
+                forwardMarch = false;
+                homerunComplete = true;
+
+            }
+
+            float angle = 0;
+
+            Vector3 relative = transform.InverseTransformPoint(MarchingPoints[CurrentPointIndex]);
+            angle = Mathf.Atan2(relative.x, relative.y) * Mathf.Rad2Deg;
+            transform.Rotate(0, 0, -angle);
+
+        }
+        vector = (MarchingPoints[CurrentPointIndex] - position).normalized;
+        rb.MovePosition(rb.position + vector * speed * Time.fixedDeltaTime);
     }
 
     public void SetMarchingPoints(Vector2[] MarchingPoints)
@@ -166,11 +184,18 @@ public class Ant : InsectGroup
         Health -= damage;
         if (Health <= 0)
         {
-            HandleInsectGroupDeath();
-            Destroy(gameObject);
+            //mySquad.AntDeath();
+            //HandleInsectGroupDeath();
+            myState = States.dying;
         }
     }
 
+    private void HandleDestroy()
+    {
+        mySquad.AntDeath();
+        HandleInsectGroupDeath();
+        Destroy(gameObject);
+    }
     
     protected override bool CheckDespawn()
     {

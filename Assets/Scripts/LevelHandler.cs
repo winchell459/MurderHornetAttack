@@ -61,7 +61,7 @@ public class LevelHandler : MonoBehaviour
         MapGenerator.onGenerationPreloadComplete -= PreGenerationComplete;
         LevelManager.levelMapVoids = mapVoids;
         pregenerationComplete = true;
-        Debug.Log("Preloading Complete");
+        //Debug.Log("Preloading Complete");
     }
 
     IEnumerator SetupLevel()
@@ -172,7 +172,7 @@ public class LevelHandler : MonoBehaviour
     HornetController hc;
     private void spawnPlayer(Portal portal)
     {
-        Player = Instantiate(PlayerPrefab, /*generator.*/PlayerSpawn.Chamber.locations[0], Quaternion.identity).transform;
+        Player = Instantiate(PlayerPrefab, PlayerSpawn.Chamber.locations[0], Quaternion.identity).transform;
         playerDead = false;
         hc = Player.GetComponent<HornetController>();
         Cam.SetCameraTarget(Player);
@@ -211,7 +211,7 @@ public class LevelHandler : MonoBehaviour
         uIHandler.DisplayExitLabel(true);
         if (Player && Player.GetComponent<HornetController>().ExitButtonPressed && !levelEnding)
         {
-            bool levelComplete = TasksComplete(LevelCompleteTasks/*, ph, uIHandler*/);
+            bool levelComplete = TasksComplete(LevelCompleteTasks);
             
             if (levelComplete)
             {
@@ -247,7 +247,7 @@ public class LevelHandler : MonoBehaviour
                 {
                     taskComplete = false;
                 }
-                else if(task.Requirements.AntMoundsTriggered && !AntMoundsTriggered())
+                else if(task.Requirements.AntMoundsTriggered && !AntMoundsTriggered() && GameManager.AntSavedCount() >= task.Requirements.AntSavedCount)
                 {
                     taskComplete = false;
                 }else if(task.Requirements.QueenDefeat && queen != null)

@@ -87,7 +87,7 @@ public class MapGenerator : MonoBehaviour
 
         float start = Utility.Utility.GetTime();
         Map.StaticMap.SetupChunks();
-        Debug.Log("DisplayChunks Time: " + (Utility.Utility.GetTime() - start) + " seconds.");
+        //Debug.Log("DisplayChunks Time: " + (Utility.Utility.GetTime() - start) + " seconds.");
 
         //setup enemies in Paths
         //must be done after Map.StaticMap.SetupChunks(); 

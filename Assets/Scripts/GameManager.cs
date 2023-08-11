@@ -33,9 +33,9 @@ public class GameManager : MonoBehaviour
         public int honeycombTowersDestroyed;
         public int spidersHit, spidersKilled;
         public int pillapillarHit, pillapillarLinksKilled, pillapillarsKilled;
-        public int antsKilled;
         public int queenHits;
-        
+
+        public int antsSaved;
     }
 
     
@@ -159,8 +159,9 @@ public class GameManager : MonoBehaviour
         score.pillapillarHit = 0;
         score.pillapillarLinksKilled = 0;
         score.pillapillarsKilled = 0;
-        score.antsKilled = 0;
         score.queenHits = 0;
+
+        score.antsSaved = 0;
         return score;
     }
     private PlayerScore GetPlayerScore(int level)
@@ -194,7 +195,7 @@ public class GameManager : MonoBehaviour
                 SpiderHit();
                 break;
             default:
-                AntsKilled();
+                
                 break;
         }
     }
@@ -219,6 +220,8 @@ public class GameManager : MonoBehaviour
     {
         singleton.GetPlayerScore(singleton.level).queenHits++;
     }
+
+    // -------------------- Pillapillar -------------------------
     public static void PillapillarHit()
     {
         singleton.GetPlayerScore(singleton.level).pillapillarHit++;
@@ -232,10 +235,34 @@ public class GameManager : MonoBehaviour
     {
         singleton.GetPlayerScore(singleton.level).pillapillarsKilled++;
     }
-    public static void AntsKilled()
+
+    // ---------------------- Ants ------------------------------
+    public static void AntsSaved()
     {
-        singleton.GetPlayerScore(singleton.level).antsKilled++;
+        singleton.GetPlayerScore(singleton.level).antsSaved++;
     }
+
+    public static int TotalAntsSaved()
+    {
+        int total = 0;
+        foreach(PlayerScore ps in singleton.PlayerScores)
+        {
+            total += ps.antsSaved;
+        }
+        return total;
+    }
+
+    public static int AntSavedCount()
+    {
+        return AntSavedCount(singleton.level);
+    }
+
+    public static int AntSavedCount(int level)
+    {
+        return singleton.GetPlayerScore(level).antsSaved;
+    }
+
+    // ---------------------- Bees ------------------------------
     public static void BeeHit()
     {
         singleton.GetPlayerScore(singleton.level).beesHit++;

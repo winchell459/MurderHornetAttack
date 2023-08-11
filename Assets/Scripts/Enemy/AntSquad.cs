@@ -21,6 +21,12 @@ public class AntSquad : MonoBehaviour
     private bool marchStarted;
     public bool RandomMarch = false;
 
+    public AntSquad waitingForSquad;
+
+    private int deadCount = 0;
+    public bool DeadWaiting { get { return deadCount > 0; } }
+    public int DeadCount { get { return deadCount; } }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,7 +43,7 @@ public class AntSquad : MonoBehaviour
         if (RandomMarch)
         {
             MarchingPoints = getRandomMarchingPoints();
-            StartMarch();
+            StartMarch(AntNum);
         }
         
 
@@ -48,11 +54,12 @@ public class AntSquad : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(marchStarted && transform.childCount == 0)
+        if(marchStarted && transform.childCount == 0 && !waitingForSquad && deadCount == 0)
         {
             //
             //  Create the red ant object to chase player
             //
+            Debug.Log("AntSquad Destroyed");
             Destroy(gameObject);
         }
 
@@ -64,10 +71,16 @@ public class AntSquad : MonoBehaviour
         
     }
 
-    public void StartMarch() 
+    public void StartMarch(AntSquad waitingForSquad)
     {
         marchStarted = true;
-        //Squad = new Ant[AntNum];
+        this.waitingForSquad = waitingForSquad;
+    }
+
+    public void StartMarch(int AntNum) 
+    {
+        marchStarted = true;
+        Squad = new List<Ant>();
         for (int i = 0; i < AntNum; i++)
         {
             Squad.Add(Instantiate(AntPrefab, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<Ant>());
@@ -85,6 +98,8 @@ public class AntSquad : MonoBehaviour
         {
             Map.StaticMap.AddTransientChunkObject(Squad[i]);
         }
+
+        deadCount = 0;
     }
     public bool CheckCompletedSegments()
     {
@@ -94,32 +109,57 @@ public class AntSquad : MonoBehaviour
             if (nextSquad)
             {
                 //merge squad
-                AddMarchingPoints(nextSquad.MarchingPoints);
-                for (int i = nextSquad.Squad.Count - 1; i >=0; i--)
-                {
-                    Ant ant = nextSquad.Squad[i];
-                    if (ant)
-                    {
-                        Squad.Add(ant);
-                        nextSquad.RemoveAnt(ant);
-                        ant.transform.parent = transform;
-                        ant.MarchingPoints = MarchingPoints;
-                        ant.mySquad = this;
-                        ant.UpdateCurrentPointIndex();
-                    }
-                }
-                nextSquad.startMound.SetAntSquad(this);
+                MergeAntSquad(nextSquad);
                 return true;
             }
         }
         return false;
     }
+    public bool CheckCompletedSegments(Ant ant)
+    {
+        AntSquad nextSquad = startMound.GetNextAntSquad(this);
+        if (nextSquad)
+        {
+            if(nextSquad == this)
+            {
+                ant.myState = Ant.States.exiting;
+            }
+            else
+            {
+                nextSquad.AddAnt(ant);
+                RemoveAnt(ant);
+            }
+            
+            return true;
+        }
+        return false;
+    }
 
+    // add another AntSquad to this AntSquad
+    public void MergeAntSquad(AntSquad toAddSquad)
+    {
+        AddMarchingPoints(toAddSquad.MarchingPoints);
+        for (int i = toAddSquad.Squad.Count - 1; i >= 0; i--)
+        {
+            Ant ant = toAddSquad.Squad[i];
+            if (ant)
+            {
+                AddAnt(ant);
+                toAddSquad.RemoveAnt(ant);
+                
+            }
+        }
+        toAddSquad.startMound.SetAntSquad(this);
+    }
     
 
     public void AddAnt(Ant ant)
     {
-        Squad.Add(ant);
+        if(!Squad.Contains(ant))Squad.Add(ant);
+        ant.transform.parent = transform;
+        ant.MarchingPoints = MarchingPoints;
+        ant.mySquad = this;
+        ant.UpdateCurrentPointIndex();
     }
 
     public void RemoveAnt(Ant ant)
@@ -205,5 +245,9 @@ public class AntSquad : MonoBehaviour
         }
     }
 
+    public void AntDeath()
+    {
+        deadCount++;
+    }
     
 }

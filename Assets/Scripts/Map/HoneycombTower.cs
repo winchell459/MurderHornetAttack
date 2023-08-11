@@ -42,7 +42,7 @@ public class HoneycombTower : Honeycomb
 
         if(lastSpawn + spawnRate < Time.time)
         {
-            Ant ant = FindObjectOfType<Ant>();
+            Ant ant = Map.StaticMap.GetTransientObject<Ant>();//FindObjectOfType<Ant>();
             if(ant && Vector2.Distance(ant.transform.position, transform.position) <= 5)
             {
                 SpawnBee(ant.gameObject);

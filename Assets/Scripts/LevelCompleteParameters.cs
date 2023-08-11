@@ -26,8 +26,11 @@ public class TaskRequirements
     public bool PrincessFind;
     public bool PetalsCollect;
     public int EggCount;
-    public bool AntMoundsTriggered;
+    
     public bool QueenDefeat;
     public bool NestClear;
     public bool PitClear;
+
+    public bool AntMoundsTriggered;
+    public int AntSavedCount;
 }

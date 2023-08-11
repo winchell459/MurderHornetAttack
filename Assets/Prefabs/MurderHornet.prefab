@@ -300,7 +300,7 @@ MonoBehaviour:
   Health: 50
   MaxHealth: 50
   CollisionForce: {x: 0, y: 0}
-  type: 0
+  type: 5
   InsectPrefab: {fileID: 0}
   ForwardSpeed_Defualt: 4
   ForwardSpeed: 4
@@ -313,8 +313,6 @@ MonoBehaviour:
   MobileControls: 0
   ExitButtonPressed: 0
   retical: {fileID: 7385508688490734306}
-  velocityLag: 0.95
-  velocityLagThreshold: 0.1
   TakeHoneycombDamage: 1
   ImpulseCoefficient: 25
 --- !u!114 &815703513

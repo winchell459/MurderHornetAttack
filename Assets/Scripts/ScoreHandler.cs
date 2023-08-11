@@ -39,7 +39,7 @@ public class ScoreHandler : LevelLoadUI
     }
     private string CalcAccuracy(GameManager.PlayerScore playerLevelScore)
     {
-        int hits = playerLevelScore.beesHit + playerLevelScore.antsKilled + playerLevelScore.queenHits + playerLevelScore.pillapillarHit
+        int hits = playerLevelScore.beesHit /*+ playerLevelScore.antsKilled*/ + playerLevelScore.queenHits + playerLevelScore.pillapillarHit
             + playerLevelScore.honeycombTowerHit + playerLevelScore.terrainHit + playerLevelScore.spidersHit;
         return Utility.Utility.FormatFloat((float)hits / playerLevelScore.shotsFired, 2).ToString();
     }

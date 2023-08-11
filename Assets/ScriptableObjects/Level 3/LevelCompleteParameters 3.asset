@@ -18,10 +18,11 @@ MonoBehaviour:
       PrincessFind: 0
       PetalsCollect: 0
       EggCount: 0
-      AntMoundsTriggered: 1
       QueenDefeat: 0
       NestClear: 0
       PitClear: 0
+      AntMoundsTriggered: 1
+      AntSavedCount: 5
     CompletionPrompt: Ants Rescued
     FailedPrompt: Save all Ants
     Completed: 0
