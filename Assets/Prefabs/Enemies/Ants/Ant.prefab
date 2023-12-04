@@ -143,9 +143,10 @@ MonoBehaviour:
   Marching: 0
   speed: 1
   PlayerDamage: 1
-  forwardMarch: 1
+  forwardMarch: 0
   MarchingPoints: []
   CurrentPointIndex: 0
   playerDamage: 0
   digging: 0
+  myState: 0
   homerunComplete: 0

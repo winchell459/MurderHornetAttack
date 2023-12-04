@@ -59,12 +59,9 @@ public class ChamberAntFarmTrigger : ChamberTrigger
                 {
 
                 }
-                else if (PreviousNode /*&& PreviousNode.Triggered */&& PreviousNode.antSquad)
+                else if (PreviousNode && PreviousNode.antSquad)
                 {
                     Triggered = true;
-                    
-                    //antSquad = PreviousNode.antSquad;
-                    //antSquad.AddMarchingPoints(getPathForSquad());
 
                     StartMarch(PreviousNode.antSquad);
                 }
@@ -78,7 +75,7 @@ public class ChamberAntFarmTrigger : ChamberTrigger
             if(Triggered && antSquad && !antSquad.Alive() && antSquad.DeadWaiting)
             {
                 inTrigger = true;
-                //Debug.Log($"Drop Royal Jelly?");
+
             }
         }
     }
@@ -104,7 +101,11 @@ public class ChamberAntFarmTrigger : ChamberTrigger
             antSquad.startMound = this;
             antSquad.StartMarch(antSquad.AntNum);
         }
-        else if(!PreviousNode)
+        else if(!PreviousNode && antSquad.DeadCount > 0)
+        {
+            antSquad.StartMarch(antSquad.DeadCount);
+        }
+        else if(PreviousNode && antSquad)
         {
             antSquad.StartMarch(antSquad.DeadCount);
         }
@@ -134,7 +135,7 @@ public class ChamberAntFarmTrigger : ChamberTrigger
     public AntSquad GetNextAntSquad(AntSquad current)
     {
         if (!NextNode) return current;                                                          // at end of path
-        else if (antSquad && antSquad != current && !antSquad.DeadWaiting) return antSquad;     // found next completed path
+        else if (antSquad && antSquad != current /*&& !antSquad.DeadWaiting*/) return antSquad;     // found next completed path
         else if (!antSquad /*|| !NextNode*/) return null;                                       // next node not triggered
         else return NextNode.GetNextAntSquad(current);                                          // still looking for nextNode
     }

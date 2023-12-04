@@ -57,13 +57,17 @@ public class CameraController : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(Target.position.x, Target.position.y, transform.position.z), ControlParameters.StaticControlParams.CameraSpeed*Time.deltaTime);
             //transform.up = Target.up;
             if(rotateTargetLocked)transform.eulerAngles = Target.eulerAngles + offsetRotation * Vector3.forward;
-            for(int i = 1; i < Layers.Length; i+=1)
-            {
-                Transform layer = Layers[i];
-                layer.position = transform.position - scales[i] * scales[i] * transform.position;
-            }
+            
             //Layer2.position = transform.position - layer2Scale * layer2Scale * transform.position;
         }
+
+        // Set paralax layer offsets
+        for (int i = 1; i < Layers.Length; i += 1)
+        {
+            Transform layer = Layers[i];
+            layer.position = transform.position - scales[i] * scales[i] * transform.position;
+        }
+
         if (transform.position.z != -10) Debug.Log("Camera Error: " + transform.position.z);
     }
 

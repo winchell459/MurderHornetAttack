@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parameters:
     seed: 0
-    scale: 24
+    scale: 72
     octaves: 4
     persistance: 0.5
     lacunarity: 0.25

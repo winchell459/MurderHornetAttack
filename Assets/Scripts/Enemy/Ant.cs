@@ -149,12 +149,13 @@ public class Ant : InsectGroup
     public void SetMarchingPoints(Vector2[] MarchingPoints)
     {
         this.MarchingPoints = MarchingPoints;
+        CurrentPointIndex = MarchingPoints.Length - 1;
     }
 
     public void UpdateCurrentPointIndex()
     {
         int currentSegment = GetCurrentSegment(transform.position);
-        CurrentPointIndex = forwardMarch ? currentSegment - 1 : currentSegment;
+        CurrentPointIndex = forwardMarch || currentSegment < 0 ? currentSegment - 1 : currentSegment;
     }
 
     private int GetCurrentSegment(Vector2 currentPos)
@@ -246,5 +247,10 @@ public class Ant : InsectGroup
             }
         }
 
+    }
+
+    public bool LastAnt()
+    {
+        return this == mySquad.Squad[mySquad.Squad.Count - 1] ;
     }
 }

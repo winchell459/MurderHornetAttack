@@ -30,21 +30,21 @@ public class AntSquad : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (NumPoints <= 1)
-        {
-            NumPoints = 2;
-        }
+        //if (NumPoints <= 1)
+        //{
+        //    NumPoints = 2;
+        //}
 
-        if (AntNum <= 0)
-        {
-            AntNum = 1;
-        }
+        //if (AntNum <= 0)
+        //{
+        //    AntNum = 1;
+        //}
 
-        if (RandomMarch)
-        {
-            MarchingPoints = getRandomMarchingPoints();
-            StartMarch(AntNum);
-        }
+        //if (RandomMarch)
+        //{
+        //    MarchingPoints = getRandomMarchingPoints();
+        //    StartMarch(AntNum);
+        //}
         
 
         
@@ -54,14 +54,14 @@ public class AntSquad : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(marchStarted && transform.childCount == 0 && !waitingForSquad && deadCount == 0)
-        {
-            //
-            //  Create the red ant object to chase player
-            //
-            Debug.Log("AntSquad Destroyed");
-            Destroy(gameObject);
-        }
+        //if(marchStarted && transform.childCount == 0 && !waitingForSquad && deadCount == 0)
+        //{
+        //    //
+        //    //  Create the red ant object to chase player
+        //    //
+        //    Debug.LogWarning("AntSquad Destroyed");
+        //    Destroy(gameObject);
+        //}
 
         for(int i = 1; i < MarchingPoints.Length; i++)
         {
@@ -86,7 +86,7 @@ public class AntSquad : MonoBehaviour
             Squad.Add(Instantiate(AntPrefab, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<Ant>());
             Squad[i].transform.parent = this.transform;
             Ant ant = Squad[i].GetComponent<Ant>();
-            ant.transform.position = MarchingPoints[0];
+            ant.transform.position = MarchingPoints[MarchingPoints.Length - 1];
             ant.SetMarchingPoints(MarchingPoints);
             ant.March(MarchDelay * i);
             ant.speed = speed;
@@ -101,20 +101,20 @@ public class AntSquad : MonoBehaviour
 
         deadCount = 0;
     }
-    public bool CheckCompletedSegments()
-    {
-        if(startMound.GetMoundID() == 0)
-        {
-            AntSquad nextSquad = startMound.GetNextAntSquad(this);
-            if (nextSquad)
-            {
-                //merge squad
-                MergeAntSquad(nextSquad);
-                return true;
-            }
-        }
-        return false;
-    }
+    //public bool CheckCompletedSegments()
+    //{
+    //    if(startMound.GetMoundID() == 0)
+    //    {
+    //        AntSquad nextSquad = startMound.GetNextAntSquad(this);
+    //        if (nextSquad)
+    //        {
+    //            //merge squad
+    //            MergeAntSquad(nextSquad);
+    //            return true;
+    //        }
+    //    }
+    //    return false;
+    //}
     public bool CheckCompletedSegments(Ant ant)
     {
         AntSquad nextSquad = startMound.GetNextAntSquad(this);
@@ -136,30 +136,37 @@ public class AntSquad : MonoBehaviour
     }
 
     // add another AntSquad to this AntSquad
-    public void MergeAntSquad(AntSquad toAddSquad)
-    {
-        AddMarchingPoints(toAddSquad.MarchingPoints);
-        for (int i = toAddSquad.Squad.Count - 1; i >= 0; i--)
-        {
-            Ant ant = toAddSquad.Squad[i];
-            if (ant)
-            {
-                AddAnt(ant);
-                toAddSquad.RemoveAnt(ant);
+    //public void MergeAntSquad(AntSquad toAddSquad)
+    //{
+    //    AddMarchingPoints(toAddSquad.MarchingPoints);
+    //    for (int i = toAddSquad.Squad.Count - 1; i >= 0; i--)
+    //    {
+    //        Ant ant = toAddSquad.Squad[i];
+    //        if (ant)
+    //        {
+    //            AddAnt(ant);
+    //            toAddSquad.RemoveAnt(ant);
                 
-            }
-        }
-        toAddSquad.startMound.SetAntSquad(this);
-    }
+    //        }
+    //    }
+    //    toAddSquad.startMound.SetAntSquad(this);
+    //}
     
 
     public void AddAnt(Ant ant)
     {
+        bool lastAnt = ant.LastAnt();
+
         if(!Squad.Contains(ant))Squad.Add(ant);
         ant.transform.parent = transform;
         ant.MarchingPoints = MarchingPoints;
         ant.mySquad = this;
         ant.UpdateCurrentPointIndex();
+
+        if (lastAnt)
+        {
+            StartMarch(deadCount);
+        }
     }
 
     public void RemoveAnt(Ant ant)
@@ -184,30 +191,30 @@ public class AntSquad : MonoBehaviour
         MarchingPoints = marchingPoints;
     }
 
-    public void AddMarchingPoints(Vector2[] newPoints)
-    {
-        Vector2[] newMarchingPoints = new Vector2[MarchingPoints.Length + newPoints.Length];
-        for (int i = 0; i < MarchingPoints.Length; i += 1)
-        {
-            newMarchingPoints[i + newPoints.Length] = MarchingPoints[i];
-        }
-        for (int i = 0; i < newPoints.Length; i += 1)
-        {
-            newMarchingPoints[i /* + MarchingPoints.Length*/] = newPoints[i];
-        }
+    //public void AddMarchingPoints(Vector2[] newPoints)
+    //{
+    //    Vector2[] newMarchingPoints = new Vector2[MarchingPoints.Length + newPoints.Length];
+    //    for (int i = 0; i < MarchingPoints.Length; i += 1)
+    //    {
+    //        newMarchingPoints[i + newPoints.Length] = MarchingPoints[i];
+    //    }
+    //    for (int i = 0; i < newPoints.Length; i += 1)
+    //    {
+    //        newMarchingPoints[i /* + MarchingPoints.Length*/] = newPoints[i];
+    //    }
 
-        MarchingPoints = newMarchingPoints;
-        foreach (Ant ant in Squad)
-        {
-            if (ant)
-            {
-                //Ant ant = antObj.GetComponent<Ant>();
-                //ant.March(1);
-                ant.MarchingPoints = MarchingPoints;
-                ant.CurrentPointIndex = ant.CurrentPointIndex + newPoints.Length;
-            }
-        }
-    }
+    //    MarchingPoints = newMarchingPoints;
+    //    foreach (Ant ant in Squad)
+    //    {
+    //        if (ant)
+    //        {
+    //            //Ant ant = antObj.GetComponent<Ant>();
+    //            //ant.March(1);
+    //            ant.MarchingPoints = MarchingPoints;
+    //            ant.CurrentPointIndex = ant.CurrentPointIndex + newPoints.Length;
+    //        }
+    //    }
+    //}
 
     public bool Alive()
     {

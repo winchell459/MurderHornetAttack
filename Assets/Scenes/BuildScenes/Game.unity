@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37312, g: 0.38074034, b: 0.35872716, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -12852,10 +12852,11 @@ MonoBehaviour:
       PrincessFind: 0
       PetalsCollect: 0
       EggCount: 0
-      AntMoundsTriggered: 1
       QueenDefeat: 0
       NestClear: 0
       PitClear: 0
+      AntMoundsTriggered: 1
+      AntSavedCount: 0
     CompletionPrompt: All Ants Rescued
     FailedPrompt: Rescue All Ants
     Completed: 0
@@ -12864,10 +12865,11 @@ MonoBehaviour:
       PrincessFind: 0
       PetalsCollect: 0
       EggCount: 5
-      AntMoundsTriggered: 0
       QueenDefeat: 0
       NestClear: 0
       PitClear: 0
+      AntMoundsTriggered: 0
+      AntSavedCount: 0
     CompletionPrompt: 5 Eggs Found
     FailedPrompt: Need 5 Eggs
     Completed: 0
@@ -12876,10 +12878,11 @@ MonoBehaviour:
       PrincessFind: 0
       PetalsCollect: 1
       EggCount: 0
-      AntMoundsTriggered: 0
       QueenDefeat: 0
       NestClear: 0
       PitClear: 0
+      AntMoundsTriggered: 0
+      AntSavedCount: 0
     CompletionPrompt: '*khap*'
     FailedPrompt: '*ou-ah*'
     Completed: 0
@@ -15207,6 +15210,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AntSquad
+      objectReference: {fileID: 0}
+    - target: {fileID: 4713034296474697245, guid: a36d3aeabb0924681ace5b5e3930ac30,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a36d3aeabb0924681ace5b5e3930ac30, type: 3}
