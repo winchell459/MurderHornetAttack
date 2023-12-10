@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 287776210}
   - component: {fileID: 7385508688490734306}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Retical
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,7 +58,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1308394196}
   - component: {fileID: 1308394197}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Square (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -140,7 +140,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1712759839}
   - component: {fileID: 1712759840}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -225,7 +225,7 @@ GameObject:
   - component: {fileID: 2963273219893779832}
   - component: {fileID: 2963273219893779831}
   - component: {fileID: 815703513}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MurderHornet
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -337,7 +337,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2963273220353562595}
   - component: {fileID: 2963273220353562596}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MurderHornetTest_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -418,7 +418,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2963273221294690423}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sprites
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -213,6 +213,24 @@ public class Ant : InsectGroup
         _mySquad.Despawn();
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        string tag = collision.transform.tag;
+        //if (/*!digging && */tag.Equals("Honeycomb"))
+        //{
+        //    DamageHoneycomb(collision.transform.GetComponent<Honeycomb>());
+        //}
+        Debug.Log(collision.transform.name);
+        if (tag.Equals("Enemy") /*&& collision.transform.GetComponent<Insect>()*/)
+        {
+            Insect insect = collision.transform.GetComponent<Insect>();
+            Vector2 velocity = rb.velocity;
+            Vector2 collisionVelocity = insect.GetCollisionVelocity(transform, velocity);
+            TakeDamage(insect.CollisionDamage, collisionVelocity);
+            insect.TakeDamage(PlayerDamage);
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         string tag = collision.tag;
@@ -224,14 +242,14 @@ public class Ant : InsectGroup
         {
             collision.GetComponent<HornetController>().TakeDamage(PlayerDamage);
         }
-        else if (tag.Equals("Enemy") && collision.transform.GetComponent<Insect>())
-        {
-            Insect insect = collision.transform.GetComponent<Insect>();
-            Vector2 velocity = rb.velocity;
-            Vector2 collisionVelocity = insect.GetCollisionVelocity(transform, velocity);
-            TakeDamage(insect.CollisionDamage, collisionVelocity);
-            insect.TakeDamage(PlayerDamage);
-        }
+        //else if (tag.Equals("Enemy") && collision.transform.GetComponent<Insect>())
+        //{
+        //    Insect insect = collision.transform.GetComponent<Insect>();
+        //    Vector2 velocity = rb.velocity;
+        //    Vector2 collisionVelocity = insect.GetCollisionVelocity(transform, velocity);
+        //    TakeDamage(insect.CollisionDamage, collisionVelocity);
+        //    insect.TakeDamage(PlayerDamage);
+        //}
 
         //detect other ant squad and combine
         if (collision.GetComponent<Ant>())
@@ -251,6 +269,11 @@ public class Ant : InsectGroup
 
     public bool LastAnt()
     {
+        if(mySquad.Squad.Count == 0)
+        {
+            Debug.LogWarning("Squad Count is zero.");
+            return false;
+        }
         return this == mySquad.Squad[mySquad.Squad.Count - 1] ;
     }
 }

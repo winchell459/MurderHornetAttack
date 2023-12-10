@@ -35,6 +35,7 @@ public class MiniMap : MonoBehaviour
     public Transform princessMarker;
     public Transform flowerMarkerPrefab;
     private List<Transform> flowerMarkers = new List<Transform>();
+    private List<Marker> markers = new List<Marker>();
 
     bool displayPrincess = false;
     List<bool> displayFlowers = new List<bool>();
@@ -42,6 +43,16 @@ public class MiniMap : MonoBehaviour
     public bool debuggingMaps;
 
     private Vector2 defaultPos;
+
+    private struct Marker
+    {
+        public string name;
+        public int id;
+        public bool display;
+        public HoneycombPos hexPos;
+        public Color color;
+        public UnityEngine.UI.Image marker;
+    }
 
     // Start is called before the first frame update
     void Awake()
@@ -280,6 +291,21 @@ public class MiniMap : MonoBehaviour
         
     }
 
+    public int SetAnt(HoneycombPos hex, bool display)
+    {
+        return 0;
+    }
+
+    public void SetAnt(int antID, HoneycombPos hex, bool display)
+    {
+
+    }
+
+    public void RemoveAnt(int antID)
+    {
+
+    }
+
     private void HandleDisplayPOI()
     {
         if (displayPrincess && princessMarker)
@@ -293,6 +319,19 @@ public class MiniMap : MonoBehaviour
             if (displayFlowers[i])
             {
                 flowerMarkers[i].localPosition = GetClampedZoomMapPos(flowerPos[i]);
+            }
+        }
+
+        foreach(Marker marker in markers)
+        {
+            if (marker.display)
+            {
+                marker.marker.transform.localPosition = GetClampedZoomMapPos(marker.hexPos);
+                marker.marker.gameObject.SetActive(true);
+            }
+            else
+            {
+                marker.marker.gameObject.SetActive(false);
             }
         }
     }
